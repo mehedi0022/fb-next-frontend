@@ -2,6 +2,7 @@ import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import { Tiro_Bangla } from "next/font/google";
 import "./globals.css";
+import Header from "./components/header/header";
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
@@ -47,7 +48,10 @@ export default function RootLayout({
       <body
         className={`${tiroBangla.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Header />
+        <main className="max-w-7xl mx-auto px-4">
+          <Providers>{children}</Providers>
+        </main>
       </body>
     </html>
   );
