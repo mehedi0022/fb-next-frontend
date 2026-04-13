@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header/Header";
+import Footer from "./components/Footer/Footer";
+
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
@@ -52,6 +54,7 @@ export default function RootLayout({
         <main className="max-w-7xl mx-auto px-4">
           <Providers>{children}</Providers>
         </main>
+        <Footer />
       </body>
     </html>
   );

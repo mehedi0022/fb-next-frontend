@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X, Package, Layers, BookOpen, User } from 'lucide-react';
+import { 
+  MenuOutlined, 
+  CloseOutlined, 
+  BlockOutlined, 
+  AppstoreOutlined, 
+  BookOutlined, 
+  UserOutlined 
+} from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
@@ -10,7 +17,7 @@ import LoginRegisterBtn from './LoginRegisterBtn';
 interface NavigationItem {
   label: string;
   href: string;
-  icon: any;
+  icon: React.ElementType; 
 }
 
 const testData = {
@@ -23,10 +30,10 @@ export default function Header(): JSX.Element {
   const auth = false;
 
   const navigationItems: NavigationItem[] = [
-    { label: 'আমাদের সম্পর্কে', href: '/services', icon: Layers },
-    { label: 'ক্যাটাগরি', href: '/categories', icon: Package },
-    { label: 'প্রোডাক্ট', href: '/products', icon: Package },
-    { label: 'যোগাযোগ', href: '/contact', icon: BookOpen },
+    { label: 'আমাদের সম্পর্কে', href: '/about', icon: BlockOutlined },
+    { label: 'ক্যাটাগরি', href: '/categories', icon: AppstoreOutlined },
+    { label: 'প্রোডাক্ট', href: '/products', icon: AppstoreOutlined },
+    { label: 'যোগাযোগ', href: '/contact', icon: BookOutlined },
   ];
 
   return (
@@ -58,9 +65,9 @@ export default function Header(): JSX.Element {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="lg:hidden text-white"
+            className="lg:hidden text-white text-xl"
           >
-            <Menu />
+            <MenuOutlined />
           </button>
         </div>
       </div>
@@ -89,8 +96,8 @@ export default function Header(): JSX.Element {
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b">
                 <h2 className="text-lg font-bold">Menu</h2>
-                <button onClick={() => setIsMenuOpen(false)}>
-                  <X />
+                <button onClick={() => setIsMenuOpen(false)} className="text-lg">
+                  <CloseOutlined />
                 </button>
               </div>
 
@@ -105,7 +112,9 @@ export default function Header(): JSX.Element {
                     alt={testData.name}
                   />
                 ) : (
-                  <User className="w-12 h-12 text-gray-400" />
+                  <div className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full">
+                    <UserOutlined className="text-2xl text-gray-400" />
+                  </div>
                 )}
 
                 {auth && (
@@ -127,7 +136,7 @@ export default function Header(): JSX.Element {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 transition group"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <Icon className="text-blue-600 group-hover:scale-110 transition" />
+                      <Icon className="text-blue-600 group-hover:scale-110 transition text-lg" />
                       <span className="font-medium text-gray-700">
                         {item.label}
                       </span>
