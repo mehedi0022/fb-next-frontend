@@ -5,7 +5,7 @@ import { Menu, X, Package, Layers, BookOpen, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import LoginResisterBtn from './LoginResiterBtn';
+import LoginRegisterBtn from './LoginRegisterBtn';
 
 interface NavigationItem {
   label: string;
@@ -53,7 +53,7 @@ export default function Header(): JSX.Element {
           </nav>
 
           {/* Right (Desktop only) */}
-          <LoginResisterBtn auth={auth} from="navbar" />
+          <LoginRegisterBtn auth={auth} from="navbar" />
 
           {/* Mobile Menu Button */}
           <button
@@ -138,7 +138,7 @@ export default function Header(): JSX.Element {
 
               {/* FOOTER ACTIONS (Mobile) */}
               <div className="p-4 border-t">
-                <LoginResisterBtn auth={auth} from="drawer" />
+                <LoginRegisterBtn auth={auth} from="drawer" />
               </div>
             </motion.div>
           </>
