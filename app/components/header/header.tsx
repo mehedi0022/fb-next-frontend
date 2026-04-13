@@ -20,7 +20,7 @@ const testData = {
 
 export default function Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const auth = true;
+  const auth = false;
 
   const navigationItems: NavigationItem[] = [
     { label: 'আমাদের সম্পর্কে', href: '/services', icon: Layers },
