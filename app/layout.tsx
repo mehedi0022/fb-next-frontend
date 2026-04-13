@@ -2,13 +2,13 @@ import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import { Tiro_Bangla } from "next/font/google";
 import "./globals.css";
-import Header from "./components/header/header";
+import Header from "./components/header/Header";
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
   weight: ["400"],
   variable: "--font-tiro-bangla",
-});
+}); 
 
 export const metadata: Metadata = {
   title: "Freelancer Bangladesh | Home - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",

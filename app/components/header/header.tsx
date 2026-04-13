@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X, Phone, User2, LayoutDashboard, Package, Layers, BookOpen } from 'lucide-react';
+import { Menu, X, Package, Layers, BookOpen, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
+import LoginResisterBtn from './LoginResiterBtn';
 
 interface NavigationItem {
   label: string;
@@ -12,14 +13,20 @@ interface NavigationItem {
   icon: any;
 }
 
+const testData = {
+  name: 'Peyal Hasan',
+  url: 'https://avatars.githubusercontent.com/u/155246181?v=4'
+};
+
 export default function Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const auth = true;
 
   const navigationItems: NavigationItem[] = [
-    { label: 'আমাদের সম্পর্কে', href: 'services', icon: Layers },
-    { label: 'ক্যাটাগরি', href: 'categories', icon: Package },
-    { label: 'প্রোডাক্ট', href: 'products', icon: Package },
-    { label: 'যোগাযোগ', href: 'contract', icon: BookOpen },
+    { label: 'আমাদের সম্পর্কে', href: '/services', icon: Layers },
+    { label: 'ক্যাটাগরি', href: '/categories', icon: Package },
+    { label: 'প্রোডাক্ট', href: '/products', icon: Package },
+    { label: 'যোগাযোগ', href: '/contact', icon: BookOpen },
   ];
 
   return (
@@ -29,53 +36,26 @@ export default function Header(): JSX.Element {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/assets/FB.png" alt="logo" width={60} height={60} />
-            <span className="text-white font-bold text-lg hidden sm:block">
-              Freelancer BD
-            </span>
+            <Image src="/assets/FB.png" alt="logo" width={120} height={40} />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex gap-8">
+          <nav className="hidden lg:flex gap-4">
             {navigationItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-white relative group font-medium"
+                className="text-white text-lg font-medium hover:opacity-80"
               >
                 {item.label}
-                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-300"></span>
               </Link>
             ))}
           </nav>
 
-          {/* Right */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Right (Desktop only) */}
+          <LoginResisterBtn auth={auth} from="navbar" />
 
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 bg-black/80 hover:bg-black text-white rounded-lg text-sm transition"
-            >
-              📊 ড্যাশবোর্ড
-            </Link>
-
-            <a
-              href="tel:+8801777458099"
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-sm transition"
-            >
-              <Phone size={16} />
-              Call
-            </a>
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition"
-            >
-              <User2 className="text-white" />
-            </button>
-          </div>
-
-          {/* Mobile */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(true)}
             className="lg:hidden text-white"
@@ -85,16 +65,14 @@ export default function Header(): JSX.Element {
         </div>
       </div>
 
-      {/* ========================= */}
-      {/* LEFT DRAWER */}
-      {/* ========================= */}
+      {/* ================= DRAWER ================= */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
             {/* Overlay */}
             <motion.div
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 "
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -106,7 +84,7 @@ export default function Header(): JSX.Element {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.35 }}
-              className="fixed top-0 left-0 w-[80%] max-w-sm h-full bg-ternary z-50 shadow-2xl flex flex-col"
+              className="fixed top-0 left-0 w-[80%] max-w-sm h-full bg-white z-50 shadow-2xl flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b">
@@ -118,13 +96,24 @@ export default function Header(): JSX.Element {
 
               {/* USER SECTION */}
               <div className="p-5 flex items-center gap-3 border-b bg-gray-50">
-                <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white text-xl">
-                  P
-                </div>
-                <div>
-                  <p className="font-semibold">Peyal Hasan</p>
-                  <p className="text-sm text-gray-500">User</p>
-                </div>
+                {auth ? (
+                  <Image
+                    className="rounded-full border-2 border-secondary"
+                    src={testData.url}
+                    width={60}
+                    height={60}
+                    alt={testData.name}
+                  />
+                ) : (
+                  <User className="w-12 h-12 text-gray-400" />
+                )}
+
+                {auth && (
+                  <div>
+                    <p className="font-semibold">{testData.name}</p>
+                    <p className="text-sm text-gray-500">User</p>
+                  </div>
+                )}
               </div>
 
               {/* NAVIGATION */}
@@ -132,37 +121,24 @@ export default function Header(): JSX.Element {
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <a
+                    <Link
                       key={item.label}
                       href={item.href}
                       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 transition group"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       <Icon className="text-blue-600 group-hover:scale-110 transition" />
                       <span className="font-medium text-gray-700">
                         {item.label}
                       </span>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
 
-              {/* FOOTER ACTIONS */}
-              <div className="p-4 border-t space-y-3">
-                <Link
-                  href="/dashboard"
-                  className="flex items-center justify-center gap-2 w-full py-2 bg-black text-white rounded-lg"
-                >
-                  <LayoutDashboard size={16} />
-                  Dashboard
-                </Link>
-
-                <a
-                  href="tel:+8801777458099"
-                  className="flex items-center justify-center gap-2 w-full py-2 bg-orange-500 text-white rounded-lg"
-                >
-                  <Phone size={16} />
-                  Call Now
-                </a>
+              {/* FOOTER ACTIONS (Mobile) */}
+              <div className="p-4 border-t">
+                <LoginResisterBtn auth={auth} from="drawer" />
               </div>
             </motion.div>
           </>

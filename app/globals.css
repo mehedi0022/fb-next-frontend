@@ -7,3 +7,6 @@
   --color-secondary: 247 86 5;   /* #f75605 */
   --color-ternary: 229 237 228;  /* #e5ede4 */
 }
+.btn-primary{
+  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-sm transition h-12
+}
