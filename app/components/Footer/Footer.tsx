@@ -47,17 +47,17 @@ const Footer = () => {
 
     return (
         <footer className="bg-[#1a1f24] text-gray-300 py-10 mt-auto border-t border-gray-800">
-            <div className="max-w-7xl mx-auto px-5 md:px-10">
-                {/* Main Grid Layout - Gap 10 ensuring space between sections */}
+            <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20">
+                {/* Main Grid Layout */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
                     {/* যোগাযোগ করুন Section */}
-                    <div className="w-full">
+                    <div className="flex flex-col">
                         <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-orange-600 inline-block w-fit pb-1">
                             যোগাযোগ করুন
                         </h3>
-                        <div className="space-y-4 text-sm leading-relaxed text-gray-400">
-                            <p className="font-semibold text-white mb-1 text-base">ঠিকানা:</p>
+                        <div className="space-y-4 text-sm leading-relaxed">
+                            <p className="font-semibold text-white mb-1">ঠিকানা:</p>
                             <div className="flex gap-3">
                                 <MapPin className="text-red-500 shrink-0 mt-1" size={18} />
                                 <p>চক-বাজার ব্রাঞ্চ : আর এস টাওয়ার, ২ ফ্লোর, ১ নং নাজিমুদ্দিন রোড, ঢাকা -১২০০</p>
@@ -78,8 +78,8 @@ const Footer = () => {
                     </div>
 
                     {/* সহায়ক লিংক Section */}
-                    <div className="w-full">
-                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-orange-600 inline-block w-fit pb-1">
+                    <div>
+                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-red-600 inline-block w-fit pb-1">
                             সহায়ক লিংক
                         </h3>
                         <ul className="space-y-3 text-sm">
@@ -94,8 +94,8 @@ const Footer = () => {
                     </div>
 
                     {/* দ্রুত লিংক Section */}
-                    <div className="w-full">
-                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-orange-600 inline-block w-fit pb-1">
+                    <div>
+                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-red-600 inline-block w-fit pb-1">
                             দ্রুত লিংক
                         </h3>
                         <ul className="space-y-3 text-sm">
@@ -109,36 +109,36 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* ফলো করুন Section - Layout Fix for Laptop/LG */}
-                    <div className="w-full flex flex-col min-w-0">
-                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-orange-600 inline-block w-fit pb-1">
+                    {/* ফলো করুন Section */}
+                    <div className="w-full">
+                        <h3 className="text-white text-lg font-bold mb-5 border-b-2 border-red-600 inline-block w-fit pb-1">
                             ফলো করুন
                         </h3>
                         
                         {/* Social Icons Grid */}
-                        <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="grid grid-cols-3 gap-2 mb-6">
                             {socialLinks.map((social) => (
                                 <a
                                     key={social.label}
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`flex items-center justify-center gap-1.5 ${social.bgColor} text-white py-2 rounded text-[10px] xl:text-xs font-medium hover:brightness-110 transition-all`}
+                                    className={`flex items-center justify-center gap-1.5 ${social.bgColor} text-white py-2 rounded text-xs font-medium hover:brightness-110 transition-all`}
                                 >
                                     {social.icon}
-                                    <span className="hidden xl:inline">{social.label}</span>
+                                    <span className="hidden sm:inline lg:hidden xl:inline">{social.label}</span>
                                 </a>
                             ))}
                         </div>
 
-                        {/* Real Facebook Feed Widget - Fixed for LG Devices */}
-                        <div className="bg-white rounded shadow-md overflow-hidden w-full">
+                        {/* Facebook Real Widget */}
+                        <div className="bg-white rounded shadow-md overflow-hidden w-full max-w-[340px]">
                             <iframe
-                                src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(pageUrl)}&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                                src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(pageUrl)}&tabs=timeline&width=340&height=400&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
                                 width="100%"
-                                height="500"
-                                style={{ border: 'none', overflow: 'hidden', minWidth: '100%' }}
-                                scrolling="no"
+                                height="400"
+                                style={{ border: 'none', overflow: 'hidden' }}
+                                scrolling="yes"
                                 frameBorder="0"
                                 allowFullScreen={true}
                                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"

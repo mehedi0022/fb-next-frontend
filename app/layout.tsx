@@ -10,7 +10,7 @@ const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
   weight: ["400"],
   variable: "--font-tiro-bangla",
-}); 
+});
 
 export const metadata: Metadata = {
   title: "Freelancer Bangladesh | Home - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
@@ -51,10 +51,10 @@ export default function RootLayout({
         className={`${tiroBangla.variable} antialiased`}
       >
         <Header />
-        <main className="max-w-7xl mx-auto px-4">
+        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto px-4">
           <Providers>{children}</Providers>
         </main>
-        <Footer />
+          <Footer />
       </body>
     </html>
   );
