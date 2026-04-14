@@ -1,17 +1,25 @@
 import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
-import { Tiro_Bangla } from "next/font/google";
+import { Poppins, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header/Header";
+import Footer from "./components/Footer/Footer";
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
   weight: ["400"],
   variable: "--font-tiro-bangla",
-}); 
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+});
 
 export const metadata: Metadata = {
-  title: "Freelancer Bangladesh | Home - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
+  title:
+    "Freelancer Bangladesh | Home - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
   description:
     "কোনো বিনিয়োগ ছাড়াই ফ্রিতে রেজিস্ট্রেশন করে ফুল ক্যাশ অন ডেলিভারিতে ড্রপশিপিং বিজনেস শুরু করুন। ইন্সট্যান্ট পেমেন্ট, সহজ অর্ডার ম্যানেজমেন্ট এবং নির্ভরযোগ্য সার্ভিস—সব এক প্ল্যাটফর্মে।",
 
@@ -26,8 +34,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Freelancer Bangladesh" }],
 
   openGraph: {
-    title:
-      "Freelancer Bangladesh - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
+    title: "Freelancer Bangladesh - বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
     description:
       "ফ্রি রেজিস্ট্রেশন করে আজই শুরু করুন আপনার ড্রপশিপিং বিজনেস। কোনো ইনভেস্টমেন্ট ছাড়াই ইনকাম করার সুযোগ!",
     url: "https://freelancerbangladesh.com",
@@ -35,7 +42,6 @@ export const metadata: Metadata = {
     locale: "bn_BD",
     type: "website",
   },
-
 };
 
 export default function RootLayout({
@@ -46,12 +52,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${tiroBangla.variable} antialiased`}
+        className={`${tiroBangla.variable} ${poppins.variable} antialiased`}
       >
         <Header />
-        <main className="max-w-7xl mx-auto px-4">
+        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto px-4">
           <Providers>{children}</Providers>
         </main>
+        <Footer />
       </body>
     </html>
   );

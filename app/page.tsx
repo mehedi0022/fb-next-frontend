@@ -1,14 +1,17 @@
-"use client";
-import { useGetUsersQuery } from "@/appstore/modules/users/api";
-import React from "react";
+import Banner from "./components/home/Bannar";
+import ProductsList from "./components/products/ProductsList";
 
 const HomePage = () => {
-  const { data, error, isLoading } = useGetUsersQuery();
-  // console.log("data", data, error, isLoading);
-  return <div className="text-primary">Home page
   
-  <h1 className=" text-secondary">ফ্রি রেজিস্ট্রেশন করে আজই শুরু করুন আপনার ড্রপশিপিং বিজনেস। কোনো ইনভেস্টমেন্ট ছাড়াই ইনকাম করার সুযোগ!</h1>
-  </div>;
+  return (
+    <>
+      {/* Hero Section */}
+      <Banner />
+
+      {/* Products Section */}
+      <ProductsList />
+    </>
+  );
 };
 
 export default HomePage;

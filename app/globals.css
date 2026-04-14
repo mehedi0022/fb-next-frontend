@@ -10,3 +10,11 @@
 .btn-primary{
   @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-sm transition h-12
 }
+
+body {
+  font-family: var(--font-poppins), var(--font-tiro-bangla);
+}
+
+.font-tiro-bangla{
+  font-family: var(--font-tiro-bangla);
+}
