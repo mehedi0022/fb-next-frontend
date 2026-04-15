@@ -1,6 +1,5 @@
 import React from "react";
-import Container from "../common/Container"; // আপনার প্রজেক্টের কন্টেইনার
-import Title from "../common/Title"; // আপনার প্রজেক্টের টাইটেল কম্পোনেন্ট
+import Container from "../common/Container";
 
 const HowItWorks = () => {
   const steps = [

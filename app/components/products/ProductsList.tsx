@@ -1,15 +1,15 @@
 import { Product } from "@/app/types/productTypes";
-import React from "react";
+import React, { Suspense } from "react";
 import Container from "../common/Container";
 import Title from "../common/Title";
 import SearchProduct from "./SearchProduct";
 import ProductCard from "./ProductCard";
 
-const ProductsList = ({
-  searchParams,
-}: {
+interface ProductsListProps {
   searchParams: { product?: string };
-}) => {
+}
+
+const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
   const search = searchParams?.product || "";
   const searchText = search.trim().toLowerCase();
 
@@ -64,7 +64,7 @@ const ProductsList = ({
       };
     });
 
-  // ✅ Smart filtering
+  // Smart filtering
   const filteredProducts =
     searchText === ""
       ? products
@@ -74,7 +74,6 @@ const ProductsList = ({
           .includes(searchText)
       );
 
-
   return (
     <section className="bg-ternary pt-10">
       <Container className="py-5">
@@ -82,12 +81,14 @@ const ProductsList = ({
           আমাদের প্রোডাক্ট সমূহ
         </Title>
 
-        <SearchProduct />
+        <Suspense fallback="Loading...">
+          <SearchProduct />
+        </Suspense>
 
-        {/* Optional UX */}
+        {/* Search Results Info */}
         {search && (
           <p className="text-sm text-gray-500 mt-2">
-            Showing results for "{search}"
+            Showing results for &quot;{search}&quot;
           </p>
         )}
 
@@ -102,23 +103,19 @@ const ProductsList = ({
 
           {filteredProducts.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-
-              {/* Icon */}
               <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gray-200 mb-4">
                 <span className="text-3xl">🔍</span>
               </div>
 
-              {/* Title */}
-              <h2 className="text-xl font-semibold text-gray-700">
+              <h2 className="text-lg font-semibold text-gray-700">
                 No products found
               </h2>
 
-              {/* Subtitle */}
               <p className="text-gray-500 mt-2 max-w-md">
-                We couldn’t find anything matching your search. Try using different or simpler keywords.
+                We could not find anything matching your search. Try different
+                keywords.
               </p>
 
-              {/* Action */}
               <a
                 href="?"
                 className="mt-5 px-5 py-2 rounded-full bg-black text-white text-sm hover:bg-black/80 transition"

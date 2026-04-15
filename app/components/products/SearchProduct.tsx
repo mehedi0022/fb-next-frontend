@@ -37,7 +37,7 @@ export default function SearchProduct() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery]);
+  }, [debouncedQuery, router, searchParams]);
 
   // Handle Submit 
   const handleSubmit = (e: React.FormEvent) => {
