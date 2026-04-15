@@ -55,7 +55,7 @@ export default function RootLayout({
         className={`${tiroBangla.variable} ${poppins.variable} antialiased`}
       >
         <Header />
-        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto px-4">
+        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">
           <Providers>{children}</Providers>
         </main>
         <Footer />
