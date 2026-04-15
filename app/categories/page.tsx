@@ -1,7 +1,11 @@
 import React from 'react'
+import LandingPage from '../components/categories/LandingPage'
+
 
 export default function page() {
   return (
-    <div>page</div>
+    <div>
+      <LandingPage />
+    </div>
   )
 }

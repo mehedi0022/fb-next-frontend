@@ -1,11 +1,18 @@
 import { Product } from "@/app/types/productTypes";
-import React, { Suspense } from "react";
+import React from "react";
 import Container from "../common/Container";
 import Title from "../common/Title";
 import SearchProduct from "./SearchProduct";
 import ProductCard from "./ProductCard";
 
-const ProductsList = () => {
+const ProductsList = ({
+  searchParams,
+}: {
+  searchParams: { product?: string };
+}) => {
+  const search = searchParams?.product || "";
+  const searchText = search.trim().toLowerCase();
+
   const sampleProducts = [
     {
       title: "EMS Butterfly Massager",
@@ -16,11 +23,12 @@ const ProductsList = () => {
         sale: 50,
         shipping: 30,
         profit: 10,
-        currency: "BDT" as const, // Type safety এর জন্য
+        currency: "BDT" as const,
       },
       stock: 100,
       isInStock: true,
-      thumbnail: "https://freelancerbangladesh.com/uploads/product/product-20260313150745-kCEiVs.jpg",
+      thumbnail:
+        "https://freelancerbangladesh.com/uploads/product/product-20260313150745-kCEiVs.jpg",
       images: ["https://i.ibb.co/example1.jpg"],
       category: "Health",
       createdAt: "2026-04-01T10:00:00Z",
@@ -38,7 +46,8 @@ const ProductsList = () => {
       },
       stock: 50,
       isInStock: true,
-      thumbnail: "https://freelancerbangladesh.com/uploads/product/product-20260313154044-CPr4DF.jpg",
+      thumbnail:
+        "https://freelancerbangladesh.com/uploads/product/product-20260313154044-CPr4DF.jpg",
       images: ["https://i.ibb.co/example2.jpg"],
       category: "Kitchen",
       createdAt: "2026-04-02T12:00:00Z",
@@ -55,24 +64,69 @@ const ProductsList = () => {
       };
     });
 
+  // ✅ Smart filtering
+  const filteredProducts =
+    searchText === ""
+      ? products
+      : products.filter((product) =>
+        `${product.title} ${product.description} ${product.category}`
+          .toLowerCase()
+          .includes(searchText)
+      );
+
+
   return (
-    <section className="bg-ternary">
-      <Container className="py-5 ">
-        {/* Title & Subtile */}
+    <section className="bg-ternary pt-10">
+      <Container className="py-5">
         <Title subtitle="আমাদের রয়েছে প্রায় ৫০০+টিরও বেশি প্রোডাক্ট, যেগুলো আপনি সহজেই অনলাইনে বিক্রি করতে পারবেন।">
           আমাদের প্রোডাক্ট সমূহ
         </Title>
 
-        {/* Searching box */}
-        <Suspense fallback={<div>Loading search...</div>}>
-          <SearchProduct />
-        </Suspense>
+        <SearchProduct />
 
-        {/* Product List */}
+        {/* Optional UX */}
+        {search && (
+          <p className="text-sm text-gray-500 mt-2">
+            Showing results for "{search}"
+          </p>
+        )}
+
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6 mt-7">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} isLoggedIn={true} />
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              isLoggedIn={true}
+            />
           ))}
+
+          {filteredProducts.length === 0 && (
+            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+
+              {/* Icon */}
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gray-200 mb-4">
+                <span className="text-3xl">🔍</span>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-xl font-semibold text-gray-700">
+                No products found
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-gray-500 mt-2 max-w-md">
+                We couldn’t find anything matching your search. Try using different or simpler keywords.
+              </p>
+
+              {/* Action */}
+              <a
+                href="?"
+                className="mt-5 px-5 py-2 rounded-full bg-black text-white text-sm hover:bg-black/80 transition"
+              >
+                Clear Search
+              </a>
+            </div>
+          )}
         </div>
       </Container>
     </section>

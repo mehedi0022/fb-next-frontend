@@ -2,6 +2,9 @@ import Link from "next/link";
 import Container from "../common/Container";
 import Image from "next/image";
 import { ArrowRight, LogIn } from "lucide-react";
+import {toBanglaNumber} from '@/app/lib/index'
+
+
 
 const Banner = () => {
   return (
@@ -10,7 +13,7 @@ const Banner = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* // Left side - Content */}
-          <div className="text-center md:text-left space-y-5 flex flex-col items-center md:items-start">
+          <div className="order-2 md:order-1 text-center md:text-left space-y-5 flex flex-col items-center md:items-start">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-neutral-800 !leading-[1.2]">
               দেশের সর্ববৃহৎ{" "}
               <span className="text-secondary text-wrap relative inline-block">
@@ -50,12 +53,12 @@ const Banner = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
               </span>
-              <span className="text-xl">৫০০+</span>অ্যাক্টিভ রিসেলার আমাদের সাথে যুক্ত
+              <span className="text-xl">{ toBanglaNumber(500)}+</span> অ্যাক্টিভ রিসেলার আমাদের সাথে যুক্ত
             </div>
           </div>
 
           {/* // Right Side - Image */}
-          <div className="flex justify-center md:justify-end items-center relative group p-4 lg:p-10">
+          <div className="flex order-1 md:order-2 justify-center md:justify-end items-center relative group p-4 lg:p-10">
 
 
             <div className="absolute inset-0 bg-secondary/15 rounded-full blur-[80px] md:blur-[120px] transform scale-75 group-hover:scale-100 group-hover:bg-secondary/25 transition-all duration-700 ease-in-out"></div>
