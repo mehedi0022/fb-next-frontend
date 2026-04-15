@@ -2,8 +2,8 @@ import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import { Poppins, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
-import Header from "./components/header/Header";
 import Footer from "./components/Footer/Footer";
+import Header from "./components/header/header";
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
