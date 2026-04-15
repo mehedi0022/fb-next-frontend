@@ -10,11 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        secondary: "rgb(var(--color-secondary) / <alpha-value>)",
+        ternary: "rgb(var(--color-ternary) / <alpha-value>)",
       },
     },
   },
   plugins: [],
 };
 export default config;
+

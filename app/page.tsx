@@ -1,11 +1,17 @@
-"use client";
-import { useGetUsersQuery } from "@/appstore/modules/users/api";
-import React from "react";
+import Banner from "./components/home/Bannar";
+import ProductsList from "./components/products/ProductsList";
 
 const HomePage = () => {
-  const { data, error, isLoading } = useGetUsersQuery();
-  // console.log("data", data, error, isLoading);
-  return <div className="">Home page</div>;
+  
+  return (
+    <>
+      {/* Hero Section */}
+      <Banner />
+
+      {/* Products Section */}
+      <ProductsList />
+    </>
+  );
 };
 
 export default HomePage;

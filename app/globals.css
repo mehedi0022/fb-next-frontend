@@ -3,25 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: 54 116 181;   /* #3674b5 */
+  --color-secondary: 247 86 5;   /* #f75605 */
+  --color-ternary: 229 237 228;  /* #e5ede4 */
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.btn-primary{
+  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-sm transition h-12
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), var(--font-tiro-bangla);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.font-tiro-bangla{
+  font-family: var(--font-tiro-bangla);
 }
