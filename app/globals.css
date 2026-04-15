@@ -8,7 +8,10 @@
   --color-ternary: 229 237 228;  /* #e5ede4 */
 }
 .btn-primary{
-  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-sm transition h-12
+  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-lg transition h-12 
+}
+.btn-secondary{
+  @apply px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
 }
 
 body {

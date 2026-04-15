@@ -13,9 +13,10 @@ export default function ProductCard({
   const { wholesale, sale, shipping = 0 } = product.price;
 
   return (
-    <div className="w-full h-full flex flex-col bg-white border border-gray-200 rounded-xl hover:shadow-md transition overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-white border  rounded-sm hover:shadow-md transition overflow-hidden border-gray-400">
+      <div className=" m-2 border border-gray-400 rounded-sm">
       <Link href={`/products/${product.id}`}>
-        <figure className="border-b-gray-200 border-b-2 rounded-lg overflow-hidden">
+        <figure className="border-b-gray-400 border-b-2  overflow-hidden p-2">
           {/* Image */}
           <img
             src={product.thumbnail}
@@ -81,6 +82,7 @@ export default function ProductCard({
             </Button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

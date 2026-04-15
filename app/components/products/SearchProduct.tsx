@@ -50,8 +50,8 @@ export default function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto">
-      <div className="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1.5 pl-4 shadow-sm">
+    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto ">
+      <div className="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1.5 pl-4 shadow-sm border border-gray-600">
         {/* Input */}
         <input
           type="text"
