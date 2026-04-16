@@ -4,7 +4,7 @@ export type Price = {
   sale: number;        // selling price
   shipping?: number;   // delivery / dropshipping cost
   profit: number;      // calculated profit
-  currency: "BDT";
+  currency: "BDT" | string; // currency code, default is BDT
 };
 
 export type Product = {
