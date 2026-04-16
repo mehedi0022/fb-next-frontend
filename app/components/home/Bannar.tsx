@@ -8,7 +8,7 @@ import {toBanglaNumber} from '@/app/lib/index'
 
 const Banner = () => {
   return (
-    <section className="bg-ternary py-10 md:py-16 lg:py-20 overflow-hidden">
+    <section className="bg-ternary py-2 md:py-4 lg:py-8 overflow-hidden">
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
 

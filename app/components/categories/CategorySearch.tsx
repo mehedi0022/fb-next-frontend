@@ -2,18 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function CategorySearch() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const pathname = usePathname()
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // ✅ Sync input with URL
   useEffect(() => {
-    const current = searchParams.get("product") || "";
+    const current = searchParams.get("category") || "";
     setQuery(current);
   }, [searchParams]);
 
@@ -31,13 +32,13 @@ export default function CategorySearch() {
     const params = new URLSearchParams(searchParams.toString());
 
     if (debouncedQuery) {
-      params.set("product", debouncedQuery);
+      params.set("category", debouncedQuery);
     } else {
-      params.delete("product");
+      params.delete("category");
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, router, searchParams]);
+  }, [debouncedQuery, router]);
 
   // Handle Submit 
   const handleSubmit = (e: React.FormEvent) => {
@@ -59,8 +60,9 @@ export default function CategorySearch() {
   const handleClear = () => {
     setQuery("");
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("product");
-    router.replace(`?${params.toString()}`, { scroll: false });
+    params.delete("category");
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
   };
 
   return (

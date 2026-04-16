@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function SearchProduct() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  const pathname = usePathname()
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,7 +39,7 @@ export default function SearchProduct() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, router, searchParams]);
+  }, [debouncedQuery, router]);
 
   // Handle Submit 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +62,8 @@ export default function SearchProduct() {
     setQuery("");
     const params = new URLSearchParams(searchParams.toString());
     params.delete("product");
-    router.replace(`?${params.toString()}`, { scroll: false });
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
   };
 
   return (

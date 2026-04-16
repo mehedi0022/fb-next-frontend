@@ -69,8 +69,7 @@ const ContactSection = () => {
                         {/* Social Buttons */}
                         <div className="flex flex-wrap gap-3">
                             {socialLinks.map((social) => (
-                                <a
-                                    key={social.label}
+                                <a key={social.label}
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -83,8 +82,7 @@ const ContactSection = () => {
             hover:shadow-lg hover:-translate-y-0.5 
             active:scale-95 
             transition-all duration-300
-        `}
-                                >
+        `}>
                                     <span className="text-lg">{social.icon}</span>
 
                                     <span className="hidden sm:inline lg:hidden xl:inline">

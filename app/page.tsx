@@ -5,11 +5,19 @@ import Banner from "./components/home/Bannar";
 import SpecialFeatures from "./components/home/SpecialFeatures";
 import ProductsList from "./components/products/ProductsList";
 
-const HomePage = ({
+
+interface SearchParamsProps {
+  product?: string;
+  category?: string;
+}
+
+const HomePage = async ({
   searchParams,
 }: {
-  searchParams: { product?: string };
+  searchParams: Promise<SearchParamsProps> | SearchParamsProps;
 }) => {
+
+  const resolvedParams = await searchParams;
 
   return (
     <>
@@ -22,14 +30,14 @@ const HomePage = ({
       {/* Special Features */}
       <SpecialFeatures />
 
-   {/* ২. Category List  */}
+      {/* ২. Category List  */}
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
-        <CategoryList />
+        <CategoryList searchParams={resolvedParams} isCarousel={true} />
       </Suspense>
 
       {/* {/. Products Section /} */}
       <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
-        <ProductsList searchParams={searchParams} />
+        <ProductsList searchParams={resolvedParams} />
       </Suspense>
 
     </>

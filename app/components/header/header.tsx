@@ -37,13 +37,13 @@ export default function Header(): JSX.Element {
   ];
 
   return (
-    <header className="w-full bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50 py-3">
-      <div className="max-w-7xl mx-auto px-4">
+    <header className="w-full bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50 ">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-20">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/assets/FB.png" alt="logo" width={120} height={40} />
+            <Image src="/assets/FB.png" alt="logo" width={100} height={30} />
           </Link>
 
           {/* Desktop Nav */}
