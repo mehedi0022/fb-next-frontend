@@ -2,7 +2,12 @@
 import { Carousel } from 'antd';
 import Image from "next/image";
 
-export default function CategoryCarousel({ categories = [] }: { categories?: any[] }) {
+interface Category {
+  name: string;
+  img: string;
+}
+
+export default function CategoryCarousel({ categories = [] }: { categories?: Category[] }) {
   const settings = {
     dots: true,
     infinite: (categories?.length ?? 0) > 6, 
