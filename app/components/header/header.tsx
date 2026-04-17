@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import LoginRegisterBtn from './LoginRegisterBtn';
 import { NavigationItem } from '@/lib';
@@ -22,6 +23,7 @@ const testData = {
 
 export default function Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
   const auth = false;
 
   const navigationItems: NavigationItem[] = [
@@ -43,15 +45,22 @@ export default function Header(): JSX.Element {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex gap-4">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-white text-lg font-medium hover:opacity-80"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navigationItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`text-lg font-medium transition-all ${
+                    isActive 
+                      ? 'text-white border-b-2 border-secondary pb-1' 
+                      : 'text-white hover:text-ternary'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right (Desktop only) */}
@@ -124,15 +133,24 @@ export default function Header(): JSX.Element {
               <div className="flex-1 p-4 space-y-2">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
+                  const isActive = pathname === item.href;
                   return (
                     <Link
                       key={item.label}
                       href={item.href}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 transition group"
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition group ${
+                        isActive 
+                          ? 'bg-blue-100 border-l-4 border-blue-600' 
+                          : 'hover:bg-blue-50'
+                      }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <Icon className="text-blue-600 group-hover:scale-110 transition text-lg" />
-                      <span className="font-medium text-gray-700">
+                      <Icon className={`group-hover:scale-110 transition text-lg ${
+                        isActive ? 'text-blue-700' : 'text-blue-600'
+                      }`} />
+                      <span className={`font-medium ${
+                        isActive ? 'text-blue-800' : 'text-gray-700'
+                      }`}>
                         {item.label}
                       </span>
                     </Link>

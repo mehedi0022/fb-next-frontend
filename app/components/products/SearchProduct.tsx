@@ -57,7 +57,7 @@ export default function SearchProduct() {
   }, [query, router, searchParams]);
 
 
-  // ✅ Clear
+  // clear searchbox 
   const handleClear = useCallback(() => {
     setQuery("");
     const params = new URLSearchParams(searchParams.toString());
