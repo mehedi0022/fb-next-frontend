@@ -34,4 +34,5 @@ export { default as Field } from '../app/components/common/Field';
 
 // Auth components
 export { default as SignIn } from '../app/components/auth/SignIn';
+export { default as TwoFactorAuth } from '../app/components/auth/TwoFactorAuth';
 // export { default as SignUp } from '../app/components/auth/SignUp';
