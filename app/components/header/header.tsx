@@ -37,7 +37,7 @@ export default function Header(): JSX.Element {
   ];
 
   return (
-    <header className="w-full bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50">
+    <header className="w-full bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50 py-3">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-20">
 

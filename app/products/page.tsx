@@ -1,10 +1,14 @@
 import React from 'react'
 import ProductsList from '../components/products/ProductsList'
 
-export default function page() {
+export default function page({
+  searchParams,
+}: {
+  searchParams: { product?: string };
+}) {
   return (
-    <>
-      <ProductsList />
-    </>
+    <div>
+      <ProductsList searchParams={searchParams} />
+    </div>
   )
 }

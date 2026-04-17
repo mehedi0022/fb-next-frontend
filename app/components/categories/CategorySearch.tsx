@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SearchProduct() {
+export default function CategorySearch() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
 

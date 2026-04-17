@@ -2,8 +2,8 @@ import { Providers } from "@/app/providers";
 import type { Metadata } from "next";
 import { Poppins, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
-import Header from "./components/header/Header";
 import Footer from "./components/Footer/Footer";
+import Header from "./components/header/header";
 
 const tiroBangla = Tiro_Bangla({
   subsets: ["bengali"],
@@ -55,7 +55,7 @@ export default function RootLayout({
         className={`${tiroBangla.variable} ${poppins.variable} antialiased font-tiro`}
       >
         <Header />
-        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto px-4">
+        <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">
           <Providers>{children}</Providers>
         </main>
         <Footer />
