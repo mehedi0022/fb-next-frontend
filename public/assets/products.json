@@ -1,0 +1,230 @@
+[
+  {
+    "id": "p-101",
+    "title": "EMS Butterfly Massager",
+    "slug": "ems-butterfly-massager",
+    "description": "🚬 Classic Aluminum Alloy Cigarette Case – Stylish, Durable & Practical এই Cigarette Case হলো ধূমপায়ীদের জন্য এক স্মার্ট ও পরিশীলিত সমাধান, যা স্টাইল, নিরাপত্তা ও ব্যবহারিক সুবিধা একসাথে নিয়ে আসে। ✨ প্রধান বৈশিষ্ট্য: High-Quality Aluminum Alloy: হালকা ও টেকসই ধাতু, স্টাইলিশ ও আরামদায়ক ফিল Elegant Design & Magnetic Latch: চৌম্বকীয় ল্যাচ নিশ্চিত করে সিগারেট নিরাপদ ও আত্মস্ফূর্তভাবে খোলে না Capacity: 20টি পাতলা সিগারেট বা পুরো প্যাক সিগারেট রাখা যায় Moisture & Damage Protection: আর্দ্রতা ও চাপ থেকে সিগারেটকে সুরক্ষিত রাখে Compact & Portable: যে কোনো কাজের বা ছুটির সময়ে বহনযোগ্য, Indoor বা Outdoor ব্যবহার উপযুক্ত Perfect Gift: ছোট্ট কিন্তু চমৎকার উপহার, বন্ধুবান্ধব বা পরিবারকে আনন্দ দিতে পারবে 💎 Practical & Stylish: সিগারেট রক্ষা করা এবং স্টাইল বজায় রাখা একসাথে। এই ক্লাসিক কেস প্রত্যেক ধূমপায়ীর জীবনে প্রয়োজনীয  একটি আইটেম, কাজের অফিসে বা ছুটির ভ্রমণে সহজে বহনযোগ্য। 📌 Use Tip: সিগারেটের আর্দ্রতা ও ভাঙা থেকে সুরক্ষার জন্য সবসময় ল্যাচ বন্ধ রাখুন হালকা ও সংরক্ষণযোগ্য, পকেটে বা ব্যাগে রাখা যায় এই Classic Cigarette Case আপনার ধূমপানের অভিজ্ঞতাকে করবে আরও পরিপাটি, আরামদায়ক ও স্টাইলিশ।",
+    "price": {
+      "wholesale": 40,
+      "sale": 50,
+      "shipping": 30,
+      "profit": 10,
+      "currency": "BDT"
+    },
+    "stock": 100,
+    "isInStock": true,
+    "thumbnail": "https://freelancerbangladesh.com/uploads/product/product-20260313150745-kCEiVs.jpg",
+    "images": ["https://freelancerbangladesh.com/uploads/product/product-20260313150745-kCEiVs.jpg","https://freelancerbangladesh.com/uploads/product/product-20260313154044-CPr4DF.jpg"],
+    "category": "Health",
+    "createdAt": "2026-04-01T10:00:00Z"
+  },
+  {
+    "id": "p-102",
+    "title": "Portable Mini Blender for Smoothies",
+    "slug": "portable-mini-blender",
+    "description": "Rechargeable mini blender for smoothies.",
+    "price": {
+      "wholesale": 400,
+      "sale": 900,
+      "shipping": 30,
+      "profit": 500,
+      "currency": "BDT"
+    },
+    "stock": 50,
+    "isInStock": true,
+    "thumbnail": "https://freelancerbangladesh.com/uploads/product/product-20260313154044-CPr4DF.jpg",
+    "images": ["https://i.ibb.co/example2.jpg"],
+    "category": "Kitchen",
+    "createdAt": "2026-04-02T12:00:00Z"
+  },
+  {
+    "id": "p-103",
+    "title": "Wireless Bluetooth Earbuds",
+    "slug": "wireless-bluetooth-earbuds",
+    "description": "High quality wireless earbuds with noise cancellation.",
+    "price": {
+      "wholesale": 300,
+      "sale": 650,
+      "shipping": 40,
+      "profit": 350,
+      "currency": "BDT"
+    },
+    "stock": 80,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/earbuds/500/500",
+    "images": ["https://picsum.photos/seed/earbuds1/500/500"],
+    "category": "Electronics",
+    "createdAt": "2026-04-03T10:00:00Z"
+  },
+  {
+    "id": "p-104",
+    "title": "Smart LED Ring Light",
+    "slug": "smart-led-ring-light",
+    "description": "Perfect lighting setup for content creators.",
+    "price": {
+      "wholesale": 500,
+      "sale": 950,
+      "shipping": 50,
+      "profit": 450,
+      "currency": "BDT"
+    },
+    "stock": 60,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/ringlight/500/500",
+    "images": ["https://picsum.photos/seed/ringlight1/500/500"],
+    "category": "Electronics",
+    "createdAt": "2026-04-03T12:00:00Z"
+  },
+  {
+    "id": "p-105",
+    "title": "Portable Power Bank 20000mAh",
+    "slug": "portable-power-bank",
+    "description": "Fast charging high capacity power bank.",
+    "price": {
+      "wholesale": 700,
+      "sale": 1200,
+      "shipping": 60,
+      "profit": 500,
+      "currency": "BDT"
+    },
+    "stock": 100,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/powerbank/500/500",
+    "images": ["https://picsum.photos/seed/powerbank1/500/500"],
+    "category": "Electronics",
+    "createdAt": "2026-04-04T09:00:00Z"
+  },
+  {
+    "id": "p-106",
+    "title": "Mini USB Desk Fan",
+    "slug": "mini-usb-desk-fan",
+    "description": "Compact cooling fan for desk use.",
+    "price": {
+      "wholesale": 150,
+      "sale": 300,
+      "shipping": 30,
+      "profit": 150,
+      "currency": "BDT"
+    },
+    "stock": 120,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/fan/500/500",
+    "images": ["https://picsum.photos/seed/fan1/500/500"],
+    "category": "Home",
+    "createdAt": "2026-04-04T11:00:00Z"
+  },
+  {
+    "id": "p-107",
+    "title": "Digital Kitchen Scale",
+    "slug": "digital-kitchen-scale",
+    "description": "Accurate weight measurement for kitchen use.",
+    "price": {
+      "wholesale": 250,
+      "sale": 450,
+      "shipping": 35,
+      "profit": 200,
+      "currency": "BDT"
+    },
+    "stock": 90,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/scale/500/500",
+    "images": ["https://picsum.photos/seed/scale1/500/500"],
+    "category": "Kitchen",
+    "createdAt": "2026-04-05T10:00:00Z"
+  },
+  {
+    "id": "p-108",
+    "title": "Waterproof Sports Watch",
+    "slug": "waterproof-sports-watch",
+    "description": "Durable sports watch with waterproof feature.",
+    "price": {
+      "wholesale": 350,
+      "sale": 700,
+      "shipping": 40,
+      "profit": 350,
+      "currency": "BDT"
+    },
+    "stock": 70,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/watch/500/500",
+    "images": ["https://picsum.photos/seed/watch1/500/500"],
+    "category": "Fashion",
+    "createdAt": "2026-04-05T12:00:00Z"
+  },
+  {
+    "id": "p-109",
+    "title": "Electric Hair Trimmer",
+    "slug": "electric-hair-trimmer",
+    "description": "Professional hair trimmer with multiple blades.",
+    "price": {
+      "wholesale": 400,
+      "sale": 850,
+      "shipping": 45,
+      "profit": 450,
+      "currency": "BDT"
+    },
+    "stock": 65,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/trimmer/500/500",
+    "images": ["https://picsum.photos/seed/trimmer1/500/500"],
+    "category": "Beauty",
+    "createdAt": "2026-04-06T09:00:00Z"
+  },
+  {
+    "id": "p-110",
+    "title": "Foldable Laptop Stand",
+    "slug": "foldable-laptop-stand",
+    "description": "Adjustable laptop stand for better ergonomics.",
+    "price": {
+      "wholesale": 300,
+      "sale": 650,
+      "shipping": 40,
+      "profit": 350,
+      "currency": "BDT"
+    },
+    "stock": 85,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/laptopstand/500/500",
+    "images": ["https://picsum.photos/seed/laptopstand1/500/500"],
+    "category": "Office",
+    "createdAt": "2026-04-06T11:00:00Z"
+  },
+  {
+    "id": "p-111",
+    "title": "Reusable Water Bottle",
+    "slug": "reusable-water-bottle",
+    "description": "Eco-friendly reusable water bottle.",
+    "price": {
+      "wholesale": 120,
+      "sale": 250,
+      "shipping": 25,
+      "profit": 130,
+      "currency": "BDT"
+    },
+    "stock": 150,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/bottle/500/500",
+    "images": ["https://picsum.photos/seed/bottle1/500/500"],
+    "category": "Lifestyle",
+    "createdAt": "2026-04-07T10:00:00Z"
+  },
+  {
+    "id": "p-112",
+    "title": "Gaming Mouse RGB",
+    "slug": "gaming-mouse-rgb",
+    "description": "High precision RGB gaming mouse.",
+    "price": {
+      "wholesale": 350,
+      "sale": 750,
+      "shipping": 35,
+      "profit": 400,
+      "currency": "BDT"
+    },
+    "stock": 95,
+    "isInStock": true,
+    "thumbnail": "https://picsum.photos/seed/mouse/500/500",
+    "images": ["https://picsum.photos/seed/mouse1/500/500"],
+    "category": "Electronics",
+    "createdAt": "2026-04-07T12:00:00Z"
+  }
+]

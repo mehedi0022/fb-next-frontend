@@ -1,4 +1,4 @@
-import { Product } from "@/app/types/productTypes";
+import { Product, SearchParamsProps } from "@/lib";
 import React, { Suspense } from "react";
 import Container from "../common/Container";
 import Title from "../common/Title";
@@ -6,7 +6,7 @@ import SearchProduct from "./SearchProduct";
 import ProductCard from "./ProductCard";
 
 interface ProductsListProps {
-  searchParams: { product?: string };
+  searchParams: SearchParamsProps;
 }
 
 const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
@@ -73,7 +73,6 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
           .toLowerCase()
           .includes(searchText)
       );
-
   return (
     <section className="bg-ternary pt-10">
       <Container className="py-5">

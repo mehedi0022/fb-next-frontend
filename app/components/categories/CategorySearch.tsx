@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -38,10 +38,10 @@ export default function CategorySearch() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, router]);
+  }, [debouncedQuery, router, searchParams]);
 
   // Handle Submit 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
 
     const params = new URLSearchParams(searchParams.toString());
@@ -53,17 +53,17 @@ export default function CategorySearch() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  };
+  }, [query, router, searchParams]);
 
 
   // ✅ Clear
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setQuery("");
     const params = new URLSearchParams(searchParams.toString());
     params.delete("category");
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
-  };
+  }, [pathname, router, searchParams]);
 
   return (
     <form onSubmit={handleSubmit}

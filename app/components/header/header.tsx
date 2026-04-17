@@ -13,12 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import LoginRegisterBtn from './LoginRegisterBtn';
-
-interface NavigationItem {
-  label: string;
-  href: string;
-  icon: React.ElementType; 
-}
+import { NavigationItem } from '@/lib';
 
 const testData = {
   name: 'Peyal Hasan',

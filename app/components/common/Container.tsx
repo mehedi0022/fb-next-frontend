@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
+import { ContainerProps } from "@/lib"
 
-const Container = ({ children , className}: {children: ReactNode, className?: string}) => {
+const Container = ({ children , className}: ContainerProps) => {
 
     return (
         <section className={`max-w-6xl mx-auto px-5 ${className}`}>

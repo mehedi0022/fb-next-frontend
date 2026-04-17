@@ -4,9 +4,10 @@ import Image from "next/image";
 import CategorySearch from "./CategorySearch";
 import Title from "../common/Title";
 import CategoryCarousel from "../home/CategoryCarousel";
+import { SearchParamsProps } from "@/lib";
 
 interface CategoryListProps {
-  searchParams: { category?: string };
+  searchParams: SearchParamsProps;
   isCarousel?: boolean;
 }
 
