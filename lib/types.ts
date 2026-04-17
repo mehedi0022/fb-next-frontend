@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Product related types
 export type Price = {
   wholesale: number;   // supplier price

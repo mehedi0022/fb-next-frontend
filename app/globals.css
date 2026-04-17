@@ -44,3 +44,24 @@ body {
   /* Active state-e kono transition delay thakbe na */
   transition: width 0.3s ease-in-out !important;
 }
+
+/* Mobile responsive fixes for category carousel */
+@media (max-width: 640px) {
+  .category-carousel .slick-slide {
+    padding: 0 2px !important;
+  }
+  
+  .category-carousel .slick-list {
+    margin: 0 -2px !important;
+  }
+  
+  .category-carousel .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Ensure proper spacing on all devices */
+.category-carousel .slick-slide > div {
+  height: 100% !important;
+}

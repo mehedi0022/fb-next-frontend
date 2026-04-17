@@ -15,9 +15,9 @@ export default function ProductDetails({ product }: { product: Product }) {
   return (
     <div className="max-w-5xl mx-auto p-4 grid md:grid-cols-3 gap-6">
       {/* LEFT  */}
-      <div className="space-y-4 ">
+      <div className="space-y-4 border-2 rounded-xl border-gray-300">
         {/* Main Image */}
-        <div className="bg-gray-100 border-gray-100 border-2 rounded-xl overflow-hidden ">
+        <div className="bg-gray-100 border-gray-300 border-2 p-4 rounded-xl overflow-hidden">
           <Image
             src={gallery[active]}
             alt={product.title}
@@ -28,7 +28,7 @@ export default function ProductDetails({ product }: { product: Product }) {
         </div>
 
         {/* Thumbnails */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 p-4">
           {gallery.map((img: string, i: number) => (
             <Image
               key={i}
@@ -44,12 +44,14 @@ export default function ProductDetails({ product }: { product: Product }) {
           ))}
         </div>
 
+        <hr className="border-gray-300" />
+
         {/* Default YouTube Video */}
-        <div>
+        <div className="p-4">
           <h3 className="text-sm font-semibold mb-2">Product Video</h3>
 
           <iframe
-            className="w-full h-[180px] rounded-lg"
+            className="w-full h-[180px] rounded-lg border border-gray-300"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ"
             title="Product Video"
             allowFullScreen
@@ -58,7 +60,7 @@ export default function ProductDetails({ product }: { product: Product }) {
       </div>
 
       {/* RIGHT */}
-      <div className="border rounded-xl p-4 bg-white space-y-3 md:col-span-2">
+      <div className="border-2 border-gray-300 rounded-xl p-4 bg-white space-y-3 md:col-span-2">
         <h1 className="text-lg font-bold">{product.title}</h1>
 
         <p className="text-sm text-gray-500">Category: {product.category}</p>
