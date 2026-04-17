@@ -1,4 +1,4 @@
-import { Product } from "@/app/types/productTypes";
+import { Product, SearchParamsProps } from "@/lib";
 import React, { Suspense } from "react";
 import Container from "../common/Container";
 import Title from "../common/Title";
@@ -6,7 +6,7 @@ import SearchProduct from "./SearchProduct";
 import ProductCard from "./ProductCard";
 
 interface ProductsListProps {
-  searchParams: { product?: string };
+  searchParams: SearchParamsProps;
 }
 
 const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
@@ -73,7 +73,6 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
           .toLowerCase()
           .includes(searchText)
       );
-
   return (
     <section className="bg-ternary pt-10">
       <Container className="py-5">
@@ -92,7 +91,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
           </p>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6 mt-7">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6 mt-7">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

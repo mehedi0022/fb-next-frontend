@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Button, Tag } from "antd";
 import { Package } from "lucide-react";
-import { Product } from "@/app/types/productTypes";
+import { Product } from "@/lib";
+import Image from "next/image";
 
 export default function ProductDetails({ product }: { product: Product }) {
   const [active, setActive] = useState(0);
@@ -17,9 +18,11 @@ export default function ProductDetails({ product }: { product: Product }) {
       <div className="space-y-4 ">
         {/* Main Image */}
         <div className="bg-gray-100 border-gray-100 border-2 rounded-xl overflow-hidden ">
-          <img
+          <Image
             src={gallery[active]}
             alt={product.title}
+            width={400}
+            height={400}
             className="w-full aspect-square object-cover"
           />
         </div>
@@ -27,10 +30,12 @@ export default function ProductDetails({ product }: { product: Product }) {
         {/* Thumbnails */}
         <div className="flex gap-2">
           {gallery.map((img: string, i: number) => (
-            <img
+            <Image
               key={i}
               src={img}
               alt="thumb"
+              width={56}
+              height={56}
               onClick={() => setActive(i)}
               className={`w-14 h-14 object-cover cursor-pointer rounded-md border ${
                 active === i ? "border-blue-500" : "border-gray-300"

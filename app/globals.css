@@ -21,3 +21,26 @@ body {
 .font-tiro-bangla{
   font-family: var(--font-tiro-bangla);
 }
+
+
+
+
+/* স্লাইডারের সাধারণ (Inactive) ডট */
+.category-carousel .slick-dots li button {
+  background: #255ac4 !important; /* Initial Blue */
+  opacity: 0.4 !important; 
+  height: 8px !important;
+  width: 8px !important;
+  border-radius: 100px !important;
+  /* Color transition off rakhbo jate instant orange hoy */
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+}
+
+/* স্লাইডারের একটিভ (Active) ডট - সাথে সাথেই অরেঞ্জ হবে */
+.category-carousel .slick-dots li.slick-active button {
+  background: #be8a05 !important; /* Your Orange color */
+  opacity: 1 !important;
+  width: 24px !important;
+  /* Active state-e kono transition delay thakbe na */
+  transition: width 0.3s ease-in-out !important;
+}

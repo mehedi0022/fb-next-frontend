@@ -1,10 +1,11 @@
 import React from 'react'
-import ContactSection from '../components/contact/ContactSection'
+import { AboutUs, HowItWorks } from '@/lib'
 
 export default function page() {
   return (
     <div>
-      <ContactSection />
+      <AboutUs />
+      <HowItWorks />
     </div>
   )
 }

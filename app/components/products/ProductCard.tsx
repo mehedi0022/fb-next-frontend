@@ -1,14 +1,9 @@
-import { Product } from "@/app/types/productTypes";
+import { ProductCardProps } from "@/lib";
 import React from "react";
 import { Button } from "antd";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-
-interface ProductCardProps {
-  product: Product;
-  isLoggedIn: boolean;
-}
 
 export default function ProductCard({
   product,

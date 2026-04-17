@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function SearchProduct() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  const pathname = usePathname()
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,7 +42,7 @@ export default function SearchProduct() {
   }, [debouncedQuery, router, searchParams]);
 
   // Handle Submit 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
 
     const params = new URLSearchParams(searchParams.toString());
@@ -52,16 +54,17 @@ export default function SearchProduct() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
-  };
+  }, [query, router, searchParams]);
 
 
-  // ✅ Clear
-  const handleClear = () => {
+  // clear searchbox 
+  const handleClear = useCallback(() => {
     setQuery("");
     const params = new URLSearchParams(searchParams.toString());
     params.delete("product");
-    router.replace(`?${params.toString()}`, { scroll: false });
-  };
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [pathname, router, searchParams]);
 
   return (
     <form onSubmit={handleSubmit}

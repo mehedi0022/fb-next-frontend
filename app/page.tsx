@@ -1,15 +1,13 @@
 import { Suspense } from "react";
-import HowItWorks from "./components/about/HowItWorks";
-import CategoryList from "./components/categories/CategoryList";
-import Banner from "./components/home/Bannar";
-import SpecialFeatures from "./components/home/SpecialFeatures";
-import ProductsList from "./components/products/ProductsList";
+import { HowItWorks, CategoryList, Banner, SpecialFeatures, ProductsList, SearchParamsProps } from "@/lib";
 
-const HomePage = ({
+const HomePage = async ({
   searchParams,
 }: {
-  searchParams: { product?: string };
+  searchParams: Promise<SearchParamsProps> | SearchParamsProps;
 }) => {
+
+  const resolvedParams = await searchParams;
 
   return (
     <>
@@ -22,14 +20,14 @@ const HomePage = ({
       {/* Special Features */}
       <SpecialFeatures />
 
-   {/* ২. Category List  */}
+      {/* ২. Category List  */}
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
-        <CategoryList />
+        <CategoryList searchParams={resolvedParams} isCarousel={true} />
       </Suspense>
 
       {/* {/. Products Section /} */}
       <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
-        <ProductsList searchParams={searchParams} />
+        <ProductsList searchParams={resolvedParams} />
       </Suspense>
 
     </>

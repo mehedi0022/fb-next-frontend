@@ -1,7 +1,6 @@
 import React from 'react';
 import productsData from "@/public/assets/products.json";
-import { Product } from '@/app/types/productTypes';
-import ProductDetails from '@/app/components/products/productDetails';
+import { Product, ProductDetails } from '@/lib';
 import { Metadata } from 'next';
 
 // Product SEO
