@@ -105,7 +105,7 @@ export default function TwoFactorForm() {
         sessionStorage.removeItem('tempEmail');
         
         // Redirect to dashboard or home
-        router.push('/');
+        router.replace('/');
       } else {
         setError('ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।');
       }
