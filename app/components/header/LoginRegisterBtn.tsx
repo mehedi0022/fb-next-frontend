@@ -39,13 +39,8 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
         </Link>
       ) : (
         <div className={`flex ${isDrawer ? "flex-col w-full" : "flex-row"} gap-3`}>
-<<<<<<< HEAD
-          <Link href="/register" className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border">
-            <UserAddOutlined /> Register
-=======
           <Link href="/auth/register" className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border">
             <UserAddOutlined /> রেজিস্ট্রেশন
->>>>>>> b7dfbf1af3de6d5acb7d74af8e80b97a087980a8
           </Link>
 
           <Link href="/auth/login" className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border">
