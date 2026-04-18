@@ -83,11 +83,19 @@ export default function SignInForm() {
       
       // For demo purposes, simulate success
       if (formData.email && formData.password.length >= 6) {
-        // Store email in sessionStorage for 2FA page
-        sessionStorage.setItem('tempEmail', formData.email);
+        // Check if sessionStorage is available (mobile compatibility)
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+          sessionStorage.setItem('tempEmail', formData.email);
+        }
         
-        // Redirect to 2FA page
-        router.push('/login/two-factor');
+        // Redirect to 2FA page with proper error handling
+        try {
+          router.push('/login/two-factor');
+        } catch (routerError) {
+          console.error('Router error:', routerError);
+          // Fallback navigation
+          window.location.href = '/two-factor';
+        }
       } else {
         setErrors({ general: 'ভুল ইমেইল বা পাসওয়ার্ড' });
       }
