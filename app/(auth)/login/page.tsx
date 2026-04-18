@@ -1,8 +1,13 @@
+import { SignIn } from "@/lib";
+import { Metadata } from 'next';
 
-import React from 'react'
+export const metadata: Metadata = {
+  title: 'লগইন - Freelancer Bangladesh',
+  description: 'আপনার অ্যাকাউন্টে লগইন করুন এবং আমাদের সেবা উপভোগ করুন',
+};
 
 export default function LoginPage() {
   return (
-    <div>Login Page</div>
-  )
+    <SignIn />
+  );
 }

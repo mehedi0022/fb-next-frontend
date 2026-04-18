@@ -30,3 +30,9 @@ export { default as AboutUs } from '../app/components/about/AboutUs';
 
 // Contact components
 export { default as ContactSection } from '../app/components/contact/ContactSection';
+export { default as Field } from '../app/components/common/Field';
+
+// Auth components
+export { default as SignIn } from '../app/components/auth/SignIn';
+export { default as TwoFactorAuth } from '../app/components/auth/TwoFactorAuth';
+// export { default as SignUp } from '../app/components/auth/SignUp';

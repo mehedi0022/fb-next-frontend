@@ -44,3 +44,36 @@ body {
   /* Active state-e kono transition delay thakbe na */
   transition: width 0.3s ease-in-out !important;
 }
+
+/* Mobile responsive fixes for category carousel */
+@media (max-width: 640px) {
+  .category-carousel .slick-slide {
+    padding: 0 2px !important;
+  }
+  
+  .category-carousel .slick-list {
+    margin: 0 -2px !important;
+  }
+  
+  .category-carousel .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Ensure proper spacing on all devices */
+.category-carousel .slick-slide > div {
+  height: 100% !important;
+}
+
+
+/* global input filed design */
+.input {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg 
+  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+  outline-none transition;
+}
+
+.input-icon {
+  @apply absolute left-3 top-3.5 text-gray-400 w-5 h-5;
+}

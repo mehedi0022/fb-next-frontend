@@ -54,7 +54,7 @@ export default function Header(): JSX.Element {
                   className={`text-lg font-medium transition-all ${
                     isActive 
                       ? 'text-white border-b-2 border-secondary pb-1' 
-                      : 'text-white hover:text-ternary'
+                      : 'text-white hover:text-yellow-200'
                   }`}
                 >
                   {item.label}
@@ -109,7 +109,7 @@ export default function Header(): JSX.Element {
               <div className="p-5 flex items-center gap-3 border-b bg-gray-50">
                 {auth ? (
                   <Image
-                    className="rounded-full border-2 border-secondary"
+                    className="rounded-full border-2 border-blue-500"
                     src={testData.url}
                     width={60}
                     height={60}
