@@ -177,14 +177,6 @@ export default function TwoFactorForm() {
         </p>
       </div>
 
-      {/* Test Error Button - Remove after debugging */}
-      <button
-        type="button"
-        onClick={() => setError('টেস্ট এরর মেসেজ')}
-        className="w-full py-2 bg-red-500 text-white rounded-lg text-sm"
-      >
-        Test Error Message
-      </button>
 
       {/* Error Message */}
       {error && (

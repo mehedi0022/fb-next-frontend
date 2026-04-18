@@ -79,23 +79,14 @@ export default function SignInForm() {
       // Simulate API call for login
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      console.log('Login attempt:', formData);
       
       // For demo purposes, simulate success
       if (formData.email && formData.password.length >= 6) {
-        // Check if sessionStorage is available (mobile compatibility)
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-          sessionStorage.setItem('tempEmail', formData.email);
-        }
+        // Store email in sessionStorage for 2FA page
+        sessionStorage.setItem('tempEmail', formData.email);
         
-        // Redirect to 2FA page with proper error handling
-        try {
-          router.push('/login/two-factor');
-        } catch (routerError) {
-          console.error('Router error:', routerError);
-          // Fallback navigation
-          window.location.href = '/two-factor';
-        }
+        // Redirect to 2FA page
+        router.push('/login/two-factor');
       } else {
         setErrors({ general: 'ভুল ইমেইল বা পাসওয়ার্ড' });
       }
