@@ -39,4 +39,5 @@ export { default as PrivacyPolicy } from '../app/components/common/PrivacyPolicy
 // Auth components
 export { default as SignIn } from '../app/components/auth/SignIn';
 export { default as TwoFactorAuth } from '../app/components/auth/TwoFactorAuth';
-// export { default as SignUp } from '../app/components/auth/SignUp';
+export { default as RegisterForm } from '../app/components/auth/RegisterForm';
+

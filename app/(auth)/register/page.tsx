@@ -1,5 +1,4 @@
-import { Container } from "@/lib";
-import RegisterForm from "@/app/components/auth/RegisterForm";
+import { Container, RegisterForm } from "@/lib";
 
 export default function Register() {
   return (

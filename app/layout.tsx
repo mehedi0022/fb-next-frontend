@@ -50,17 +50,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
-        <body
-          className={`${tiroBangla.variable} ${poppins.variable} antialiased font-tiro`}
-        >
+      <body
+        className={`${tiroBangla.variable} ${poppins.variable} antialiased font-tiro`}
+      >
+        <Providers>
           <Header />
           <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">
             {children}
           </main>
           <Footer />
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }

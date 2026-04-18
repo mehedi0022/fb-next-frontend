@@ -10,7 +10,7 @@ interface FieldProps {
 }
 
 const Field: React.FC<FieldProps> = ({ label, children, htmlFor, error }) => {
-  const id = htmlFor || getChildId(children);
+  const id = htmlFor;
   
   return (
     <div className="flex flex-col space-y-1">
@@ -29,15 +29,6 @@ const Field: React.FC<FieldProps> = ({ label, children, htmlFor, error }) => {
       )}
     </div>
   );
-};
-
-const getChildId = (children: React.ReactNode): string | undefined => {
-  const child = React.Children.only(children as React.ReactElement);
-
-  if (child && typeof child === 'object' && 'props' in child && 'id' in child.props) {
-    return child.props.id;
-  }
-  return undefined;
 };
 
 export default Field;
