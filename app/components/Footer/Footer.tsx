@@ -15,7 +15,7 @@ const Footer = () => {
     const helperLinks = [
         { label: 'আমাদের সম্পর্কে', href: '/about' },
         { label: 'টার্মস এন্ড কন্ডিশন', href: '/terms-and-conditions' },
-        { label: 'গোপনীয়তা নীতি', href: '/privacy' },
+        { label: 'গোপনীয়তা নীতি', href: '/privacy-policy' },
     ];
 
     const quickLinks = [

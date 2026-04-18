@@ -32,6 +32,10 @@ export { default as AboutUs } from '../app/components/about/AboutUs';
 export { default as ContactSection } from '../app/components/contact/ContactSection';
 export { default as Field } from '../app/components/common/Field';
 
+// Terms and Conditions & Privacy Policy
+export { default as TermsAndConditions } from '../app/components/common/TermsAndConditions';
+export { default as PrivacyPolicy } from '../app/components/common/PrivacyPolicy';
+
 // Auth components
 export { default as SignIn } from '../app/components/auth/SignIn';
 export { default as TwoFactorAuth } from '../app/components/auth/TwoFactorAuth';
