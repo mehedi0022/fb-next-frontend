@@ -1,4 +1,4 @@
-import { Container, Title } from '@/lib';
+import { Container, Title } from '@/lib/home';
 import { Shield, Calendar, Mail, Globe, Lock, Eye, Users, FileText, AlertTriangle } from 'lucide-react';
 
 export default function PrivacyPolicy() {

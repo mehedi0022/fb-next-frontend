@@ -1,4 +1,4 @@
-import { TwoFactorAuth } from '@/components';
+import { TwoFactorAuth } from '@/components/home';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

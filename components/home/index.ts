@@ -1,6 +1,6 @@
 // About components
-export { default as AboutUs } from './about/AboutUs';
-export { default as HowItWorks } from './about/HowItWorks';
+export { default as AboutUs } from './user/about/AboutUs';
+export { default as HowItWorks } from './user/about/HowItWorks';
 
 // Auth components
 export { default as RegisterForm } from './auth/RegisterForm';

@@ -1,4 +1,4 @@
-import { ProductCardProps } from "@/lib";
+import { ProductCardProps } from "@/lib/home";
 import React from "react";
 import { Button } from "antd";
 import Link from "next/link";

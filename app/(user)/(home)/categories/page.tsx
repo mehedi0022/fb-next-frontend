@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
-import { CategoryList } from '@/components';
-import { SearchParamsProps } from '@/lib';
+import { CategoryList } from '@/components/home';
+import { SearchParamsProps } from '@/lib/home';
 
 export default function page({
   searchParams,

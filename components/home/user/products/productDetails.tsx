@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, Tag } from "antd";
 import { Package } from "lucide-react";
-import { Product } from "@/lib";
+import { Product } from "@/lib/home";
 import Image from "next/image";
 
 export default function ProductDetails({ product }: { product: Product }) {

@@ -1,4 +1,4 @@
-import { Container, RegisterForm } from "@/components";
+import { Container, RegisterForm } from "@/components/home";
 
 export default function Register() {
   return (

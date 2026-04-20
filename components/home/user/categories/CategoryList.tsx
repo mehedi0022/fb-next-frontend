@@ -4,7 +4,7 @@ import Image from "next/image";
 import CategorySearch from "./CategorySearch";
 import Title from "../../common/Title";
 import CategoryCarousel from "../home/CategoryCarousel";
-import { SearchParamsProps } from "@/lib";
+import { SearchParamsProps } from "@/lib/home";
 
 interface CategoryListProps {
   searchParams: SearchParamsProps;

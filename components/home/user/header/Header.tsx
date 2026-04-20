@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import LoginRegisterBtn from './LoginRegisterBtn';
-import { NavigationItem } from '@/lib';
+import { NavigationItem } from '@/lib/home';
 
 const testData = {
   name: 'Peyal Hasan',

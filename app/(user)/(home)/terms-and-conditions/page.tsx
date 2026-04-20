@@ -1,4 +1,4 @@
-import { TermsAndConditions } from '@/components';
+import { TermsAndConditions } from '@/components/home';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

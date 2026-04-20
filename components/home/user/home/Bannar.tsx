@@ -2,7 +2,7 @@ import Link from "next/link";
 import Container from "../../common/Container";
 import Image from "next/image";
 import { ArrowRight, LogIn } from "lucide-react";
-import {toBanglaNumber} from '@/lib'
+import {toBanglaNumber} from '@/lib/home'
 
 
 

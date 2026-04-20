@@ -1,6 +1,6 @@
 import React from 'react'
-import { ProductsList } from '@/components'
-import { SearchParamsProps } from '@/lib'
+import { ProductsList } from '@/components/home'
+import { SearchParamsProps } from '@/lib/home'
 
 export default function page({
   searchParams,

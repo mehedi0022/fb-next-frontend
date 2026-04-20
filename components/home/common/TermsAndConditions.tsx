@@ -1,4 +1,4 @@
-import { Container, Title } from '@/lib';
+import { Container, Title } from '@/lib/home';
 import { Shield, Clock, RefreshCw, CreditCard, Package, Mail, Globe } from 'lucide-react';
 
 export default function TermsAndConditions() {

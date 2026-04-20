@@ -1,7 +1,7 @@
 import React from 'react';
 import productsData from "@/public/assets/products.json";
-import { ProductDetails } from '@/components';
-import { Product } from '@/lib';
+import { ProductDetails } from '@/components/home';
+import { Product } from '@/lib/home';
 import { Metadata } from 'next';
 
 // Product SEO

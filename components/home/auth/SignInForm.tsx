@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Field } from '@/lib';
+import { Field } from '@/lib/home';
 import { Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react';
 
 interface FormData {

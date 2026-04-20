@@ -1,4 +1,4 @@
-import { ContainerProps } from "@/lib"
+import { ContainerProps } from "@/lib/home"
 
 const Container = ({ children , className}: ContainerProps) => {
 

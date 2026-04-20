@@ -1,4 +1,4 @@
-import { Container } from '@/lib';
+import { Container } from '@/lib/home';
 import { Shield, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import TwoFactorForm from './TwoFactorForm';

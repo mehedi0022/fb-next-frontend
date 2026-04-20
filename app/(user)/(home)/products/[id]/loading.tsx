@@ -1,4 +1,4 @@
-import ProductDetailsSkeleton from "@/components/user/products/ProductDetailsSkeleton";
+import ProductDetailsSkeleton from "@/components/home/user/products/ProductDetailsSkeleton";
 import React from "react";
 
 const loading = () => {

@@ -1,5 +1,5 @@
-import ProductCardSkeleton from "@/components/user/products/productCardSkeleton";
-import Container from "@/components/common/Container";
+import ProductCardSkeleton from "@/components/home/user/products/productCardSkeleton";
+import Container from "@/components/home/common/Container";
 // import { Package, Loader2 } from "lucide-react";
 
 export default function ProductsLoading() {

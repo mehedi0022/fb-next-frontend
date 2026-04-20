@@ -1,4 +1,4 @@
-import { Product, SearchParamsProps } from "@/lib";
+import { Product, SearchParamsProps } from "@/lib/home";
 import React, { Suspense } from "react";
 import Container from "../../common/Container";
 import Title from "../../common/Title";
