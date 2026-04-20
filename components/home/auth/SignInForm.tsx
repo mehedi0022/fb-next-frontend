@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setSession } from '@/appstore/slices/session-slice';
 import { Field } from '@/lib/home';
 import { Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react';
+import Link from 'next/link';
 
 interface FormData {
   email: string;
@@ -18,6 +21,7 @@ interface FormErrors {
 
 export default function SignInForm() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
@@ -70,28 +74,69 @@ export default function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    console.log('Form submitted');
+    console.log('Form Data:', formData);
+    console.log('Email:', formData.email);
+    console.log('Password:', formData.password);
+    
+    if (!validateForm()) {
+      console.log('Validation failed');
+      return;
+    }
 
     setIsLoading(true);
     setErrors({});
 
     try {
-      // Simulate API call for login
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const requestBody = {
+        email: formData.email,
+        password: formData.password,
+      };
       
+      console.log('Request Body:', requestBody);
+      console.log('API URL:', `${process.env.NEXT_PUBLIC_API_URL}/auth/login`);
       
-      // For demo purposes, simulate success
-      if (formData.email && formData.password.length >= 6) {
-        // Store email in sessionStorage for 2FA page
-        sessionStorage.setItem('tempEmail', formData.email);
-        
-        // Redirect to 2FA page
-        router.push('/login/two-factor');
-      } else {
-        setErrors({ general: 'ভুল ইমেইল বা পাসওয়ার্ড' });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      if (!response.ok) {
+        setErrors({ general: data.message || 'ভুল ইমেইল বা পাসওয়ার্ড' });
+        return;
       }
+
+      // Check if OTP is required (2FA)
+      if (data.message === 'OTP sent to email') {
+        sessionStorage.setItem('tempEmail', formData.email);
+        router.push('/login/two-factor');
+        return;
+      }
+
+      // If login successful, cookies are already set by backend
+      // Update Redux store (optional, if you need user data in state)
+      if (data.user) {
+        dispatch(setSession({
+          data: {
+            user: data.user,
+          },
+          status: 'authenticated',
+        }));
+      }
+
+      // Redirect to home
+      router.push('/');
       
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error);
       setErrors({ general: 'লগইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।' });
     } finally {
       setIsLoading(false);
@@ -160,7 +205,7 @@ export default function SignInForm() {
         </div>
       </Field>
 
-      {/* Remember Me */}
+      {/* Remember Me & Forgot Password */}
       <div className="flex items-center justify-between">
         <label className="flex items-center">
           <input
@@ -170,6 +215,12 @@ export default function SignInForm() {
           />
           <span className="ml-2 text-sm text-gray-600">আমাকে মনে রাখুন</span>
         </label>
+        <Link 
+          href="/auth/forgot-password" 
+          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+        >
+          পাসওয়ার্ড ভুলে গেছেন?
+        </Link>
       </div>
 
       {/* Submit Button */}

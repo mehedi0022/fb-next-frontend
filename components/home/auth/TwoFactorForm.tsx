@@ -119,29 +119,32 @@ export default function TwoFactorForm() {
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp: otpString }),
+      });
 
-      // For demo purposes, accept any 6-digit code
-      if (otpString.length === 6) {
-        // Clear session storage safely
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-          sessionStorage.removeItem('tempEmail');
-        }
+      if (!response.ok) {
+        throw new Error('OTP verification failed');
+      }
 
-        // Redirect to dashboard or home with error handling
-        try {
-          router.replace('/');
-        } catch {
-          // Fallback navigation
-          window.location.href = '/';
-        }
-      } else {
-        setError('ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।');
+      const data = await response.json();
+
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        sessionStorage.removeItem('tempEmail');
+      }
+
+      try {
+        router.replace('/');
+      } catch {
+        window.location.href = '/';
       }
 
     } catch {
-      setError('যাচাইকরণে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+      setError('ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।');
     } finally {
       setIsLoading(false);
     }

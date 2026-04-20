@@ -96,7 +96,6 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
             <ProductCard
               key={product.id}
               product={product}
-              isLoggedIn={true}
             />
           ))}
 
