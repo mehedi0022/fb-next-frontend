@@ -8,4 +8,4 @@ export * from './types';
 export * from './constants';
 
 // Components
-export * from './components';
+export * from '../components';

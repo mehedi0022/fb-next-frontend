@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { HowItWorks, CategoryList, Banner, SpecialFeatures, ProductsList, SearchParamsProps } from "@/lib";
+import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures, ProductsList } from "@/components";
+import { SearchParamsProps } from "@/lib";
 
 const HomePage = async ({
   searchParams,
