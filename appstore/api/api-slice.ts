@@ -24,7 +24,7 @@ const baseQueryWithLogout: typeof rawBaseQuery = async (
   extraOptions,
 ) => {
   const result = await rawBaseQuery(args, api, extraOptions);
-
+  
   const status = result?.error?.status;
   if (status === 401) {
     // Ensures the user is signed out when the session is invalid or forbidden

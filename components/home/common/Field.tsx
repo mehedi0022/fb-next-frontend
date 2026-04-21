@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
 interface FieldProps {
   label?: string;
   children: React.ReactNode;
   htmlFor?: string;
   error?: {
-    message: string;
+    message?: string;
   };
 }
 
 const Field: React.FC<FieldProps> = ({ label, children, htmlFor, error }) => {
   const id = htmlFor;
-  
+
   return (
     <div className="flex flex-col space-y-1">
       {label && (
@@ -19,10 +19,12 @@ const Field: React.FC<FieldProps> = ({ label, children, htmlFor, error }) => {
           {label}
         </label>
       )}
-      <div className={`${error ? 'border-red-500 border-2 rounded-lg' : ''}  `}>
+      <div
+        className={`${error && error.message ? "border-red-500 border-2 rounded-lg" : ""}  `}
+      >
         {children}
       </div>
-      {error && (
+      {error && error.message && (
         <div role="alert" className="text-red-500 text-sm">
           {error.message}
         </div>
