@@ -2,7 +2,7 @@ import { Container, RegisterForm } from "@/lib";
 
 export default function Register() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
       <Container>
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
           
