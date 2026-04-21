@@ -20,6 +20,14 @@ const nextConfig = {
             },
         ],
     },
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'https://demoapi.save71.com/api/v1/:path*',
+            },
+        ];
+    },
 };
 
 export default nextConfig;
