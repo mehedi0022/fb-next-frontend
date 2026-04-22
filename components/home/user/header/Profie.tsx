@@ -2,86 +2,80 @@
 
 import React from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Dropdown } from 'antd';
-import type { MenuProps } from 'antd';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useLogoutMutation } from '@/appstore/api/authApi';
+import { useAppDispatch, useAppSelector } from '@/appstore/hooks/hooks';
+import { clearSession, selectIsAuthenticated, selectUser } from '@/appstore/slices/sessionSlice';
 
 type Props = {
   open: boolean;
+  onClose: () => void;
 };
 
-const testData = {
-  name: 'Peyal Hasan',
-  url: 'https://avatars.githubusercontent.com/u/155246181?v=4'
-};
-const auth = true;
-
-const Profile = ({ open }: Props) => {
+const Profile = ({ open, onClose }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [logout] = useLogoutMutation();
+  const user = useAppSelector(selectUser);
+  const auth = useAppSelector(selectIsAuthenticated);
 
-  // Logout handler 
-  const handleLogout = () => {
-    // Remove access token 
-    localStorage.removeItem('accessToken');
-    
-    // Redirect to login page
-    router.push('/auth/login');
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      dispatch(clearSession());
+      onClose();
+      router.push('/login');
+    }
   };
 
-  
-  const items: MenuProps['items'] = [
-    {
-      key: 'profile-header',
-      label: (
-        <div className="p-2 flex items-center gap-3 border-b bg-gray-50 -m-1 mb-1 rounded-t-md">
-          {auth ? (
-            <Image
-              className="rounded-full border-2 border-secondary"
-              src={testData.url}
-              width={40}
-              height={40}
-              alt={testData.name}
-            />
-          ) : (
-            <UserOutlined className="text-2xl text-gray-400" />
-          )}
+  if (!open) return null;
 
+  return (
+    <div className="w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+      
+      {/* User Info */}
+      <div className="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+            <UserOutlined className="text-white text-base" />
+          </div>
           {auth && (
-            <div>
-              <p className="font-semibold leading-tight text-black">{testData.name}</p>
-              <p className="text-xs text-gray-500">User</p>
+            <div className="overflow-hidden">
+              <p className="text-white font-semibold text-sm truncate">
+                {user?.name ?? user?.email}
+              </p>
+              <p className="text-blue-100 text-xs truncate capitalize">
+                {user?.role?.replace('_', ' ')}
+              </p>
             </div>
           )}
         </div>
-      ),
-      disabled: true,
-    },
-    {
-      key: '2',
-      label: 'Settings',
-      icon: <SettingOutlined />,
-    },
-    { type: 'divider' },
-    {
-      key: '3',
-      label: 'Logout',
-      icon: <LogoutOutlined />,
-      danger: true,
-      onClick: handleLogout, 
-    },
-  ];
+      </div>
 
-  return (
-    <Dropdown
-      menu={{ items }}
-      open={open}
-      trigger={['click']}
-      placement="bottomRight"
-      overlayClassName="min-w-[200px]"
-    >
-     
-    </Dropdown>
+      {/* Menu Items */}
+      <div className="py-1">
+        <button
+          onClick={() => { router.push('/settings'); onClose(); }}
+          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <SettingOutlined className="text-gray-400" />
+          <span>Settings</span>
+        </button>
+
+        <div className="mx-3 border-t border-gray-100 my-1" />
+
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+        >
+          <LogoutOutlined />
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
   );
 };
 

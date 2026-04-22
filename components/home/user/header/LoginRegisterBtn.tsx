@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   DashboardOutlined,
   LoginOutlined,
@@ -19,6 +19,19 @@ type Props = {
 const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
   const isDrawer = from === "drawer";
   const [open, setOpen] = useState(false);
+  const dropDownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutSide = (e: MouseEvent) => {
+      if (dropDownRef.current && !dropDownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutSide);
+
+    return () => document.removeEventListener('mousedown', handleClickOutSide);
+  }, []);
 
   return (
     <div
@@ -63,16 +76,18 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
       {!isDrawer && auth && (
         <div
           className="relative"
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          ref={dropDownRef}
         >
-          <button className="p-2 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all">
+          <button 
+            onClick={() => setOpen(prev => !prev)}
+            className="p-2 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all"
+          >
             <UserOutlined className="text-white text-xl" />
           </button>
 
           {/* PROFILE DROPDOWN */}
           <div className="absolute right-0 top-full pt-2">
-            <Profile open={open} />
+            <Profile open={open} onClose={() => setOpen(false)} />
           </div>
         </div>
       )}

@@ -1,12 +1,12 @@
-import Link from "next/link";
 import Container from "../../common/Container";
 import Image from "next/image";
-import { ArrowRight, LogIn } from "lucide-react";
 import {toBanglaNumber} from '@/lib/home'
+import BannarLoginRegLink from "./BannarLoginRegLink";
 
 
 
 const Banner = () => {
+  
   return (
     <section className="bg-ternary py-2 md:py-4 lg:py-8 overflow-hidden">
       <Container>
@@ -29,23 +29,7 @@ const Banner = () => {
               করুন Freelancer Bangladesh এর মাধ্যমে! আজই শুরু করুন আপনার উদ্যোক্তা হওয়ার যাত্রা।
             </p>
 
-            <div className="flex flex-wrap gap-6 justify-center md:justify-start pt-2">
-
-              <Link href="/register">
-                <button className="flex items-center btn-secondary border">
-                  রেজিস্ট্রেশন করুন
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              </Link>
-
-              <Link href="/login">
-                <button className="flex items-center btn-secondary border">
-                  লগইন করুন
-                  <LogIn className="w-5 h-5 " />
-                </button>
-              </Link>
-            </div>
-
+            <BannarLoginRegLink />
 
             <div className="pt-5 flex items-center gap-3 text-sm text-neutral-00 tracking-wide">
 
