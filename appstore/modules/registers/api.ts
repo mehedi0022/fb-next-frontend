@@ -3,10 +3,10 @@ import { apiSlice } from "@/appstore/api/api-slice";
 const registerApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation({
-      query: (data) => ({
-        url: "/register",
+      query: (userData) => ({
+        url: "/auth/register",
         method: "POST",
-        body: data,
+        body: userData,
       }),
     }),
   }),
