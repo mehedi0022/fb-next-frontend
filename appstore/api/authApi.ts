@@ -38,7 +38,10 @@ export const authApi = baseApi.injectEndpoints({
 
     // get current user
     checkMe: builder.query<{ user: any }, void>({
-      query: () => "/auth/check-me",
+      query: () =>({
+        url: "/auth/check-me",
+        method: "GET"
+      })
     }),
 
     // logout

@@ -38,11 +38,7 @@ export default function TwoFactorAuth() {
             <TwoFactorForm />
 
             {/* Footer */}
-            <div className="mt-8 text-center space-y-4">
-              <button className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors">
-                কোড পুনরায় পাঠান
-              </button>
-              
+            <div className="mt-8 text-center">
               <div className="flex items-center justify-center">
                 <Link 
                   href="/login" 

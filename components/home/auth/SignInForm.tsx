@@ -93,11 +93,11 @@ export default function SignInForm() {
 
       // ✅ If backend directly logs in (optional case)
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
-
+      const error = err as { data?: { message?: string } };
       setErrors({
-        general: err?.data?.message || "ভুল ইমেইল বা পাসওয়ার্ড",
+        general: error?.data?.message || "ভুল ইমেইল বা পাসওয়ার্ড",
       });
     } finally {
       setIsLoading(false);
