@@ -1,5 +1,10 @@
 import { Container, RegisterForm } from "@/components/home";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "রেজিস্ট্রেশন - Freelancer Bangladesh",
+  description: "নতুন অ্যাকাউন্ট তৈরি করুন এবং আমাদের সেবা উপভোগ করুন",
+};
 export default function Register() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">

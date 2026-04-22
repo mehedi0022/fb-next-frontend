@@ -1,6 +1,6 @@
-import { apiSlice } from "@/appstore/api/api-slice";
+import { baseApi } from "@/appstore/api/baseApi";
 
-const batchApi = apiSlice.injectEndpoints({
+const batchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getBatches: builder.query({
       query: () => "/batch",

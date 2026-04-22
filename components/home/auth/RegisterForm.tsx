@@ -22,10 +22,10 @@ import {
   Users,
 } from "lucide-react";
 import { useGetBranchesQuery } from "@/appstore/modules/branch/api";
-import { useGetBatchesQuery } from "@/appstore/modules/batch/api";
 import Link from "next/link";
 import { useRegisterUserMutation } from "@/appstore/modules/registers/api";
 import { toast } from "react-toastify";
+import { BatchInBranch, Branch } from "../../../lib/home/types";
 
 // ==================== TYPES ====================
 interface FormData {
@@ -140,9 +140,9 @@ function getPasswordStrength(password: string) {
 export default function RegisterForm() {
   const router = useRouter();
   const { data: branches, isError: branchesError } = useGetBranchesQuery();
-  const { data: batches, isError: batchesError } = useGetBatchesQuery();
-  const [registerUser] =
-    useRegisterUserMutation();
+  const [registerUser] = useRegisterUserMutation();
+
+  console.log({ branches, branchesError });
 
   const {
     register,
@@ -158,6 +158,17 @@ export default function RegisterForm() {
 
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
+
+  // map branch
+  const branchMap = useMemo(() => {
+    if (!branches?.branches) return new Map();
+
+    return new Map(branches.branches.map((b) => [b.id, b]));
+  }, [branches]);
+
+  // watch branchId
+  const branchesId = watch("branchId");
+  const selectedBranch = branchMap.get(Number(branchesId));
 
   const passwordStrength = useMemo(
     () => getPasswordStrength(password || ""),
@@ -198,15 +209,19 @@ export default function RegisterForm() {
 
         router.push("/login?registered=true");
       } else {
+        
+        const errorMessage =
+          result?.error && "data" in result.error
+            ? (result.error.data as { message?: string })?.message
+            : undefined;
+
         toast.error(
-          result?.error?.data?.message ||
-            "রেজিস্ট্রেশনে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+          errorMessage || "রেজিস্ট্রেশনে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
         );
 
         setError("agreeToTerms", {
           message:
-            result?.error?.data?.message ||
-            "রেজিস্ট্রেশনে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+            errorMessage || "রেজিস্ট্রেশনে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
         });
       }
 
@@ -374,7 +389,7 @@ export default function RegisterForm() {
               disabled={isLoading || branchesError}
             >
               <option value="">ব্রাঞ্চ নির্বাচন করুন</option>
-              {branches?.branches.map((branch: any) => (
+              {branches?.branches.map((branch: Branch) => (
                 <option key={branch.id} value={branch.id}>
                   {branch.branchName}
                 </option>
@@ -388,23 +403,30 @@ export default function RegisterForm() {
           label="ব্যাচ নির্বাচন *"
           error={{
             message:
-              errors.batchId?.message ||
-              (batchesError ? "ব্যাচ লোড করতে সমস্যা হয়েছে" : undefined),
+              errors.batchId?.message || (branchesError ? "" : undefined),
           }}
         >
           <div className="relative">
             <Users className="input-icon" />
             <select
               {...register("batchId", { required: "ব্যাচ নির্বাচন করুন" })}
-              className={`input !pl-10 ${errors.batchId || batchesError ? "border-red-500" : ""}`}
-              disabled={isLoading || batchesError}
+              className={`input !pl-10 ${errors.batchId || branchesError ? "border-red-500" : ""}`}
+              disabled={isLoading || branchesError}
             >
               <option value="">ব্যাচ নির্বাচন করুন</option>
-              {batches?.data.map((batch: any) => (
-                <option key={batch.id} value={batch.id}>
-                  {batch.batchName}
+
+              {!selectedBranch && (
+                <option value="" disabled>
+                  প্রথমে ব্রাঞ্চ নির্বাচন করুন
                 </option>
-              ))}
+              )}
+
+              {selectedBranch &&
+                selectedBranch?.batches?.map((batch: BatchInBranch) => (
+                  <option key={batch.id} value={batch.id}>
+                    {batch.batchName}
+                  </option>
+                ))}
             </select>
           </div>
         </Field>

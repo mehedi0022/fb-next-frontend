@@ -1,6 +1,6 @@
-import { apiSlice } from "@/appstore/api/api-slice";
+import { baseApi } from "@/appstore/api/baseApi";
 
-const registerApi = apiSlice.injectEndpoints({
+const registerApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({

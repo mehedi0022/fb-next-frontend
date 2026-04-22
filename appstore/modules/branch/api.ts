@@ -1,8 +1,14 @@
-import { apiSlice } from "@/appstore/api/api-slice";
+import { baseApi } from "@/appstore/api/baseApi";
+import { Branch } from "@/lib/home/types";
 
-const branchApi = apiSlice.injectEndpoints({
+interface BranchResponse {
+  success: boolean;
+  branches: Branch[];
+}
+
+const branchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getBranches: builder.query({
+    getBranches: builder.query<BranchResponse, void>({
       query: () => "/branch",
     }),
 

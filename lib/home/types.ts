@@ -45,3 +45,26 @@ export interface ContainerProps {
   children: React.ReactNode;
   className?: string;
 }
+
+export interface BatchInBranch {
+  id: number;
+  batchName: string;
+  branchId: number;
+  maxStudents: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    users: number;
+  };
+}
+
+export interface Branch {
+  id: number;
+  branchName: string;
+  branchDescription: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  batches: BatchInBranch[];
+}
