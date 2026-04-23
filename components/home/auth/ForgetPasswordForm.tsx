@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
 import { Field } from '@/lib/home';
 import { Mail, ArrowLeft, Send } from 'lucide-react';
 import Link from 'next/link';
@@ -16,7 +15,6 @@ interface FormErrors {
 }
 
 export default function ForgetPasswordForm() {
-  // const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     email: ''
   });

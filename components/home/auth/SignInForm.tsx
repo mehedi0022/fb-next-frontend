@@ -95,9 +95,9 @@ export default function SignInForm() {
       router.push("/");
     } catch (err: unknown) {
       console.error("Login error:", err);
-
+      const error = err as { data?: { message?: string } };
       setErrors({
-        general: err instanceof Error ? err.message : "ভুল ইমেইল বা পাসওয়ার্ড",
+        general: error?.data?.message || "ভুল ইমেইল বা পাসওয়ার্ড",
       });
     } finally {
       setIsLoading(false);

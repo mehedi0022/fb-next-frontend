@@ -1,12 +1,12 @@
-import { baseApi } from "@/appstore/api/baseApi";
+// import { apiSlice } from "@/appstore/api/api-slice";
 
-export const productsApi = baseApi.injectEndpoints({
-  overrideExisting: true,
-  endpoints: (build) => ({
-    getProducts: build.query<unknown, string | void>({
-      query: () => `/assets/products.json`,
-    }),
-  }),
-});
+// export const productsApi = apiSlice.injectEndpoints({
+//   overrideExisting: true,
+//   endpoints: (build) => ({
+//     getProducts: build.query<any, string | void>({
+//       query: (queryStr) => `/assets/products.json`,
+//     }),
+//   }),
+// });
 
-export const { useGetProductsQuery } = productsApi;
+// export const { useGetProductsQuery } = productsApi;

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { z } from "zod";
-import { useVerifyOtpMutation } from "@/appstore/api/authApi";
+import { useVerifyOtpMutation, useResendOtpMutation } from "@/appstore/api/authApi";
 
 // Zod validation schemas for regex patterns
 const singleDigitSchema = z
@@ -23,6 +23,7 @@ export default function TwoFactorForm() {
   const [timeLeft, setTimeLeft] = useState(300);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [verifyOtp] = useVerifyOtpMutation();
+  const [resendOtp] = useResendOtpMutation();
 
   // Get email from sessionStorage
   useEffect(() => {
@@ -144,14 +145,15 @@ export default function TwoFactorForm() {
 
   // Resend code
   const handleResendCode = async () => {
-    setTimeLeft(600); // Reset timer
+    setTimeLeft(300);
     setError("");
     setOtp(["", "", "", "", "", ""]);
-
-    // Focus first input
     inputRefs.current[0]?.focus();
-
-    // Here you would make API call to resend code
+    try {
+      await resendOtp({ email }).unwrap();
+    } catch {
+      setError("কোড পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    }
   };
 
   return (
@@ -179,13 +181,6 @@ export default function TwoFactorForm() {
         <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
-        </div>
-      )}
-
-      {/* Debug Error Display */}
-      {error && (
-        <div className="text-xs text-gray-500 text-center">
-          Debug: &ldquo;{error}&rdquo;
         </div>
       )}
 
