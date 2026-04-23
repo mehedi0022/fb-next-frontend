@@ -3,14 +3,42 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: 54 116 181;   /* #3674b5 */
-  --color-secondary: 247 86 5;   /* #f75605 */
-  --color-ternary: 229 237 228;  /* #e5ede4 */
+  --color-primary: 54 116 181;
+  /* #3674b5 */
+  --color-secondary: 247 86 5;
+  /* #f75605 */
+  --color-ternary: 229 237 228;
+  /* #e5ede4 */
+  --sidebar-bg: #f5f5f0;
+  --sidebar-width: 220px;
+  --white: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --input-border: #d1d5db;
+  --accent: #0f766e;
+  /* teal-700 */
+  --accent-dark: #134e4a;
+  --nav-active-bg: #1a1a1a;
+  --nav-active-text: #ffffff;
+  --nav-hover-bg: #e8e8e3;
+  --finance-grad-from: #0f766e;
+  --finance-grad-to: #155e75;
+  --finance-text: #ffffff;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --card-radius: 10px;
+  --page-bg: #f0f0ea;
+  --font-main: "DM Sans", sans-serif;
+  --font-mono: "DM Mono", monospace;
 }
-.btn-primary{
-  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-lg transition h-12 
+
+.btn-primary {
+  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
 }
-.btn-secondary{
+
+.btn-secondary {
   @apply px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
 }
 
@@ -18,7 +46,7 @@ body {
   font-family: var(--font-poppins), var(--font-tiro-bangla);
 }
 
-.font-tiro-bangla{
+.font-tiro-bangla {
   font-family: var(--font-tiro-bangla);
 }
 
@@ -27,8 +55,9 @@ body {
 
 /* স্লাইডারের সাধারণ (Inactive) ডট */
 .category-carousel .slick-dots li button {
-  background: #255ac4 !important; /* Initial Blue */
-  opacity: 0.4 !important; 
+  background: #255ac4 !important;
+  /* Initial Blue */
+  opacity: 0.4 !important;
   height: 8px !important;
   width: 8px !important;
   border-radius: 100px !important;
@@ -38,7 +67,8 @@ body {
 
 /* স্লাইডারের একটিভ (Active) ডট - সাথে সাথেই অরেঞ্জ হবে */
 .category-carousel .slick-dots li.slick-active button {
-  background: #be8a05 !important; /* Your Orange color */
+  background: #be8a05 !important;
+  /* Your Orange color */
   opacity: 1 !important;
   width: 24px !important;
   /* Active state-e kono transition delay thakbe na */
@@ -50,11 +80,11 @@ body {
   .category-carousel .slick-slide {
     padding: 0 2px !important;
   }
-  
+
   .category-carousel .slick-list {
     margin: 0 -2px !important;
   }
-  
+
   .category-carousel .slick-track {
     display: flex !important;
     align-items: stretch !important;
@@ -62,18 +92,659 @@ body {
 }
 
 /* Ensure proper spacing on all devices */
-.category-carousel .slick-slide > div {
+.category-carousel .slick-slide>div {
   height: 100% !important;
 }
 
 
 /* global input filed design */
 .input {
-  @apply w-full px-4 py-3 border border-gray-300 rounded-lg 
-  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-  outline-none transition;
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition;
 }
 
 .input-icon {
   @apply absolute left-3 top-3.5 text-gray-400 w-5 h-5;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap");
+
+/* ─── CSS Variables ──────────────────────────────────────────────────────────── */
+
+/* ─── Reset ──────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ─── App Shell ───────────────────────────────────────────────────────────────── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.portal-box {
+  padding: 16px 14px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.portal-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.portal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.portal-info li {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.info-label {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* ─── Nav Menu ────────────────────────────────────────────────────────────────── */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  flex: 1;
+}
+
+.nav-item {
+  display: block;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-item:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+}
+
+.nav-item--active {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+  font-weight: 600;
+}
+
+.nav-item--active:hover {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+}
+
+/* ─── Main Area ───────────────────────────────────────────────────────────────── */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--page-bg);
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────────────── */
+.dash-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dash-header__left {
+  min-width: 160px;
+}
+
+.dash-header__section {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.dash-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.dash-header__search {
+  flex: 1;
+  max-width: 320px;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.dash-header__user {
+  margin-left: auto;
+  text-align: right;
+}
+
+.dash-header__welcome {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dash-header__welcome strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.dash-header__since {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ─── Main Content ────────────────────────────────────────────────────────────── */
+.main-content {
+  padding: 20px 24px;
+  flex: 1;
+}
+
+/* ─── Dashboard Page ──────────────────────────────────────────────────────────── */
+.page-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ─── Date Filter ─────────────────────────────────────────────────────────────── */
+.date-filter {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 14px 18px;
+  box-shadow: var(--card-shadow);
+}
+
+.date-filter__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-filter__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.date-filter__input {
+  padding: 7px 10px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  min-width: 140px;
+  transition: border-color 0.15s;
+}
+
+.date-filter__input:focus {
+  border-color: var(--accent);
+}
+
+.date-filter__btn {
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.15s, background 0.15s;
+  height: 36px;
+}
+
+.date-filter__btn--load {
+  background: var(--nav-active-bg);
+  color: var(--white);
+}
+
+.date-filter__btn--load:hover {
+  opacity: 0.85;
+}
+
+.date-filter__btn--reset {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+}
+
+.date-filter__btn--reset:hover {
+  background: var(--nav-hover-bg);
+}
+
+/* ─── Finance Banner ──────────────────────────────────────────────────────────── */
+.finance-banner {
+  background: linear-gradient(135deg, var(--finance-grad-from), var(--finance-grad-to));
+  border-radius: var(--card-radius);
+  padding: 20px 22px;
+  color: var(--finance-text);
+  position: relative;
+  box-shadow: 0 4px 16px rgba(15, 118, 110, 0.25);
+}
+
+.finance-banner__details-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.finance-banner__details-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.finance-banner__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.finance-banner__row--sub {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.finance-col__label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  opacity: 0.75;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.finance-col__amount {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-family: var(--font-mono);
+}
+
+.finance-col__amount--negative {
+  color: #fca5a5;
+}
+
+.finance-col__sub-amount {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.finance-col--right {
+  text-align: right;
+}
+
+.finance-col--center {
+  text-align: center;
+}
+
+/* ─── Stat Cards Grid ─────────────────────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+/* ─── Stat Card ───────────────────────────────────────────────────────────────── */
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.stat-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-card__icon {
+  font-size: 15px;
+}
+
+.stat-card__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.stat-card__badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+  padding: 2px 9px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.stat-card__amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+.stat-card__sub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.stat-card__sub-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.stat-card__breakdown {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 0;
+  margin-top: 2px;
+  text-align: left;
+  transition: opacity 0.15s;
+}
+
+.stat-card__breakdown:hover {
+  opacity: 0.7;
+}
+
+/* ─── Profile Page ────────────────────────────────────────────────────────────── */
+.page-inner {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.profile-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--finance-grad-from), var(--finance-grad-to));
+  color: var(--white);
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.profile-since {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.profile-fields {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.profile-field__label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.profile-field__value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ─── Placeholder Page ────────────────────────────────────────────────────────── */
+.placeholder-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 420px;
+}
+
+.placeholder-icon {
+  font-size: 40px;
+  margin-bottom: 14px;
+}
+
+.placeholder-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.placeholder-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Tailwind badge colors ───────────────────────────────────────────────────── */
+.bg-green-500 {
+  background-color: #22c55e;
+}
+
+.bg-teal-500 {
+  background-color: #14b8a6;
+}
+
+.bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.bg-orange-400 {
+  background-color: #fb923c;
+}
+
+.bg-red-500 {
+  background-color: #ef4444;
+}
+
+.bg-gray-500 {
+  background-color: #6b7280;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 180px;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .finance-col__amount {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    display: none;
+  }
+
+  .dash-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .main-content {
+    padding: 14px;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
 }

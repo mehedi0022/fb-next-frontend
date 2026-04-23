@@ -10,7 +10,9 @@ export { default as TwoFactorAuth } from './auth/TwoFactorAuth';
 export { default as TwoFactorForm } from './auth/TwoFactorForm';
 
 // Common components
+export { default as AuthStatus } from './common/AuthStatus';
 export { default as Container } from './common/Container';
+export { default as ErrorBoundary } from './common/ErrorBoundary';
 export { default as Field } from './common/Field';
 export { default as PrivacyPolicy } from './common/PrivacyPolicy';
 export { default as TermsAndConditions } from './common/TermsAndConditions';
@@ -44,3 +46,11 @@ export { default as ProductDetails } from './user/products/productDetails';
 export { default as ProductDetailsSkeleton } from './user/products/ProductDetailsSkeleton';
 export { default as ProductsList } from './user/products/ProductsList';
 export { default as SearchProduct } from './user/products/SearchProduct';
+
+// Dashboard components
+export { default as Sidebar } from './user/dashboard/sidebar/Sidebar';
+export { default as DashboardHeader } from './user/dashboard/header/Header';
+export { default as FinanceBanner } from './user/dashboard/dashboard/FinanceBanner';
+export { default as StatCardsGrid } from './user/dashboard/dashboard/StatCardsGrid';
+export { default as DateFilterBar } from './user/dashboard/dashboard/DateFilterBar';
+export { default as PlaceholderPage } from './user/dashboard/PlaceholderPage';

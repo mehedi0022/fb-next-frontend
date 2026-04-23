@@ -44,7 +44,7 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
       {/* AUTH */}
       {auth ? (
         <Link
-          href="/dashboard"
+          href="/dashboard/dashboard"
           className="btn-primary bg-black/80 text-white flex items-center gap-2 w-full justify-center py-2 px-4 rounded"
         >
           <DashboardOutlined />
