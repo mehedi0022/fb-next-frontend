@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures, ProductsList } from "@/components/home";
 import { SearchParamsProps } from "@/lib/home";
-import CheckMeDebug from "@/components/home/auth/CheckMeDebug";
 
 const HomePage = async ({
   searchParams,
@@ -13,7 +12,6 @@ const HomePage = async ({
 
   return (
     <>
-      <CheckMeDebug />
       {/* Hero Section */}
       <Banner />
 

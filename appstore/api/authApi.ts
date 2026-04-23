@@ -16,7 +16,7 @@ export const authApi = baseApi.injectEndpoints({
 
     // verify OTP
     verifyOtp: builder.mutation<
-      { user: any },
+      { message: string },
       { email?: string; phone?: string; otp: string }
     >({
       query: (body) => ({
@@ -37,11 +37,12 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     // get current user
-    checkMe: builder.query<{ user: any }, void>({
-      query: () =>({
+    checkMe: builder.query<{ user: unknown }, void>({
+      query: () => ({
         url: "/auth/check-me",
         method: "GET"
-      })
+      }),
+      providesTags: ["User"],
     }),
 
     // logout

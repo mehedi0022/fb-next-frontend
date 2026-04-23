@@ -5,10 +5,12 @@ import { Button, Tag } from "antd";
 import { Package } from "lucide-react";
 import { Product } from "@/lib/home";
 import Image from "next/image";
+import { useAppSelector } from "@/appstore/hooks/hooks";
+import { selectIsAuthenticated } from "@/appstore/slices/sessionSlice";
 
 export default function ProductDetails({ product }: { product: Product }) {
   const [active, setActive] = useState(0);
-  const isLogin = true;
+  const auth = useAppSelector(selectIsAuthenticated)
   const gallery =
     product.images?.length > 0 ? product.images : [product.thumbnail];
 
@@ -65,7 +67,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
         <p className="text-sm text-gray-500">Category: {product.category}</p>
 
-        {isLogin ? (
+        {auth ? (
           <>
             {/* Price */}
             <div className="space-y-1 text-sm">

@@ -38,7 +38,7 @@ export interface NavigationItem {
 
 export interface ProductCardProps {
   product: Product;
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean; // Make optional so component can use Redux fallback
 }
 
 export interface ContainerProps {

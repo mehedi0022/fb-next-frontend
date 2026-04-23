@@ -15,16 +15,14 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import LoginRegisterBtn from './LoginRegisterBtn';
 import { NavigationItem } from '@/lib/home';
+import { useAppSelector } from '@/appstore/hooks/hooks';
+import { selectIsAuthenticated, selectUser } from '@/appstore/slices/sessionSlice';
 
-const testData = {
-  name: 'Peyal Hasan',
-  url: 'https://avatars.githubusercontent.com/u/155246181?v=4'
-};
-
-export default function Header(): JSX.Element {
+export default function  Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const auth = false;
+  const auth = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
 
   const navigationItems: NavigationItem[] = [
     { label: 'আমাদের সম্পর্কে', href: '/about', icon: BlockOutlined },
@@ -107,24 +105,14 @@ export default function Header(): JSX.Element {
 
               {/* USER SECTION */}
               <div className="p-5 flex items-center gap-3 border-b bg-gray-50">
-                {auth ? (
-                  <Image
-                    className="rounded-full border-2 border-blue-500"
-                    src={testData.url}
-                    width={60}
-                    height={60}
-                    alt={testData.name}
-                  />
-                ) : (
-                  <div className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full">
-                    <UserOutlined className="text-2xl text-gray-400" />
-                  </div>
-                )}
+                <div className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full">
+                  <UserOutlined className="text-2xl text-gray-400" />
+                </div>
 
                 {auth && (
                   <div>
-                    <p className="font-semibold">{testData.name}</p>
-                    <p className="text-sm text-gray-500">User</p>
+                    <p className="font-semibold">{user?.name ?? user?.email}</p>
+                    <p className="text-sm text-gray-500">{user?.role}</p>
                   </div>
                 )}
               </div>

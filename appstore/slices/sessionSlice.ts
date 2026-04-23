@@ -5,46 +5,34 @@ export interface User {
   email?: string;
   name?: string;
   role?: string;
-  [key: string]: any;
 }
 
 export interface SessionState {
   user: User | null;
   status: "loading" | "authenticated" | "unauthenticated";
-  userAccess?: any;
+  isLoggedOut: boolean;
 }
 
 const initialState: SessionState = {
   user: null,
   status: "loading",
-  userAccess: null,
+  isLoggedOut: false,
 };
 
 const sessionSlice = createSlice({
   name: "session",
   initialState,
   reducers: {
-    setSession: (
-      state,
-      action: PayloadAction<{
-        user: User;
-        userAccess?: any;
-      }>,
-    ) => {
+    setSession: (state, action: PayloadAction<{ user: User }>) => {
       state.user = action.payload.user;
       state.status = "authenticated";
-
-      if (action.payload.userAccess !== undefined) {
-        state.userAccess = action.payload.userAccess;
-      }
+      state.isLoggedOut = false;
     },
-
     clearSession: (state) => {
       state.user = null;
       state.status = "unauthenticated";
-      state.userAccess = null;
+      state.isLoggedOut = true;
     },
-
     setLoading: (state) => {
       state.status = "loading";
     },
@@ -54,11 +42,9 @@ const sessionSlice = createSlice({
 export const { setSession, clearSession, setLoading } = sessionSlice.actions;
 export default sessionSlice.reducer;
 
-export const selectUser = (state: { session: SessionState }) =>
-  state.session.user;
+export const selectUser = (state: { session: SessionState }) => state.session.user;
+export const selectSessionStatus = (state: { session: SessionState }) => state.session.status;
+export const selectUserRole = (state: { session: SessionState }) => state.session.user?.role ?? null;
+export const selectIsAuthenticated = (state: { session: SessionState }) => state.session.status === "authenticated";
 
-export const selectSessionStatus = (state: { session: SessionState }) =>
-  state.session.status;
-
-export const selectUserAccess = (state: { session: SessionState }) =>
-  state.session.userAccess;
+export const selectIsLoggedOut = (state: { session: SessionState }) => state.session.isLoggedOut;
