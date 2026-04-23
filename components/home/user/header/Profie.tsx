@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/appstore/api/authApi';
 import { useAppDispatch, useAppSelector } from '@/appstore/hooks/hooks';
 import { clearSession, selectIsAuthenticated, selectUser } from '@/appstore/slices/sessionSlice';
+import { baseApi } from '@/appstore/api/baseApi';
 
 type Props = {
   open: boolean;
@@ -21,13 +22,28 @@ const Profile = ({ open, onClose }: Props) => {
 
   const handleLogout = async () => {
     try {
+      // Clear Redux state first
+      dispatch(clearSession());
+      dispatch(baseApi.util.resetApiState());
+      
+      // Call logout API
       await logout().unwrap();
+      
+      // Force clear cookies from browser (fallback)
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
     } catch (error) {
       console.error('Logout failed:', error);
-    } finally {
+      
+      // Even if API fails, clear local state and cookies
       dispatch(clearSession());
+      dispatch(baseApi.util.resetApiState());
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    } finally {
       onClose();
-      router.push('/login');
+      router.replace('/');
     }
   };
 
@@ -35,7 +51,7 @@ const Profile = ({ open, onClose }: Props) => {
 
   return (
     <div className="w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
-      
+
       {/* User Info */}
       <div className="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600">
         <div className="flex items-center gap-3">

@@ -29,10 +29,13 @@ const sessionSlice = createSlice({
       state.user = null;
       state.status = "unauthenticated";
     },
+    setLoading: (state) => {
+      state.status = "loading";
+    },
   },
 });
 
-export const { setSession, clearSession } = sessionSlice.actions;
+export const { setSession, clearSession, setLoading } = sessionSlice.actions;
 export default sessionSlice.reducer;
 
 export const selectUser = (state: { session: SessionState }) => state.session.user;
