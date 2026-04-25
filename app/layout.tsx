@@ -51,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${tiroBangla.variable} ${poppins.variable} antialiased font-tiro`}>
+        className={`${tiroBangla.variable} ${poppins.variable} antialiased`}>
         <Providers>
           <Header />
           <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">

@@ -77,7 +77,7 @@ export default function ProductCard({
                 <Button
                   type="primary"
                   size="large"
-                  className="w-full h-10 font-medium"
+                  className="w-full h-10 font-medium font-tiro-bangla"
                   block
                 >
                   রেজিস্ট্রেশন করুন
