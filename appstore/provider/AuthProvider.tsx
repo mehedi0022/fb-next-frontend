@@ -29,5 +29,5 @@ export default function AuthProvider({
     }
   }, [isSuccess, isError, data, dispatch]);
 
-  return children;
+  return <>{children}</>;
 }

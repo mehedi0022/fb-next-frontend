@@ -24,6 +24,7 @@ export default function  Header(): JSX.Element {
   const auth = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
+  
   const navigationItems: NavigationItem[] = [
     { label: 'আমাদের সম্পর্কে', href: '/about', icon: BlockOutlined },
     { label: 'ক্যাটাগরি', href: '/categories', icon: AppstoreOutlined },

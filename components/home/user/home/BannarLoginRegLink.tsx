@@ -8,18 +8,14 @@ export default function BannarLoginRegLink() {
     const auth = useAppSelector(selectIsAuthenticated);
     return (
         <div className={`flex flex-wrap gap-6 justify-center md:justify-start pt-2 ${auth ? 'hidden' : 'flex'}`}>
-            <Link href="/register">
-                <button className="flex items-center btn-secondary border">
-                    রেজিস্ট্রেশন করুন
-                    <ArrowRight className="w-5 h-5" />
-                </button>
+            <Link href="/register" className="flex items-center btn-secondary border">
+                রেজিস্ট্রেশন করুন
+                <ArrowRight className="w-5 h-5" />
             </Link>
 
-            <Link href="/login">
-                <button className="flex items-center btn-secondary border">
-                    লগইন করুন
-                    <LogIn className="w-5 h-5 " />
-                </button>
+            <Link href="/login" className="flex items-center btn-secondary border">
+                লগইন করুন
+                <LogIn className="w-5 h-5 " />
             </Link>
         </div>
     )

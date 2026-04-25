@@ -1,17 +1,18 @@
 import { Suspense } from "react";
-import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures, ProductsList } from "@/components/home";
-import { SearchParamsProps } from "@/lib/home";
+import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures,} from "@/components/home";
+import { ProductsList, SearchParamsProps } from "@/lib/home";
 
 const HomePage = async ({
   searchParams,
 }: {
   searchParams: Promise<SearchParamsProps> | SearchParamsProps;
 }) => {
-
-  const resolvedParams = await searchParams;
+  // Handle both Promise and direct searchParams
+  const resolvedParams = searchParams instanceof Promise ? await searchParams : searchParams;
 
   return (
     <>
+
       {/* Hero Section */}
       <Banner />
 
@@ -26,11 +27,10 @@ const HomePage = async ({
         <CategoryList searchParams={resolvedParams} isCarousel={true} />
       </Suspense>
 
-      {/* {/. Products Section /} */}
+      {/* Products Section */}
       <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
         <ProductsList searchParams={resolvedParams} />
       </Suspense>
-
     </>
   );
 };
