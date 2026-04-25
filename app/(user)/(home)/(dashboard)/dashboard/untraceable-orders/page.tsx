@@ -1,4 +1,5 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import { PlaceholderPage } from "@/lib/home";
+
 
 export default function Page() {
   return <PlaceholderPage title="Untraceable Orders" />;

@@ -23,8 +23,8 @@ export default function  Header(): JSX.Element {
   const pathname = usePathname();
   const auth = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
-  console.log(auth)
 
+  
   const navigationItems: NavigationItem[] = [
     { label: 'আমাদের সম্পর্কে', href: '/about', icon: BlockOutlined },
     { label: 'ক্যাটাগরি', href: '/categories', icon: AppstoreOutlined },

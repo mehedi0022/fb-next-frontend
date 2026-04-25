@@ -1,4 +1,4 @@
-import { SELLER_INFO } from "@/lib/constants";
+import { SELLER_INFO } from "@/lib/home";
 
 export default function ProfilePage() {
   return (

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures, ProductsList, AuthStatus } from "@/components/home";
-import { SearchParamsProps } from "@/lib/home";
+import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures,} from "@/components/home";
+import { ProductsList, SearchParamsProps } from "@/lib/home";
 
 const HomePage = async ({
   searchParams,
@@ -12,10 +12,6 @@ const HomePage = async ({
 
   return (
     <>
-      {/* Authentication Status */}
-      <div className="container mx-auto px-4 pt-6">
-        <AuthStatus />
-      </div>
 
       {/* Hero Section */}
       <Banner />

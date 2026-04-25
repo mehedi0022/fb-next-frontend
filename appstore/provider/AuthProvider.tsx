@@ -12,12 +12,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     if (isSuccess && data?.user) {
       dispatch(setSession({ user: data.user }));
-      console.log('Effect')
     } else if (isError) {
       dispatch(clearSession());
-      console.log('Error Effect')
     }
-  }, [isSuccess, isError, data]);
+  }, [isSuccess, isError, data, dispatch]);
 
-  return children;
+  return <>{children}</>;
 }

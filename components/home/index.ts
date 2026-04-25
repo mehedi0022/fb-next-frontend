@@ -3,6 +3,7 @@ export { default as AboutUs } from './user/about/AboutUs';
 export { default as HowItWorks } from './user/about/HowItWorks';
 
 // Auth components
+export { default as AuthGuard } from './auth/AuthGuard';
 export { default as RegisterForm } from './auth/RegisterForm';
 export { default as SignIn } from './auth/SignIn';
 export { default as SignInForm } from './auth/SignInForm';
@@ -10,7 +11,6 @@ export { default as TwoFactorAuth } from './auth/TwoFactorAuth';
 export { default as TwoFactorForm } from './auth/TwoFactorForm';
 
 // Common components
-export { default as AuthStatus } from './common/AuthStatus';
 export { default as Container } from './common/Container';
 export { default as ErrorBoundary } from './common/ErrorBoundary';
 export { default as Field } from './common/Field';
@@ -21,7 +21,6 @@ export { default as Title } from './common/Title';
 // Contact components
 export { default as ContactSection } from './contact/ContactSection';
 
-// User components
 // Categories components
 export { default as CategoryList } from './user/categories/CategoryList';
 export { default as CategorySearch } from './user/categories/CategorySearch';
@@ -48,9 +47,10 @@ export { default as ProductsList } from './user/products/ProductsList';
 export { default as SearchProduct } from './user/products/SearchProduct';
 
 // Dashboard components
-export { default as Sidebar } from './user/dashboard/sidebar/Sidebar';
-export { default as DashboardHeader } from './user/dashboard/header/Header';
-export { default as FinanceBanner } from './user/dashboard/dashboard/FinanceBanner';
-export { default as StatCardsGrid } from './user/dashboard/dashboard/StatCardsGrid';
-export { default as DateFilterBar } from './user/dashboard/dashboard/DateFilterBar';
-export { default as PlaceholderPage } from './user/dashboard/PlaceholderPage';
+export { default as Sidebar } from './dashboard/Sidebar';
+export { default as DashboardHeader } from './dashboard/DashboardHeader';
+export { default as FinanceBanner } from './dashboard/FinanceBanner';
+export { default as StatCardsGrid } from './dashboard/StatCardsGrid';
+export { default as StatCardItem } from './dashboard/StatCardItem';
+export { default as DateFilterBar } from './dashboard/DateFilterBar';
+export { default as PlaceholderPage } from './dashboard/PlaceholderPage';

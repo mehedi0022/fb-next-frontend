@@ -1,5 +1,4 @@
-import { STAT_CARDS } from "@/lib/home";
-import StatCardItem from "./StatCardItem";
+import { STAT_CARDS, StatCardItem } from "@/lib/home";
 
 export default function StatCardsGrid() {
   return (

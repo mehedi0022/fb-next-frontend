@@ -69,14 +69,11 @@ export default function ProductCard({
             <div className="flex flex-col justify-end gap-3">
               <div className="text-center py-6">
                 <p className="text-sm text-gray-500 mb-2">দাম দেখতে লগইন করুন</p>
-                <button
-                  type="button"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 underline"
-                >
+                <Link href={`/products/${product.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 underline">
                   বিস্তারিত দেখুন →
-                </button>
+                </Link>
               </div>
-              <Link href="/auth/register">
+              <Link href="/register">
                 <Button
                   type="primary"
                   size="large"

@@ -10,7 +10,7 @@
   --color-ternary: 229 237 228;
   /* #e5ede4 */
   --sidebar-bg: #f5f5f0;
-  --sidebar-width: 220px;
+  --sidebar-width: 300px;
   --white: #ffffff;
   --text-primary: #1a1a1a;
   --text-secondary: #6b7280;
@@ -175,6 +175,7 @@ ul {
 .portal-box {
   padding: 16px 14px 14px;
   border-bottom: 1px solid var(--border);
+  font-size: large;
 }
 
 .portal-title {
