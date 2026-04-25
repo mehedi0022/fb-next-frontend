@@ -63,7 +63,13 @@ export default function Sidebar() {
       {/* ── Nav ── */}
       <nav className="nav-menu">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href;
+          // Dashboard root: exact match only
+          // Other items: startsWith so nested pages also highlight correctly
+          const isActive =
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname.startsWith(item.href);
+
           return (
             <Link
               key={item.href}

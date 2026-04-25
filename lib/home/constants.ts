@@ -35,14 +35,14 @@ import type {
 // ─── Navigation Items ─────────────────────────────────────────────────────────
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Profile Page", href: "/profile" },
-  { label: "Pending Orders", href: "/pending-orders" },
-  { label: "All Orders", href: "/all-orders" },
-  { label: "Untraceable Orders", href: "/untraceable-orders" },
-  { label: "My Products", href: "/my-products" },
-  { label: "My Categories", href: "/my-categories" },
-  { label: "Payment History", href: "/payment-history" },
+  { label: "Dashboard",           href: "/dashboard" },
+  { label: "Profile Page",        href: "/dashboard/profile" },
+  { label: "Pending Orders",      href: "/dashboard/pending-orders" },
+  { label: "All Orders",          href: "/dashboard/all-orders" },
+  { label: "Untraceable Orders",  href: "/dashboard/untraceable-orders" },
+  { label: "My Products",         href: "/dashboard/my-products" },
+  { label: "My Categories",       href: "/dashboard/my-categories" },
+  { label: "Payment History",     href: "/dashboard/payment-history" },
 ];
 
 // ─── Seller Info ──────────────────────────────────────────────────────────────

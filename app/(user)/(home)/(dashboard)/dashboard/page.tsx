@@ -1,5 +1,11 @@
-import { redirect } from "next/navigation";
+import { DateFilterBar, FinanceBanner, StatCardsGrid } from "@/lib/home";
 
-export default function RootPage() {
-  redirect("/dashboard");
+export default function DashboardPage() {
+  return (
+    <div className="page-dashboard">
+      <DateFilterBar />
+      <FinanceBanner />
+      <StatCardsGrid />
+    </div>
+  );
 }
