@@ -1,17 +1,15 @@
-// lib/store.ts
 import { configureStore } from "@reduxjs/toolkit";
+import { baseApi } from "./api/baseApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { apiSlice } from "./api/api-slice";
-import sessionReducer from "./slices/session-slice";
+import sessionReducer from "./slices/sessionSlice";
 
 export const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
     session: sessionReducer,
   },
-  devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 setupListeners(store.dispatch);

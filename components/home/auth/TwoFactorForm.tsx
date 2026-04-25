@@ -1,37 +1,44 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { z } from 'zod';
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { z } from "zod";
+import { useVerifyOtpMutation, useResendOtpMutation } from "@/appstore/api/authApi";
 
 // Zod validation schemas for regex patterns
-const singleDigitSchema = z.string().regex(/^\d?$/, 'শুধুমাত্র সংখ্যা প্রবেশ করুন');
-const pastedOtpSchema = z.string().regex(/^\d{6}$/, 'সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন');
+const singleDigitSchema = z
+  .string()
+  .regex(/^\d?$/, "শুধুমাত্র সংখ্যা প্রবেশ করুন");
+const pastedOtpSchema = z
+  .string()
+  .regex(/^\d{6}$/, "সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন");
 
 export default function TwoFactorForm() {
   const router = useRouter();
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [email, setEmail] = useState('');
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [verifyOtp] = useVerifyOtpMutation();
+  const [resendOtp] = useResendOtpMutation();
 
   // Get email from sessionStorage
   useEffect(() => {
     // Check if we're in browser environment
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-      const tempEmail = sessionStorage.getItem('tempEmail');
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      const tempEmail = sessionStorage.getItem("tempEmail");
       if (tempEmail) {
         setEmail(tempEmail);
       } else {
         // Redirect back to login if no email found
-        router.push('/login');
+        router.push("/login");
       }
     } else {
       // If sessionStorage is not available, redirect to login
-      router.push('/login');
+      router.push("/login");
     }
   }, [router]);
 
@@ -47,7 +54,7 @@ export default function TwoFactorForm() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}: ${secs.toString().padStart(2, '0')}`;
+    return `${mins}: ${secs.toString().padStart(2, "0")}`;
   };
 
   // Handle OTP input change with Zod validation
@@ -56,7 +63,9 @@ export default function TwoFactorForm() {
     const digitValidation = singleDigitSchema.safeParse(value);
 
     if (!digitValidation.success) {
-      const errorMessage = digitValidation.error.issues[0]?.message || 'শুধুমাত্র সংখ্যা প্রবেশ করুন';
+      const errorMessage =
+        digitValidation.error.issues[0]?.message ||
+        "শুধুমাত্র সংখ্যা প্রবেশ করুন";
       setError(errorMessage);
       return;
     }
@@ -66,7 +75,7 @@ export default function TwoFactorForm() {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    setError('');
+    setError("");
 
     // Auto-focus next input
     if (value && index < 5) {
@@ -76,7 +85,7 @@ export default function TwoFactorForm() {
 
   // Handle backspace
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -84,22 +93,26 @@ export default function TwoFactorForm() {
   // Handle paste with Zod validation
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-
+    const pastedData = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
 
     // Validate pasted data with Zod
     const pasteValidation = pastedOtpSchema.safeParse(pastedData);
 
     if (!pasteValidation.success) {
-      const errorMessage = pasteValidation.error.issues[0]?.message || 'সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন';
+      const errorMessage =
+        pasteValidation.error.issues[0]?.message ||
+        "সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন";
       setError(errorMessage);
       return;
     }
 
     // If validation passes, set the OTP
-    const newOtp = pastedData.split('');
+    const newOtp = pastedData.split("");
     setOtp(newOtp);
-    setError(''); 
+    setError("");
 
     // Focus the last input
     inputRefs.current[5]?.focus();
@@ -109,90 +122,65 @@ export default function TwoFactorForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const otpString = otp.join('');
+    const otpString = otp.join("");
     if (otpString.length !== 6) {
-      setError('সম্পূর্ণ ৬ সংখ্যার কোড প্রবেশ করুন');
+      setError("সম্পূর্ণ ৬ সংখ্যার কোড প্রবেশ করুন");
       return;
     }
 
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, otp: otpString }),
-      });
+      await verifyOtp({ email, otp: otpString }).unwrap();
 
-      if (!response.ok) {
-        throw new Error('OTP verification failed');
-      }
-
-      const data = await response.json();
-
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        sessionStorage.removeItem('tempEmail');
-      }
-
-      try {
-        router.replace('/');
-      } catch {
-        window.location.href = '/';
-      }
-
+      sessionStorage.removeItem("tempEmail");
+      router.replace("/");
     } catch {
-      setError('ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।');
+      setError("ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।");
     } finally {
       setIsLoading(false);
     }
   };
 
-
   // Resend code
   const handleResendCode = async () => {
-    setTimeLeft(600); // Reset timer
-    setError('');
-    setOtp(['', '', '', '', '', '']);
-
-    // Focus first input
+    setTimeLeft(300);
+    setError("");
+    setOtp(["", "", "", "", "", ""]);
     inputRefs.current[0]?.focus();
-
-    // Here you would make API call to resend code
+    try {
+      await resendOtp({ email }).unwrap();
+    } catch {
+      setError("কোড পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-
       {/* Email Display */}
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          কোড পাঠানো হয়েছে: <span className="font-semibold text-gray-800">{email}</span>
+          কোড পাঠানো হয়েছে:{" "}
+          <span className="font-semibold text-gray-800">{email}</span>
         </p>
       </div>
 
       {/* Timer */}
       <div className="text-center">
         <p className="text-sm text-gray-500">
-          কোড মেয়াদ শেষ হবে: <span className="font-mono font-semibold text-red-600">{formatTime(timeLeft)}</span>
+          কোড মেয়াদ শেষ হবে:{" "}
+          <span className="font-mono font-semibold text-red-600">
+            {formatTime(timeLeft)}
+          </span>
         </p>
       </div>
-
 
       {/* Error Message */}
       {error && (
         <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
-        </div>
-      )}
-
-      {/* Debug Error Display */}
-      {error && (
-        <div className="text-xs text-gray-500 text-center">
-          Debug: &ldquo;{error}&rdquo;
         </div>
       )}
 
@@ -205,16 +193,19 @@ export default function TwoFactorForm() {
           {otp.map((digit, index) => (
             <input
               key={index}
-              ref={el => { inputRefs.current[index] = el; }}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
               type="text"
               inputMode="numeric"
               maxLength={1}
               value={digit}
-              onChange={e => handleOtpChange(index, e.target.value)}
-              onKeyDown={e => handleKeyDown(index, e)}
+              onChange={(e) => handleOtpChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className={`w-12 h-12 text-center text-xl font-bold border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${error ? 'border-red-500' : 'border-gray-300'
-                } ${digit ? 'bg-blue-50 border-blue-300' : ''}`}
+              className={`w-12 h-12 text-center text-xl font-bold border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+                error ? "border-red-500" : "border-gray-300"
+              } ${digit ? "bg-blue-50 border-blue-300" : ""}`}
               disabled={isLoading}
             />
           ))}
@@ -224,12 +215,12 @@ export default function TwoFactorForm() {
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={isLoading || otp.join('').length !== 6}
-        className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading || otp.join('').length !== 6
-          ? 'bg-gray-400 cursor-not-allowed'
-          : 'bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-          }`}
-      >
+        disabled={isLoading || otp.join("").length !== 6}
+        className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${
+          isLoading || otp.join("").length !== 6
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        }`}>
         {isLoading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -248,8 +239,7 @@ export default function TwoFactorForm() {
         <button
           type="button"
           onClick={handleResendCode}
-          className="w-full py-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
-        >
+          className="w-full py-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
           নতুন কোড পাঠান
         </button>
       ) : (

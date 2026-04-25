@@ -1,32 +1,29 @@
 'use client';
 
 import { ProductCardProps } from "@/lib/home";
-import React, { useEffect, useState } from "react";
 import { Button, message } from "antd";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { getTokenFromCookies } from "@/lib/jwt";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/appstore/hooks/hooks";
+import { selectIsAuthenticated } from "@/appstore/slices/sessionSlice";
 
-type ProductCardPropsWithoutLogin = Omit<ProductCardProps, 'isLoggedIn'>;
+
 
 export default function ProductCard({
   product,
-}: ProductCardPropsWithoutLogin) {
+}: ProductCardProps) {
   const { wholesale, sale, shipping = 0 } = product.price || {};
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = getTokenFromCookies('accessToken');
-    setIsLoggedIn(!!token);
-  }, []);
+  const auth = useAppSelector(selectIsAuthenticated);
+  
+  // Use isLoggedIn prop if provided, otherwise fall back to Redux auth state
 
   const handleAddProduct = () => {
-    const token = getTokenFromCookies('accessToken');
-    
-    if (!token) {
+
+
+    if (!auth) {
       message.warning('প্রোডাক্ট যোগ করতে লগইন করুন');
       router.push('/auth/login');
       return;
@@ -68,21 +65,18 @@ export default function ProductCard({
         {/* Dynamic Content - Flex Grow */}
         <div className="flex-1 flex flex-col">
           {/* BEFORE LOGIN */}
-          {!isLoggedIn && (
+          {!auth && (
             <div className="flex flex-col justify-end gap-3">
               <div className="text-center py-6">
                 <p className="text-sm text-gray-500 mb-2">দাম দেখতে লগইন করুন</p>
-                <button 
-                  type="button"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 underline"
-                >
+                <Link href={`/products/${product.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 underline">
                   বিস্তারিত দেখুন →
-                </button>
+                </Link>
               </div>
-              <Link href="/auth/register">
-                <Button 
-                  type="primary" 
-                  size="large" 
+              <Link href="/register">
+                <Button
+                  type="primary"
+                  size="large"
                   className="w-full h-10 font-medium"
                   block
                 >
@@ -93,7 +87,7 @@ export default function ProductCard({
           )}
 
           {/* AFTER LOGIN */}
-          {isLoggedIn && (
+          {auth && (
             <div className="flex flex-col gap-3">
               {/* Price Section - Structured Grid */}
               <div className="space-y-2">
@@ -119,7 +113,7 @@ export default function ProductCard({
               {/* Action Buttons - Fixed at Bottom */}
               <div className="grid grid-cols-2 gap-2 mt-auto pt-2">
                 <Link href={`/products/${product.id}`}>
-                  <Button 
+                  <Button
                     size="middle"
                     className="w-full h-9 border border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 font-medium"
                     block

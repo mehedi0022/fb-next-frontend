@@ -38,10 +38,108 @@ export interface NavigationItem {
 
 export interface ProductCardProps {
   product: Product;
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean; // Make optional so component can use Redux fallback
 }
 
 export interface ContainerProps {
   children: React.ReactNode;
   className?: string;
+}
+
+
+// Dashboard related types
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+
+export interface NavItem {
+  label: string;
+  href: string;
+  icon?: string;
+}
+
+// ─── User / Seller ────────────────────────────────────────────────────────────
+
+export interface SellerInfo {
+  sellerCode: string;
+  email: string;
+  phone: string;
+  domain: string;
+  memberName: string;
+  memberSince: string;
+}
+
+export interface CourseInfo {
+  courseName: string;
+  batchNo: string;
+  teacherName: string | null;
+  teacherWhatsApp: string | null;
+  batchWhatsAppGroup: string | null;
+  totalClassWillShow: string | null;
+  googleMeetLink: string | null;
+  courseCompletedStatus: string | null;
+}
+
+// ─── Dashboard Finance ────────────────────────────────────────────────────────
+
+export interface FinanceSummary {
+  currentBalance: number;
+  depositAmount: number;
+  totalPaid: number;
+  reserved: number;
+  withdrawable: number;
+}
+
+// ─── Dashboard Stats Card ─────────────────────────────────────────────────────
+
+export type BadgeColor = "green" | "teal" | "blue" | "orange" | "red" | "gray";
+
+export interface StatCard {
+  id: string;
+  title: string;
+  icon: string;
+  amount: number;
+  badge: string;
+  badgeColor: BadgeColor;
+  subItems?: StatSubItem[];
+  hasBreakdown?: boolean;
+}
+
+export interface StatSubItem {
+  label: string;
+  value: number;
+}
+
+// ─── Date Filter ──────────────────────────────────────────────────────────────
+
+export interface DateFilter {
+  fromDate: string;
+  toDate: string;
+}
+
+// ─── Table / Orders ───────────────────────────────────────────────────────────
+
+export interface Order {
+  id: string;
+  date: string;
+  product: string;
+  customer: string;
+  amount: number;
+  status: OrderStatus;
+}
+
+export type OrderStatus =
+  | "pending"
+  | "delivered"
+  | "partial"
+  | "untraceable"
+  | "cancelled";
+
+// ─── Profile ──────────────────────────────────────────────────────────────────
+
+export interface ProfileData {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  avatar?: string;
 }
