@@ -42,9 +42,6 @@
   @apply px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
 }
 
-body {
-  font-family: var(--font-poppins), var(--font-tiro-bangla);
-}
 
 .font-tiro-bangla {
   font-family: var(--font-tiro-bangla);
@@ -125,7 +122,7 @@ body {
 }
 
 body {
-  font-family: var(--font-main);
+  font-family: var(--font-poppins), var(--font-tiro-bangla), var(--font-main);
   background: var(--page-bg);
   color: var(--text-primary);
   font-size: 14px;
