@@ -440,12 +440,12 @@ export default function RegisterForm() {
               {...register("password", {
                 required: "পাসওয়ার্ড আবশ্যক",
                 minLength: {
-                  value: 6,
-                  message: "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে",
+                  value: 8,
+                  message: "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে",
                 },
               })}
               className={`input !pl-10 !pr-10 ${errors.password ? "border-red-500" : ""}`}
-              placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড"
+              placeholder="কমপক্ষে ৮ অক্ষরের পাসওয়ার্ড"
               disabled={isLoading}
             />
             <button
