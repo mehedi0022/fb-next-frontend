@@ -182,7 +182,7 @@ export default function SignInForm() {
           <span className="ml-2 text-sm text-gray-600">আমাকে মনে রাখুন</span>
         </label>
         <Link
-          href="/auth/forgot-password"
+          href="/forgot-password"
           className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
         >
           পাসওয়ার্ড ভুলে গেছেন?

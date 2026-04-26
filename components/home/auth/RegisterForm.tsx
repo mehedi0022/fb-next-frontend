@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Field } from "@/lib/home";
+import { Field, getPasswordStrength } from "@/lib/home";
 import {
   Eye,
   EyeOff,
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useGetBranchesQuery } from "@/appstore/modules/branch/api";
 import Link from "next/link";
-import { useRegisterUserMutation } from "@/appstore/modules/registers/api";
+import { useRegisterUserMutation } from "@/appstore/modules/(auth)/registers/api";
 import { toast } from "react-toastify";
 import { BatchInBranch, Branch } from "../../../lib/home/types";
 
@@ -115,27 +115,6 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DOMAIN_PATTERN =
   /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 
-// ==================== HELPERS ====================
-function getPasswordStrength(password: string) {
-  let strength = 0;
-  if (password.length >= 6) strength++;
-  if (password.length >= 8) strength++;
-  if (/[A-Z]/.test(password)) strength++;
-  if (/[0-9]/.test(password)) strength++;
-  if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-  const info = {
-    0: { text: "দুর্বল", color: "text-red-500", bg: "bg-red-500" },
-    1: { text: "দুর্বল", color: "text-red-500", bg: "bg-red-500" },
-    2: { text: "মাঝারি", color: "text-yellow-500", bg: "bg-yellow-500" },
-    3: { text: "ভালো", color: "text-blue-500", bg: "bg-blue-500" },
-    4: { text: "শক্তিশালী", color: "text-green-500", bg: "bg-green-500" },
-    5: { text: "শক্তিশালী", color: "text-green-500", bg: "bg-green-500" },
-  } as const;
-
-  return { strength, ...info[strength as keyof typeof info] };
-}
-
 // ==================== COMPONENT ====================
 export default function RegisterForm() {
   const router = useRouter();
@@ -209,7 +188,6 @@ export default function RegisterForm() {
 
         router.push("/login?registered=true");
       } else {
-        
         const errorMessage =
           result?.error && "data" in result.error
             ? (result.error.data as { message?: string })?.message
