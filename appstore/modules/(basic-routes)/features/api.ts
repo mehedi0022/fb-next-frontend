@@ -1,9 +1,24 @@
 import { baseApi } from "@/appstore/api/baseApi";
 
+interface FeatureItem {
+  id: number;
+  title: string;
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
+}
+
+interface Features {
+  success: boolean;
+  data: FeatureItem[];
+}
+
 const featuresApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all features
-    getFeatures: build.query({
+    getFeatures: build.query<Features, void>({
       query: () => "/features",
     }),
 
