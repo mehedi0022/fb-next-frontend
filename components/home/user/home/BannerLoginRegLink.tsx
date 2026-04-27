@@ -4,7 +4,7 @@ import { selectIsAuthenticated } from "@/appstore/slices/sessionSlice";
 import { ArrowRight, LogIn } from "lucide-react";
 import Link from "next/link";
 
-export default function BannarLoginRegLink() {
+export default function BannerLoginRegLink() {
     const auth = useAppSelector(selectIsAuthenticated);
     return (
         <div className={`flex flex-wrap gap-6 justify-center md:justify-start pt-2 ${auth ? 'hidden' : 'flex'}`}>

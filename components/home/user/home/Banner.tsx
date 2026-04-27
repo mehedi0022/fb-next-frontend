@@ -1,7 +1,7 @@
 import Container from "../../common/Container";
 import Image from "next/image";
 import {toBanglaNumber} from '@/lib/home'
-import BannarLoginRegLink from "./BannarLoginRegLink";
+import BannerLoginRegLink from "./BannerLoginRegLink";
 
 
 
@@ -29,7 +29,7 @@ const Banner = () => {
               করুন Freelancer Bangladesh এর মাধ্যমে! আজই শুরু করুন আপনার উদ্যোক্তা হওয়ার যাত্রা।
             </p>
 
-            <BannarLoginRegLink />
+            <BannerLoginRegLink />
 
             <div className="pt-5 flex items-center gap-3 text-sm text-neutral-00 tracking-wide">
 

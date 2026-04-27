@@ -1,6 +1,12 @@
 import { Suspense } from "react";
-import { HowItWorks, CategoryList, Bannar as Banner, SpecialFeatures,} from "@/components/home";
+import {
+  HowItWorks,
+  CategoryList,
+  SpecialFeatures,
+} from "@/components/home";
 import { ProductsList, SearchParamsProps } from "@/lib/home";
+import FAQ from "@/components/home/user/home/FAQ";
+import Banner from "@/components/home/user/home/Banner";
 
 const HomePage = async ({
   searchParams,
@@ -8,11 +14,11 @@ const HomePage = async ({
   searchParams: Promise<SearchParamsProps> | SearchParamsProps;
 }) => {
   // Handle both Promise and direct searchParams
-  const resolvedParams = searchParams instanceof Promise ? await searchParams : searchParams;
+  const resolvedParams =
+    searchParams instanceof Promise ? await searchParams : searchParams;
 
   return (
     <>
-
       {/* Hero Section */}
       <Banner />
 
@@ -31,6 +37,9 @@ const HomePage = async ({
       <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
         <ProductsList searchParams={resolvedParams} />
       </Suspense>
+
+      {/* FAQ Section */}
+      <FAQ />
     </>
   );
 };

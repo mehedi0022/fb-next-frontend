@@ -34,7 +34,7 @@ export { default as LoginRegisterBtn } from "./user/header/LoginRegisterBtn";
 export { default as Profile } from "./user/header/Profile";
 
 // Home components
-export { default as Bannar } from "./user/home/Bannar";
+export { default as Bannar } from "./user/home/Banner";
 export { default as CategoryCarousel } from "./user/home/CategoryCarousel";
 export { default as SpecialFeatures } from "./user/home/SpecialFeatures";
 
