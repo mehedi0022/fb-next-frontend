@@ -11,8 +11,7 @@ const FAQ = () => {
 
   const faqs =
     data?.data
-      ?.filter((item) => item.status === "active")
-      ?.sort((a, b) => a.sort_order - b.sort_order) ?? [];
+      ?.filter((item) => item.status === "active") ?? [];
 
   const items = faqs.map((faq) => ({
     key: String(faq.id),

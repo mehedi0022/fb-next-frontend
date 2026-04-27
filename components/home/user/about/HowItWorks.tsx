@@ -9,8 +9,7 @@ const HowItWorks = () => {
 
   const steps =
     data?.data
-      ?.filter((step) => step.status === "active")
-      ?.sort((a, b) => a.sort_order - b.sort_order) ?? [];
+      ?.filter((step) => step.status === "active") ?? [];
 
   return (
     <section className="py-8 bg-white">
