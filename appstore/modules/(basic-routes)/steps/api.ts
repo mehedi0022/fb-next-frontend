@@ -1,9 +1,23 @@
 import { baseApi } from "@/appstore/api/baseApi";
 
+interface StepItem {
+  id: number;
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
+}
+
+interface Steps {
+  success: boolean;
+  data: StepItem[];
+} 
+
 const stepsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all steps
-    getSteps: build.query({
+    getSteps: build.query<Steps, void>({
       query: () => "/steps",
     }),
 
