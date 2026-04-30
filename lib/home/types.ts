@@ -156,15 +156,7 @@ export type OrderStatus =
   | "untraceable"
   | "cancelled";
 
-// ─── Profile ──────────────────────────────────────────────────────────────────
 
-export interface ProfileData {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  avatar?: string;
-}
 
 // Dashboard Payment related types
 export interface NetProfitItem {
@@ -183,4 +175,20 @@ export interface PaymentData {
   netProfit: number;
   paymentSummaryItems: PaymentSummaryItem[];
   currency?: string;
+}
+
+
+
+export interface ProfileData {
+  mobile: string;
+  name: string;
+  email: string;
+  shopName: string;
+  address: string;
+}
+
+export interface ProfileFormState extends ProfileData {
+  newPassword: string;
+  confirmPassword: string;
+  shopLogo: File | null;
 }

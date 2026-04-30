@@ -7,30 +7,30 @@ interface FieldProps {
   error?: {
     message?: string;
   };
+  required?: boolean;
+  hint?: string;
+  icon: React.ReactNode;
 }
 
-const Field: React.FC<FieldProps> = ({ label, children, htmlFor, error }) => {
+const Field: React.FC<FieldProps> = ({ label, children, htmlFor, required, hint, icon, error }) => {
   const id = htmlFor;
 
   return (
-    <div className="flex flex-col space-y-1">
-      {label && (
-        <label className="text-lg font-medium text-gray-700" htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <div
-        className={`${error && error.message ? "border-red-500 border-2 rounded-lg" : ""}  `}
-      >
+    <div className="flex flex-col gap-1.5">
+      <label className="flex items-center gap-1.5 text-sm font-medium">
+        {label}
+        {required && <span className="text-rose-400">*</span>}
+        {hint && (
+          <span className="ml-1 text-[11px] font-normal ">{hint}</span>
+        )}
+      </label>
+      <div className="relative">
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+          {icon}
+        </span>
         {children}
       </div>
-      {error && error.message && (
-        <div role="alert" className="text-red-500 text-sm">
-          {error.message}
-        </div>
-      )}
     </div>
   );
 };
-
 export default Field;

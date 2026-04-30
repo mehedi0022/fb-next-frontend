@@ -7,7 +7,7 @@ const SpecialFeatures = () => {
   const { data, isLoading } = useGetFeaturesQuery();
   const features =
     data?.data
-      .filter((feature) => feature.status === "active") ?? [];
+      ?.filter((feature) => feature.status === "active") ?? [];
 
   return (
     <section className="py-16 bg-[#f0f7ef] mt-10">

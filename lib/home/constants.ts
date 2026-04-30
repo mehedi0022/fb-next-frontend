@@ -1,28 +1,27 @@
 // API endpoints
 export const API_ENDPOINTS = {
-  PRODUCTS: '/api/products',
-  USERS: '/api/users',
-  CATEGORIES: '/api/categories',
+  PRODUCTS: "/api/products",
+  USERS: "/api/users",
+  CATEGORIES: "/api/categories",
 } as const;
 
 // App configuration
 export const APP_CONFIG = {
-  SITE_NAME: 'Freelancer Bangladesh',
-  SITE_DESCRIPTION: 'বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম',
-  DEFAULT_CURRENCY: 'BDT',
+  SITE_NAME: "Freelancer Bangladesh",
+  SITE_DESCRIPTION: "বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
+  DEFAULT_CURRENCY: "BDT",
   MAX_PRODUCTS_PER_PAGE: 20,
 } as const;
 
 // Navigation items
 export const NAVIGATION_ITEMS = [
-  { label: 'আমাদের সম্পর্কে', href: '/about' },
-  { label: 'ক্যাটাগরি', href: '/categories' },
-  { label: 'প্রোডাক্ট', href: '/products' },
-  { label: 'যোগাযোগ', href: '/contact' },
+  { label: "আমাদের সম্পর্কে", href: "/about" },
+  { label: "ক্যাটাগরি", href: "/categories" },
+  { label: "প্রোডাক্ট", href: "/products" },
+  { label: "যোগাযোগ", href: "/contact" },
 ] as const;
 
-
-// Dashboard 
+// Dashboard
 
 import type {
   NavItem,
@@ -31,6 +30,7 @@ import type {
   FinanceSummary,
   StatCard,
   PaymentData,
+  ProfileData,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -294,4 +294,13 @@ export const PAYMENT_DATA: PaymentData = {
     { label: "Last Paid", value: 0 },
     { label: "Current Check Balance", value: -160, highlight: true },
   ],
+};
+
+// Profile related constants
+export const PROFILE_DATA: ProfileData = {
+  mobile: "01716070411",
+  name: "Imran Khan",
+  email: "ikhan@gmail.com",
+  shopName: "Save 71",
+  address: "Dhaka",
 };

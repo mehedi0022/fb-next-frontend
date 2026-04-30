@@ -51,9 +51,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${tiroBangla.variable} ${poppins.variable} antialiased`}>
+        className={`${tiroBangla.variable} ${poppins.variable} antialiased`}
+      >
         <Providers>
-          <Header />
+          {/* <div className="sticky top-0"> */}
+            <Header />
+          {/* </div> */}
           <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">
             {children}
           </main>

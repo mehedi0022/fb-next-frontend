@@ -35,11 +35,11 @@
 }
 
 .btn-primary {
-  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
+  @apply px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg flex items-center gap-2 text-lg transition h-12;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white rounded-lg flex items-center gap-2 text-lg transition h-12
+  @apply px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white rounded-lg flex items-center gap-2 text-lg transition h-12;
 }
 
 .font-tiro-bangla {
@@ -50,8 +50,6 @@
   font-family: var(--font-poppins);
 }
 
-
-
 /* Sidebar normal dots Inactive */
 .category-carousel .slick-dots li button {
   background: #255ac4 !important;
@@ -61,7 +59,9 @@
   width: 8px !important;
   border-radius: 100px !important;
   /* Color transition off rakhbo jate instant orange hoy */
-  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+  transition:
+    width 0.3s ease-in-out,
+    opacity 0.3s ease-in-out !important;
 }
 
 /* Sidebar active dots */
@@ -91,12 +91,10 @@
   }
 }
 
-
 /* Ensure proper spacing on all devices */
-.category-carousel .slick-slide>div {
+.category-carousel .slick-slide > div {
   height: 100% !important;
 }
-
 
 /* global input filed design */
 .input {
@@ -122,7 +120,7 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -155,11 +153,12 @@ ul {
   list-style: none;
 }
 
-
 /* ─── Sidebar ─────────────────────────────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-width);
-  height: 100vh;
+  height: calc(100vh - 100px);
+  position: sticky;
+  top: 100px;
   background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
@@ -225,7 +224,9 @@ ul {
 /* ─── Nav Menu ────────────────────────────────────────────────────────────────── */
 
 .nav-item {
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .nav-item:hover {
@@ -250,8 +251,8 @@ ul {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  height: 100vh;
-  overflow-y: auto;
+  /* height: 100vh; */
+  /* overflow-y: auto; */
   background: var(--page-bg);
 }
 
@@ -276,7 +277,6 @@ ul {
 .dash-header__left {
   min-width: 160px;
 }
-
 
 .dash-header__section {
   font-size: 10px;
@@ -409,7 +409,9 @@ ul {
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  transition: opacity 0.15s, background 0.15s;
+  transition:
+    opacity 0.15s,
+    background 0.15s;
   height: 36px;
 }
 
@@ -434,7 +436,11 @@ ul {
 
 /* ─── Finance Banner ──────────────────────────────────────────────────────────── */
 .finance-banner {
-  background: linear-gradient(135deg, var(--finance-grad-from), var(--finance-grad-to));
+  background: linear-gradient(
+    135deg,
+    var(--finance-grad-from),
+    var(--finance-grad-to)
+  );
   border-radius: var(--card-radius);
   padding: 20px 22px;
   color: var(--finance-text);
@@ -524,7 +530,9 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: box-shadow 0.15s, transform 0.15s;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
 }
 
 .stat-card:hover {
@@ -624,7 +632,11 @@ ul {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--finance-grad-from), var(--finance-grad-to));
+  background: linear-gradient(
+    135deg,
+    var(--finance-grad-from),
+    var(--finance-grad-to)
+  );
   color: var(--white);
   font-size: 28px;
   font-weight: 700;
@@ -741,10 +753,10 @@ ul {
 }
 
 @media (max-width: 640px) {
-   .sidebar {
-    display: flex;          
-    width: 100%;            
-    height: auto;          
+  .sidebar {
+    display: flex;
+    width: 100%;
+    height: auto;
     overflow-y: visible;
     flex-direction: column;
   }

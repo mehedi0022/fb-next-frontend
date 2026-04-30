@@ -61,7 +61,7 @@ export default function PaymentDashboard() {
     }
   };
 
-  const { netProfitItems, netProfit, paymentSummaryItems, currency = "৳" } = data;
+  const { netProfitItems, netProfit, paymentSummaryItems } = data;
   const isLoss = netProfit < 0;
   const isGain = netProfit > 0;
 
