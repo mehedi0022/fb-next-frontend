@@ -30,19 +30,21 @@ import type {
   CourseInfo,
   FinanceSummary,
   StatCard,
+  PaymentData,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",           href: "/dashboard" },
-  { label: "Profile Page",        href: "/dashboard/profile" },
-  { label: "Pending Orders",      href: "/dashboard/pending-orders" },
-  { label: "All Orders",          href: "/dashboard/all-orders" },
-  { label: "Untraceable Orders",  href: "/dashboard/untraceable-orders" },
-  { label: "My Products",         href: "/dashboard/my-products" },
-  { label: "My Categories",       href: "/dashboard/my-categories" },
-  { label: "Payment History",     href: "/dashboard/payment-history" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Profile Page", href: "/dashboard/profile" },
+  { label: "Pending Orders", href: "/dashboard/pending-orders" },
+  { label: "All Orders", href: "/dashboard/all-orders" },
+  { label: "Untraceable Orders", href: "/dashboard/untraceable-orders" },
+  { label: "My Products", href: "/dashboard/my-products" },
+  { label: "My Categories", href: "/dashboard/my-categories" },
+  { label: "Payment History", href: "/dashboard/payment-history" },
+  { label: "Payment Methods", href: "/dashboard/payment-methods" },
 ];
 
 // ─── Seller Info ──────────────────────────────────────────────────────────────
@@ -86,9 +88,10 @@ export const STAT_CARDS: StatCard[] = [
     id: "total-parcel",
     title: "Total Parcel",
     icon: "📦",
-    amount: 25578.0,
+    amount: 31679.0,
     badge: "24 Parcel",
-    badgeColor: "teal",
+    badgeColor: "green",
+    subItems: [],
     hasBreakdown: true,
   },
   {
@@ -118,21 +121,24 @@ export const STAT_CARDS: StatCard[] = [
     hasBreakdown: true,
   },
   {
-    id: "total-wholesale",
+    id: "total-wholesale-price",
     title: "Total Wholesale Price",
-    icon: "💰",
+    icon: "🪙",
     amount: 0.0,
     badge: "0 Delivered",
     badgeColor: "blue",
+    subItems: [],
     hasBreakdown: true,
   },
   {
     id: "packaging-charge",
     title: "Packaging Charge",
-    icon: "📫",
+    icon: "🖨️",
     amount: 0.0,
     badge: "0 Delivered",
-    badgeColor: "gray",
+    badgeColor: "green",
+    subItems: [],
+    hasBreakdown: false,
   },
   {
     id: "delivery-charge",
@@ -140,7 +146,113 @@ export const STAT_CARDS: StatCard[] = [
     icon: "🚚",
     amount: 0.0,
     badge: "0 Delivered",
+    badgeColor: "red",
+    subItems: [],
+    hasBreakdown: false,
+  },
+  {
+    id: "total-cancel",
+    title: "Total Cancel",
+    icon: "❌",
+    amount: 860.0,
+    badge: "0 Parcel",
     badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 150.0 },
+      { label: "Packaging Charge", value: 50.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "pending",
+    title: "Pending",
+    icon: "⏳",
+    amount: 11469.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 850.0 },
+      { label: "Packaging Charge", value: 270.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "delivered-approval-pending",
+    title: "Delivered Approval Pending",
+    icon: "🕐",
+    amount: 0.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 0.0 },
+      { label: "Packaging Charge", value: 0.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "hold",
+    title: "Hold",
+    icon: "✋",
+    amount: 0.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 0.0 },
+      { label: "Packaging Charge", value: 0.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "in-review",
+    title: "In Review",
+    icon: "🔍",
+    amount: 1470.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 200.0 },
+      { label: "Packaging Charge", value: 80.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "unknown-approval-pending",
+    title: "Unknown Approval Pending",
+    icon: "❓",
+    amount: 0.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 0.0 },
+      { label: "Packaging Charge", value: 0.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "unknown",
+    title: "Unknown",
+    icon: "🔮",
+    amount: 17880.0,
+    badge: "0 Parcel",
+    badgeColor: "green",
+    subItems: [
+      { label: "Delivery Charge", value: 1420.0 },
+      { label: "Packaging Charge", value: 180.0 },
+    ],
+    hasBreakdown: true,
+  },
+  {
+    id: "net-profit",
+    title: "Net Profit",
+    icon: "💰",
+    amount: -160.0,
+    badge: "1 Delivered",
+    badgeColor: "blue",
+    subItems: [
+      { label: "Product Charges ( )", value: 0.0 },
+      { label: "Cancelled Charges ( )", value: 160.0 },
+    ],
+    hasBreakdown: true,
   },
 ];
 
@@ -160,4 +272,26 @@ export const BADGE_COLOR_MAP: Record<string, string> = {
   orange: "bg-orange-400",
   red: "bg-red-500",
   gray: "bg-gray-500",
+};
+
+
+export const PAYMENT_DATA: PaymentData = {
+  currency: "৳",
+  netProfit: -160,
+  netProfitItems: [
+    { label: "Delivered COD", value: 0 },
+    { label: "Delivered Wholesale (-)", value: 0 },
+    { label: "Delivered Delivery Charge (-)", value: 0 },
+    { label: "Delivered Packaging Charge (-)", value: 0 },
+    { label: "Delivered Net Profit Base", value: 0 },
+    { label: "Partial Delivered Charges (-)", value: 0 },
+    { label: "Cancelled Charges (-)", value: 160 },
+  ],
+  paymentSummaryItems: [
+    { label: "Net Profit After Deductions", value: -160, highlight: true },
+    { label: "Total Paid", value: 0 },
+    { label: "Reserved Requests", value: 0 },
+    { label: "Last Paid", value: 0 },
+    { label: "Current Check Balance", value: -160, highlight: true },
+  ],
 };

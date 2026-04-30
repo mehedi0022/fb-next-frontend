@@ -46,6 +46,28 @@ export interface ContainerProps {
   className?: string;
 }
 
+export interface BatchInBranch {
+  id: number;
+  batchName: string;
+  branchId: number;
+  maxStudents: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    users: number;
+  };
+}
+
+export interface Branch {
+  id: number;
+  branchName: string;
+  branchDescription: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  batches: BatchInBranch[];
+}
 
 // Dashboard related types
 
@@ -142,4 +164,23 @@ export interface ProfileData {
   phone: string;
   address: string;
   avatar?: string;
+}
+
+// Dashboard Payment related types
+export interface NetProfitItem {
+  label: string;
+  value: number;
+}
+
+export interface PaymentSummaryItem {
+  label: string;
+  value: number;
+  highlight?: boolean;
+}
+
+export interface PaymentData {
+  netProfitItems: NetProfitItem[];
+  netProfit: number;
+  paymentSummaryItems: PaymentSummaryItem[];
+  currency?: string;
 }

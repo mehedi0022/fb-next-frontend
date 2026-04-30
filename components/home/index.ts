@@ -1,6 +1,6 @@
 // About components
-export { default as AboutUs } from './user/about/AboutUs';
-export { default as HowItWorks } from './user/about/HowItWorks';
+export { default as AboutUs } from "./user/about/AboutUs";
+export { default as HowItWorks } from "./user/about/HowItWorks";
 
 // Auth components
 export { default as AuthGuard } from './auth/AuthGuard';
@@ -19,24 +19,24 @@ export { default as TermsAndConditions } from './common/TermsAndConditions';
 export { default as Title } from './common/Title';
 
 // Contact components
-export { default as ContactSection } from './contact/ContactSection';
+export { default as ContactSection } from "./contact/ContactSection";
 
 // Categories components
-export { default as CategoryList } from './user/categories/CategoryList';
-export { default as CategorySearch } from './user/categories/CategorySearch';
+export { default as CategoryList } from "./user/categories/CategoryList";
+export { default as CategorySearch } from "./user/categories/CategorySearch";
 
 // Footer components
-export { default as Footer } from './user/Footer/Footer';
+export { default as Footer } from "./user/Footer/Footer";
 
 // Header components
-export { default as Header } from './user/header/Header';
-export { default as LoginRegisterBtn } from './user/header/LoginRegisterBtn';
-export { default as Profile } from './user/header/Profie';
+export { default as Header } from "./user/header/Header";
+export { default as LoginRegisterBtn } from "./user/header/LoginRegisterBtn";
+export { default as Profile } from "./user/header/Profile";
 
 // Home components
-export { default as Bannar } from './user/home/Bannar';
-export { default as CategoryCarousel } from './user/home/CategoryCarousel';
-export { default as SpecialFeatures } from './user/home/SpecialFeatures';
+export { default as Bannar } from "./user/home/Banner";
+export { default as CategoryCarousel } from "./user/home/CategoryCarousel";
+export { default as SpecialFeatures } from "./user/home/SpecialFeatures";
 
 // Products components
 export { default as ProductCard } from './user/products/ProductCard';

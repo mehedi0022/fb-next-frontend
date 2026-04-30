@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -6,10 +6,10 @@ import {
   LoginOutlined,
   WhatsAppOutlined,
   UserOutlined,
-  UserAddOutlined
+  UserAddOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import Profile from "./Profie";
+import Profile from "./Profile";
 
 type Props = {
   auth: boolean;
@@ -23,14 +23,17 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
 
   useEffect(() => {
     const handleClickOutSide = (e: MouseEvent) => {
-      if (dropDownRef.current && !dropDownRef.current.contains(e.target as Node)) {
+      if (
+        dropDownRef.current &&
+        !dropDownRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutSide);
 
-    return () => document.removeEventListener('mousedown', handleClickOutSide);
+    return () => document.removeEventListener("mousedown", handleClickOutSide);
   }, []);
 
   return (
@@ -40,7 +43,6 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
         gap-4 relative
       `}
     >
-
       {/* AUTH */}
       {auth ? (
         <Link
@@ -51,12 +53,20 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
           ড্যাশবোর্ড
         </Link>
       ) : (
-        <div className={`flex ${isDrawer ? "flex-col w-full" : "flex-row"} gap-3`}>
-          <Link href="/register" className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border">
+        <div
+          className={`flex ${isDrawer ? "flex-col w-full" : "flex-row"} gap-3`}
+        >
+          <Link
+            href="/register"
+            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border"
+          >
             <UserAddOutlined /> রেজিস্ট্রেশন
           </Link>
 
-          <Link href="/login" className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border">
+          <Link
+            href="/login"
+            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border"
+          >
             <LoginOutlined /> লগইন
           </Link>
         </div>
@@ -74,12 +84,9 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
 
       {/* USER + PROFILE DROPDOWN (Only for Desktop Navbar) */}
       {!isDrawer && auth && (
-        <div
-          className="relative"
-          ref={dropDownRef}
-        >
-          <button 
-            onClick={() => setOpen(prev => !prev)}
+        <div className="relative" ref={dropDownRef}>
+          <button
+            onClick={() => setOpen((prev) => !prev)}
             className="p-2 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all"
           >
             <UserOutlined className="text-white text-xl" />
@@ -91,7 +98,6 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

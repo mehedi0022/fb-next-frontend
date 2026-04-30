@@ -61,7 +61,7 @@ export default function Sidebar() {
       </div>
 
       {/* ── Nav ── */}
-      <nav className="nav-menu">
+      <nav className="flex flex-wrap flex-1 p-1 sm:flex-col">
         {NAV_ITEMS.map((item) => {
           // Dashboard root: exact match only
           // Other items: startsWith so nested pages also highlight correctly
@@ -74,7 +74,8 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`nav-item${isActive ? " nav-item--active" : ""}`}
+
+              className={` block p-3 font-medium bg-white/40  rounded-lg transition-color my-2 nav-item  ${isActive ? " nav-item--active" : ""}`}
             >
               {item.label}
             </Link>
