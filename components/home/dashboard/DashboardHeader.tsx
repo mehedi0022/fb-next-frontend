@@ -31,7 +31,7 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className="dash-header">
+    <header className="dash-header m-4">
       <div className="dash-header__left">
         <p className="dash-header__section">CUSTOMER DASHBOARD</p>
         <h1 className="dash-header__title">{pageLabel}</h1>
