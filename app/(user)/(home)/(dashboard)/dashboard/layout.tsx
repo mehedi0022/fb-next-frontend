@@ -7,9 +7,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="max-w-6xl mx-auto  flex flex-col md:flex-row">
-      <div className="relative">
         <Sidebar />
-      </div>
       <div className="main-area">
         <DashboardHeader />
         <main className="main-content bg-white/30 m-4 rounded-lg">
