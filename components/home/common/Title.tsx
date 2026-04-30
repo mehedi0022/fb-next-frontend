@@ -17,7 +17,7 @@ const Title = ({
       </h1>
 
       {/* Subtitle */}
-      <p className="text-gray-600 text-center font-tiro-bangla mb-5">
+      <p className="text-gray-600 text-xl sm:text-lg text-center font-tiro-bangla mb-5">
         {subtitle}
       </p>
     </div>

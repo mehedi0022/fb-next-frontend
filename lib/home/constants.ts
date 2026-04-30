@@ -1,28 +1,27 @@
 // API endpoints
 export const API_ENDPOINTS = {
-  PRODUCTS: '/api/products',
-  USERS: '/api/users',
-  CATEGORIES: '/api/categories',
+  PRODUCTS: "/api/products",
+  USERS: "/api/users",
+  CATEGORIES: "/api/categories",
 } as const;
 
 // App configuration
 export const APP_CONFIG = {
-  SITE_NAME: 'Freelancer Bangladesh',
-  SITE_DESCRIPTION: 'বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম',
-  DEFAULT_CURRENCY: 'BDT',
+  SITE_NAME: "Freelancer Bangladesh",
+  SITE_DESCRIPTION: "বাংলাদেশের সর্ববৃহৎ ড্রপশিপিং প্ল্যাটফর্ম",
+  DEFAULT_CURRENCY: "BDT",
   MAX_PRODUCTS_PER_PAGE: 20,
 } as const;
 
 // Navigation items
 export const NAVIGATION_ITEMS = [
-  { label: 'আমাদের সম্পর্কে', href: '/about' },
-  { label: 'ক্যাটাগরি', href: '/categories' },
-  { label: 'প্রোডাক্ট', href: '/products' },
-  { label: 'যোগাযোগ', href: '/contact' },
+  { label: "আমাদের সম্পর্কে", href: "/about" },
+  { label: "ক্যাটাগরি", href: "/categories" },
+  { label: "প্রোডাক্ট", href: "/products" },
+  { label: "যোগাযোগ", href: "/contact" },
 ] as const;
 
-
-// Dashboard 
+// Dashboard
 
 import type {
   NavItem,
@@ -36,13 +35,13 @@ import type {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Profile Page", href: "/profile" },
-  { label: "Pending Orders", href: "/pending-orders" },
-  { label: "All Orders", href: "/all-orders" },
-  { label: "Untraceable Orders", href: "/untraceable-orders" },
-  { label: "My Products", href: "/my-products" },
-  { label: "My Categories", href: "/my-categories" },
-  { label: "Payment History", href: "/payment-history" },
+  { label: "Profile Page", href: "/dashboard/profile" },
+  { label: "Pending Orders", href: "/dashboard/pending-orders" },
+  { label: "All Orders", href: "/dashboard/all-orders" },
+  { label: "Untraceable Orders", href: "/dashboard/untraceable-orders" },
+  { label: "My Products", href: "/dashboard/my-products" },
+  { label: "My Categories", href: "/dashboard/my-categories" },
+  { label: "Payment History", href: "/dashboard/payment-history" },
 ];
 
 // ─── Seller Info ──────────────────────────────────────────────────────────────
