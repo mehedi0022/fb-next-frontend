@@ -33,6 +33,7 @@ import type {
   ProfileData,
   PendingOrder,
   AllOrder,
+  UntrackedOrder,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -384,3 +385,14 @@ export const ALL_ORDERS: AllOrder[] = [
   { sn: 8, orderDate: "2026-04-23", itemCount: 1, cod: 880,  deliveryCharge: 130, packagingCharge: 30, wholesalePrice: 350,  netProfit: 370, status: "in_review",  orderTracking: "TRK-008" },
   { sn: 9, orderDate: "2026-04-23", itemCount: 1, cod: 1329, deliveryCharge: 130, packagingCharge: 30, wholesalePrice: 750,  netProfit: 419, status: "in_transit", orderTracking: null },
 ];
+
+
+// Untrackable orders constants
+
+export const UNTRACKED_ORDERS: UntrackedOrder[] = [
+  { sl: 1, orderId: "#4553", customer: "test order",           phone: "01853180152/01621905416", items: 1, status: "cancelled" },
+  { sl: 2, orderId: "#3538", customer: "Test VPS",             phone: "01572109979",             items: 1, status: "cancelled" },
+  { sl: 3, orderId: "#3537", customer: "Test Vps 2",           phone: "01572109979",             items: 1, status: "cancelled" },
+  { sl: 4, orderId: "#3536", customer: "Test Order",           phone: "01700111222",             items: 1, status: "cancelled" },
+  { sl: 5, orderId: "#3026", customer: "Freelancer Bangladesh", phone: "01931645490",            items: 1, status: "cancelled" },
+]; 

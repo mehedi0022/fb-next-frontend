@@ -174,7 +174,7 @@ export default function AllOrdersPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1000px] text-sm">
               <thead>
-                <tr className="border-b">
+                <tr className="border-b bg-slate-400">
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}

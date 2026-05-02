@@ -226,3 +226,16 @@ export type AllOrderStatus =
   status: AllOrderStatus;
   orderTracking: string | null;
 }
+
+
+// Untrackable orders types
+export type UntrackedOrderStatus = "cancelled" | "pending" | "delivered";
+ 
+export interface UntrackedOrder {
+  sl: number;
+  orderId: string;
+  customer: string;
+  phone: string;
+  items: number;
+  status: UntrackedOrderStatus;
+}

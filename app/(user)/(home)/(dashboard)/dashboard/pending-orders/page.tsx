@@ -149,7 +149,7 @@ export default function OrderList() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-sm">
               <thead>
-                <tr className="border-b">
+                <tr className="border-b bg-slate-400">
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}
