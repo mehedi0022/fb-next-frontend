@@ -20,7 +20,7 @@ export default function TwoFactorForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(900);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [verifyOtp] = useVerifyOtpMutation();
   const [resendOtp] = useResendOtpMutation();
@@ -145,7 +145,7 @@ export default function TwoFactorForm() {
 
   // Resend code
   const handleResendCode = async () => {
-    setTimeLeft(300);
+    setTimeLeft(900);
     setError("");
     setOtp(["", "", "", "", "", ""]);
     inputRefs.current[0]?.focus();

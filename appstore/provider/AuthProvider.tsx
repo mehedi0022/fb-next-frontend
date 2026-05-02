@@ -18,7 +18,8 @@ export default function AuthProvider({
   const isLoggedOut = useAppSelector(selectIsLoggedOut);
 
   const { data, isError, isSuccess } = useCheckMeQuery(undefined, {
-    skip: isLoggedOut,
+    // skip: isLoggedOut,
+    refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
