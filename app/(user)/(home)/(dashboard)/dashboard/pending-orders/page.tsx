@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo, ChangeEvent } from "react";
 import {
   Search,
   Calendar,
@@ -10,36 +9,35 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-// ✅ PendingOrder aliased as Order — avoids conflict with any other Order type in the project
 import {
-  OrderFilters,
   OrderStatus,
   ORDERS,
 } from "@/lib/home";
+import { useOrderFilter } from "@/appstore/hooks/useOrderFilter";
 
 // ─── Table Columns ────────────────────────────────────────────────────────────
 
 const COLUMNS = [
-  { key: "sn",              label: "SN",              align: "text-left"   },
-  { key: "orderDate",       label: "Order Date",       align: "text-left"   },
-  { key: "itemCount",       label: "Item Count",       align: "text-right"  },
-  { key: "cod",             label: "COD",              align: "text-right"  },
-  { key: "deliveryCharge",  label: "Delivery Charge",  align: "text-right"  },
-  { key: "packagingCharge", label: "Packaging Charge", align: "text-right"  },
-  { key: "wholesalePrice",  label: "Wholesale Price",  align: "text-right"  },
-  { key: "netProfit",       label: "Net Profit",       align: "text-right"  },
-  { key: "status",          label: "Status",           align: "text-center" },
-  { key: "orderTracking",   label: "Order Tracking",   align: "text-left"   },
+  { key: "sn", label: "SN", align: "text-left" },
+  { key: "orderDate", label: "Order Date", align: "text-left" },
+  { key: "itemCount", label: "Item Count", align: "text-right" },
+  { key: "cod", label: "COD", align: "text-right" },
+  { key: "deliveryCharge", label: "Delivery Charge", align: "text-right" },
+  { key: "packagingCharge", label: "Packaging Charge", align: "text-right" },
+  { key: "wholesalePrice", label: "Wholesale Price", align: "text-right" },
+  { key: "netProfit", label: "Net Profit", align: "text-right" },
+  { key: "status", label: "Status", align: "text-center" },
+  { key: "orderTracking", label: "Order Tracking", align: "text-left" },
 ] as const;
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
-  pending:     "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  delivered:   "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  partial:     "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  partial: "bg-blue-500/10 text-blue-400 border-blue-500/20",
   untraceable: "bg-slate-500/10 text-slate-400 border-slate-500/20",
-  cancelled:   "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  cancelled: "bg-rose-500/10 text-rose-400 border-rose-500/20",
 };
 
 function StatusBadge({ status }: { status: OrderStatus }) {
@@ -52,72 +50,28 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   );
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
-function toISODate(dateStr: string): string {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return d.toISOString().split("T")[0];
-}
-
 // ─── Input Styles ─────────────────────────────────────────────────────────────
 
 const inputClass =
-  "w-full rounded-xl border border-slate-700 bg-slate-800/60 py-2.5 pl-9 pr-3 text-sm text-slate-200 placeholder:text-slate-600 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20";
+  "w-full rounded-xl border  py-2.5 pl-9 pr-3 text-sm  placeholder:text-slate-600 outline-none transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function OrderList() {
-  const [filters, setFilters] = useState<OrderFilters>({
-    search: "",
-    fromDate: "",
-    toDate: "",
-  });
-  const [applied, setApplied] = useState<OrderFilters>(filters);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleApply = () => setApplied({ ...filters });
-
-  const handleReset = () => {
-    const empty: OrderFilters = { search: "", fromDate: "", toDate: "" };
-    setFilters(empty);
-    setApplied({ ...empty });
-  };
-
-  const { search, fromDate, toDate } = applied;
-
-  const filtered = useMemo(() => {
-    return ORDERS.filter((order) => {
-      const q = search.toLowerCase();
-
-      const matchSearch =
-        !q ||
-        String(order.sn).includes(q) ||
-        order.orderTracking.toLowerCase().includes(q) ||
-        order.status.toLowerCase().includes(q);
-
-      const orderDateISO = toISODate(order.orderDate);
-      const matchFrom = !fromDate || orderDateISO >= fromDate;
-      const matchTo   = !toDate   || orderDateISO <= toDate;
-
-      return matchSearch && matchFrom && matchTo;
-    });
-  }, [search, fromDate, toDate]);
+  const { filters, filtered, handleChange, handleApply, handleReset } =
+    useOrderFilter(ORDERS);
 
   return (
     <div className="min-h-screen p-6 md:p-10">
       <div className="mx-auto max-w-7xl">
-        <div className="overflow-hidden rounded-2xl border shadow-2xl shadow-black/50 bg-slate-200">
+        <div className="overflow-hidden rounded-2xl border shadow-2xl shadow-black/50 bg-slate-300">
 
           {/* Info Banner */}
           <div className="border-b px-5 py-3">
             <p className="text-xs">
               Showing only orders that are still in{" "}
-              <span className="font-semibold text-amber-400">Pending</span> status.
+              <span className="font-semibold text-secondary">Pending</span> status.
             </p>
           </div>
 
@@ -218,18 +172,17 @@ export default function OrderList() {
                       <td className="px-4 py-3 text-right font-mono ">{order.packagingCharge.toFixed(2)}</td>
                       <td className="px-4 py-3 text-right font-mono ">{order.wholesalePrice.toFixed(2)}</td>
                       <td
-                        className={`px-4 py-3 text-right font-mono font-semibold ${
-                          order.netProfit < 0
+                        className={`px-4 py-3 text-right font-mono font-semibold ${order.netProfit < 0
                             ? "text-rose-400"
                             : order.netProfit > 0
-                            ? "text-emerald-400"
-                            : ""
-                        }`}
+                              ? "text-emerald-400"
+                              : ""
+                          }`}
                       >
                         {order.netProfit.toFixed(2)}
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <StatusBadge status={order.status} />
+                        <StatusBadge status={order.status as OrderStatus} />
                       </td>
                       <td className="px-4 py-3 font-mono text-xs text-indigo-400">
                         {order.orderTracking}

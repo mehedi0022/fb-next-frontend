@@ -9,11 +9,10 @@ interface FieldProps {
   };
   required?: boolean;
   hint?: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
-const Field: React.FC<FieldProps> = ({ label, children, htmlFor, required, hint, icon, error }) => {
-  const id = htmlFor;
+const Field: React.FC<FieldProps> = ({ label, children, required, hint, icon }) => {
 
   return (
     <div className="flex flex-col gap-1.5">

@@ -31,8 +31,8 @@ import type {
   StatCard,
   PaymentData,
   ProfileData,
-  Order,
   PendingOrder,
+  AllOrder,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -369,4 +369,18 @@ export const ORDERS: PendingOrder[] = [
     status: "untraceable",
     orderTracking: "TRK-001238",
   },
+];
+
+// All Orders related constants
+
+export const ALL_ORDERS: AllOrder[] = [
+  { sn: 1, orderDate: "2026-04-30", itemCount: 1, cod: 1570, deliveryCharge: 70,  packagingCharge: 30, wholesalePrice: 900,  netProfit: 570, status: "in_transit", orderTracking: null },
+  { sn: 2, orderDate: "2026-04-27", itemCount: 1, cod: 1570, deliveryCharge: 70,  packagingCharge: 30, wholesalePrice: 900,  netProfit: 570, status: "in_transit", orderTracking: null },
+  { sn: 3, orderDate: "2026-04-27", itemCount: 2, cod: 1620, deliveryCharge: 120, packagingCharge: 30, wholesalePrice: 850,  netProfit: 620, status: "in_transit", orderTracking: null },
+  { sn: 4, orderDate: "2026-04-27", itemCount: 1, cod: 1240, deliveryCharge: 70,  packagingCharge: 30, wholesalePrice: 670,  netProfit: 470, status: "in_transit", orderTracking: null },
+  { sn: 5, orderDate: "2026-04-25", itemCount: 1, cod: 870,  deliveryCharge: 120, packagingCharge: 30, wholesalePrice: 350,  netProfit: 370, status: "in_transit", orderTracking: null },
+  { sn: 6, orderDate: "2026-04-24", itemCount: 1, cod: 540,  deliveryCharge: 70,  packagingCharge: 30, wholesalePrice: 150,  netProfit: 290, status: "in_review",  orderTracking: "TRK-006" },
+  { sn: 7, orderDate: "2026-04-23", itemCount: 1, cod: 930,  deliveryCharge: 130, packagingCharge: 30, wholesalePrice: 570,  netProfit: 200, status: "in_review",  orderTracking: "TRK-007" },
+  { sn: 8, orderDate: "2026-04-23", itemCount: 1, cod: 880,  deliveryCharge: 130, packagingCharge: 30, wholesalePrice: 350,  netProfit: 370, status: "in_review",  orderTracking: "TRK-008" },
+  { sn: 9, orderDate: "2026-04-23", itemCount: 1, cod: 1329, deliveryCharge: 130, packagingCharge: 30, wholesalePrice: 750,  netProfit: 419, status: "in_transit", orderTracking: null },
 ];

@@ -140,15 +140,6 @@ export interface DateFilter {
 
 // ─── Table / Orders ───────────────────────────────────────────────────────────
 
-export interface Order {
-  id: string;
-  date: string;
-  product: string;
-  customer: string;
-  amount: number;
-  status: OrderStatus;
-}
-
 export type OrderStatus =
   | "pending"
   | "delivered"
@@ -212,4 +203,26 @@ export interface OrderFilters {
   search: string;
   fromDate: string;
   toDate: string;
+}
+
+// All orders types
+
+export type AllOrderStatus =
+  | "in_transit"
+  | "in_review"
+  | "delivered"
+  | "cancelled"
+  | "returned";
+
+  export interface AllOrder {
+  sn: number;
+  orderDate: string;
+  itemCount: number;
+  cod: number;
+  deliveryCharge: number;
+  packagingCharge: number;
+  wholesalePrice: number;
+  netProfit: number;
+  status: AllOrderStatus;
+  orderTracking: string | null;
 }
