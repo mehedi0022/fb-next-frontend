@@ -31,6 +31,8 @@ import type {
   StatCard,
   PaymentData,
   ProfileData,
+  Order,
+  PendingOrder,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -304,3 +306,67 @@ export const PROFILE_DATA: ProfileData = {
   shopName: "Save 71",
   address: "Dhaka",
 };
+
+// Pending orders related constants
+export const ORDERS: PendingOrder[] = [
+  {
+    sn: 1,
+    orderDate: "2024-03-01",
+    itemCount: 3,
+    cod: 1500,
+    deliveryCharge: 60,
+    packagingCharge: 20,
+    wholesalePrice: 900,
+    netProfit: 520,
+    status: "delivered",
+    orderTracking: "TRK-001234",
+  },
+  {
+    sn: 2,
+    orderDate: "2024-03-05",
+    itemCount: 1,
+    cod: 800,
+    deliveryCharge: 60,
+    packagingCharge: 10,
+    wholesalePrice: 600,
+    netProfit: 130,
+    status: "pending",
+    orderTracking: "TRK-001235",
+  },
+  {
+    sn: 3,
+    orderDate: "2024-03-08",
+    itemCount: 5,
+    cod: 3200,
+    deliveryCharge: 80,
+    packagingCharge: 30,
+    wholesalePrice: 2100,
+    netProfit: 990,
+    status: "partial",
+    orderTracking: "TRK-001236",
+  },
+  {
+    sn: 4,
+    orderDate: "2024-03-10",
+    itemCount: 2,
+    cod: 1200,
+    deliveryCharge: 60,
+    packagingCharge: 20,
+    wholesalePrice: 800,
+    netProfit: -160,
+    status: "cancelled",
+    orderTracking: "TRK-001237",
+  },
+  {
+    sn: 5,
+    orderDate: "2024-03-12",
+    itemCount: 4,
+    cod: 2500,
+    deliveryCharge: 70,
+    packagingCharge: 25,
+    wholesalePrice: 1800,
+    netProfit: 0,
+    status: "untraceable",
+    orderTracking: "TRK-001238",
+  },
+];

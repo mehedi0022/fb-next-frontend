@@ -154,6 +154,17 @@ export default function ProfilePage() {
                 />
               </Field>
 
+              {/* Current Password*/}
+              <Field label="বর্তমান পাসওয়ার্ড" icon={<Lock className="h-4 w-4" />}>
+                <input
+                  name="newPassword"
+                  type="password"
+                  value={form.newPassword}
+                  onChange={handleChange}
+                  className={inputClass}
+                  placeholder="বর্তমান পাসওয়ার্ড লিখুন"
+                />
+              </Field>
               {/* New Password */}
               <Field label="নতুন পাসওয়ার্ড" icon={<Lock className="h-4 w-4" />}>
                 <input

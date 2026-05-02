@@ -192,3 +192,24 @@ export interface ProfileFormState extends ProfileData {
   confirmPassword: string;
   shopLogo: File | null;
 }
+
+
+// Pending orders related types 
+export interface PendingOrder {
+  sn: number;
+  orderDate: string;
+  itemCount: number;
+  cod: number;
+  deliveryCharge: number;
+  packagingCharge: number;
+  wholesalePrice: number;
+  netProfit: number;
+  status:OrderStatus;
+  orderTracking: string;
+}
+
+export interface OrderFilters {
+  search: string;
+  fromDate: string;
+  toDate: string;
+}
