@@ -34,6 +34,7 @@ import type {
   PendingOrder,
   AllOrder,
   UntrackedOrder,
+  ProductsTableItem,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -396,3 +397,14 @@ export const UNTRACKED_ORDERS: UntrackedOrder[] = [
   { sl: 4, orderId: "#3536", customer: "Test Order",           phone: "01700111222",             items: 1, status: "cancelled" },
   { sl: 5, orderId: "#3026", customer: "Freelancer Bangladesh", phone: "01931645490",            items: 1, status: "cancelled" },
 ]; 
+
+// ─── My Products Constants ────────────────────────────────────────────────────────────────
+
+export const PRODUCTS: ProductsTableItem[] = [
+  { id: 1,  name: "Manual Oil Extractor Siphon Pump for Car and Truck With Water Diesel Hose", previousPrice: 800,  yourPrice: 670,   status: "active", home: true, added: "May 02, 2026" },
+  { id: 2,  name: "Personal Usb Juicer Cup Portable Juicer Blender",                           previousPrice: 1200, yourPrice: 1050,  status: "active", home: true, added: "May 02, 2026" },
+  { id: 3,  name: "Portable Mini Rechargeable Juicer",                                         previousPrice: 1100, yourPrice: 950,   status: "active", home: true, added: "May 01, 2026" },
+  { id: 4,  name: "12 in 1 Multifunctional Manual Vegetable Chopper Saving Food Chopper",      previousPrice: 1100, yourPrice: 1050,  status: "active", home: true, added: "Apr 30, 2026" },
+  { id: 5,  name: "Silver Crest 3000W Grinder",                                                previousPrice: 1200, yourPrice: 1150,  status: "active", home: true, added: "Apr 30, 2026" },
+  { id: 6,  name: "Portable Juicer Blender",                                                   previousPrice: 1050, yourPrice: 900,   status: "active", home: true, added: "Apr 29, 2026" },
+];

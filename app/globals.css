@@ -9,8 +9,6 @@
   /* #f75605 */
   --color-ternary: 229 237 228;
   /* #e5ede4 */
-  --sidebar-bg: #cfcfcc;
-  --sidebar-width: 200px;
   --white: #ffffff;
   --text-primary: #1a1a1a;
   --text-secondary: #6b7280;
@@ -50,30 +48,6 @@
   font-family: var(--font-poppins);
 }
 
-/* Sidebar normal dots Inactive */
-.category-carousel .slick-dots li button {
-  background: #255ac4 !important;
-  /* Initial Blue */
-  opacity: 0.4 !important;
-  height: 8px !important;
-  width: 8px !important;
-  border-radius: 100px !important;
-  /* Color transition off rakhbo jate instant orange hoy */
-  transition:
-    width 0.3s ease-in-out,
-    opacity 0.3s ease-in-out !important;
-}
-
-/* Sidebar active dots */
-.category-carousel .slick-dots li.slick-active button {
-  background: #be8a05 !important;
-  /* Your Orange color */
-  opacity: 1 !important;
-  border-radius: 10px !important;
-  width: 24px !important;
-  /* Active state-e kono transition delay thakbe na */
-  transition: width 0.3s ease-in-out !important;
-}
 
 /* Mobile responsive fixes for category carousel */
 @media (max-width: 640px) {
@@ -153,73 +127,7 @@ ul {
   list-style: none;
 }
 
-/* ─── Sidebar ─────────────────────────────────────────────────────────────────── */
-.sidebar {
-  width: var(--sidebar-width);
-  height: calc(100vh - 100px);
-  position: sticky;
-  top: 100px;
-  background: var(--sidebar-bg);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  flex-shrink: 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
 
-.sidebar::-webkit-scrollbar {
-  width: 2px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
-}
-
-.portal-box {
-  padding: 16px 14px 14px;
-  border-bottom: 1px solid var(--border);
-  font-size: large;
-  background-color: white;
-  margin: 8px 2px 0px 2px;
-  border-radius: 10px;
-}
-
-.portal-title {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.portal-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.portal-info li {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-.info-label {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-.info-value {
-  color: var(--text-primary);
-  font-weight: 500;
-  word-break: break-all;
-}
 
 /* ─── Nav Menu ────────────────────────────────────────────────────────────────── */
 
@@ -739,9 +647,6 @@ ul {
 
 /* ─── Responsive ──────────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  :root {
-    --sidebar-width: 180px;
-  }
 
   .stat-grid {
     grid-template-columns: 1fr;
@@ -753,13 +658,6 @@ ul {
 }
 
 @media (max-width: 640px) {
-  .sidebar {
-    display: flex;
-    width: 100%;
-    height: auto;
-    overflow-y: visible;
-    flex-direction: column;
-  }
 
   .dash-header {
     flex-wrap: wrap;
