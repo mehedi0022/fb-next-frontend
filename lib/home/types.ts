@@ -252,3 +252,16 @@ export interface ProductsTableItem {
   added: string;
   category?: string;
 }
+
+// ─── Categories Types ────────────────────────────────────────────────────────────────────
+
+export interface CategoryItem {
+  id: number;
+  category: string;
+  subcategory: string;
+  label: string;
+  sort: number;
+  status: "active" | "inactive";
+  home: boolean;
+  added: string;
+};

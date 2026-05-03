@@ -35,6 +35,7 @@ import type {
   AllOrder,
   UntrackedOrder,
   ProductsTableItem,
+  CategoryItem,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -419,4 +420,59 @@ export const PRODUCTS: ProductsTableItem[] = [
   { id: 16, name: "Vegetable Spiralizer 3 Blade",                                              previousPrice: 700,  yourPrice: 560,  status: "inactive", home: false, added: "Apr 19, 2026" },
   { id: 17, name: "Handheld Immersion Blender 500W",                                           previousPrice: 1100, yourPrice: 880,  status: "active",   home: true,  added: "Apr 18, 2026" },
   { id: 18, name: "Cast Iron Skillet 10 inch",                                                 previousPrice: 2200, yourPrice: 1800, status: "active",   home: false, added: "Apr 17, 2026" },
+];
+
+// ─── My Categories Constants ────────────────────────────────────────────────────────────────
+
+export const CATEGORY_DATA: CategoryItem[] = [
+  {
+    id: 1,
+    category: "Hot Deals",
+    subcategory: "Plug In Quran",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 29, 2026",
+  },
+  {
+    id: 2,
+    category: "Hot Deals",
+    subcategory: "Juicers",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 3,
+    category: "Hot Deals",
+    subcategory: "",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 4,
+    category: "New Arrival",
+    subcategory: "",
+    label: "-",
+    sort: 1,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 5,
+    category: "Gadgets",
+    subcategory: "",
+    label: "-",
+    sort: 2,
+    status: "active",
+    home: true,
+    added: "Mar 02, 2026",
+  },
 ];
