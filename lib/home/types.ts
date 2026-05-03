@@ -250,4 +250,5 @@ export interface ProductsTableItem {
   status: "active" | "inactive";
   home: boolean;
   added: string;
+  category?: string;
 }

@@ -9,9 +9,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="
-        group
-        w-full sm:w-[190px] lg:w-[210px]
+      className="group w-full sm:w-[190px] lg:w-[210px]
         sm:sticky sm:top-[100px]
         sm:h-[calc(100vh-100px)]
         flex flex-col flex-shrink-0
@@ -173,15 +171,14 @@ export default function Sidebar() {
                 duration-200
                 border
 
-                ${
-                  isActive
-                    ? `
+                ${isActive
+                  ? `
                       bg-gradient-to-r from-[#1f3c88] to-[#2f5fd0]
                       text-white
                       border-[#1f3c88]
                       shadow-md
                     `
-                    : `
+                  : `
                       bg-white/70
                       text-[#374151]
                       border-transparent
