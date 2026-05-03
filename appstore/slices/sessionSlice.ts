@@ -41,7 +41,6 @@ const sessionSlice = createSlice({
 
 export const { setSession, clearSession, setLoading } = sessionSlice.actions;
 export default sessionSlice.reducer;
-
 export const selectUser = (state: { session: SessionState }) => state.session.user;
 export const selectSessionStatus = (state: { session: SessionState }) => state.session.status;
 export const selectUserRole = (state: { session: SessionState }) => state.session.user?.role ?? null;

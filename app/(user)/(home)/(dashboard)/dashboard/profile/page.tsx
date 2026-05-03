@@ -39,7 +39,6 @@ export default function ProfilePage() {
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
   } = useForm<FormValues>({
     defaultValues: {
