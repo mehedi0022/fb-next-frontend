@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface initialState {
+interface SidebarState {
   collapsed: boolean;
 }
 
-const initialState: initialState = {
+const initialState: SidebarState = {
   collapsed: false,
 };
 
@@ -15,8 +15,11 @@ const sidebarSlice = createSlice({
     toggleSidebar: (state) => {
       state.collapsed = !state.collapsed;
     },
+    setSidebar: (state, action) => {
+      state.collapsed = action.payload;
+    },
   },
 });
 
-export const { toggleSidebar } = sidebarSlice.actions;
+export const { toggleSidebar, setSidebar } = sidebarSlice.actions;
 export default sidebarSlice.reducer;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Layout, Avatar, Dropdown } from "antd";
+import { Avatar, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
   MenuFoldOutlined,
