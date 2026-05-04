@@ -1,4 +1,5 @@
-import { AuthGuard, DashboardHeader, Sidebar } from "@/lib/home";
+import RoleProtectedRoute from "@/appstore/provider/RoleProtectedRoute";
+import {  DashboardHeader, Sidebar } from "@/lib/home";
 
 export default function DashboardLayout({
   children,
@@ -6,8 +7,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
+      <RoleProtectedRoute allowRoles={["seller"]}>
     <div className="max-w-6xl mx-auto  flex flex-col md:flex-row">
-      <AuthGuard>
         <Sidebar />
         <div className="main-area">
           <DashboardHeader />
@@ -15,7 +16,8 @@ export default function DashboardLayout({
             {children}
           </main>
         </div>
-      </AuthGuard>
+
     </div>
+      </RoleProtectedRoute>
   );
 }

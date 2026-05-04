@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRole } from "../hooks/hooks";
+import { usePathname, useRouter } from "next/navigation";
 
 const RoleProtectedRoute = ({
   children,
@@ -11,11 +12,12 @@ const RoleProtectedRoute = ({
   allowRoles: string[];
 }) => {
   const role = useRole();
-
-  console.log("User role:", role);
+  const router = useRouter()
+  const pathname = usePathname()
 
   if (!role) {
-    return <div>Access Denied. You must be logged in to view this page.</div>;
+    router.replace(`/login`);
+    return null; 
   }
 
   if (allowRoles.includes(role)) {
