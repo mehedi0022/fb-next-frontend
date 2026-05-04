@@ -9,7 +9,7 @@ import {
     {
         label: "Dashboards",
         icon: LayoutDashboard,
-        href: "/dashboard",
+        href: "/admin",
         badge: 1,
     },
     {
@@ -22,8 +22,8 @@ import {
             { label: "Students Profit Payment", href: "/students/profit" },
         ],
     },
-    { label: "Branches", icon: GitBranch, href: "/branches" },
-    { label: "Student Batches", icon: Users, href: "/batches" },
+    { label: "Branches", icon: GitBranch, href: "/admin/branches" },
+    { label: "Student Batches", icon: Users, href: "/admin/batches" },
     {
         label: "Orders",
         icon: ShoppingCart,

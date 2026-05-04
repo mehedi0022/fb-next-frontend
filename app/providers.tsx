@@ -5,6 +5,7 @@ import { store } from "@/appstore/store";
 import type { ReactNode } from "react";
 import { Provider } from "react-redux";
 import ErrorBoundary from "@/components/home/common/ErrorBoundary";
+import { ToastContainer } from "react-toastify";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <Provider store={store}>
         <AuthProvider>
           {children}
+          <ToastContainer/>
         </AuthProvider>
       </Provider>
     </ErrorBoundary>

@@ -25,7 +25,7 @@ import { useGetBranchesQuery } from "@/appstore/modules/branch/api";
 import Link from "next/link";
 import { useRegisterUserMutation } from "@/appstore/modules/(auth)/registers/api";
 import { toast } from "react-toastify";
-import { BatchInBranch, Branch } from "../../../lib/home/types";
+import { BatchInBranch } from "../../../lib/home/types";
 
 // ==================== TYPES ====================
 interface FormData {
@@ -366,11 +366,13 @@ export default function RegisterForm() {
               disabled={isLoading || branchesError}
             >
               <option value="">ব্রাঞ্চ নির্বাচন করুন</option>
-              {branches?.branches.map((branch: Branch) => (
-                <option key={branch.id} value={branch.id}>
-                  {branch.branchName}
-                </option>
-              ))}
+              {branches?.branches
+                .filter((branch) => branch?.status === "active")
+                .map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.branchName}
+                  </option>
+                ))}
             </select>
           </div>
         </Field>
@@ -399,11 +401,13 @@ export default function RegisterForm() {
               )}
 
               {selectedBranch &&
-                selectedBranch?.batches?.map((batch: BatchInBranch) => (
-                  <option key={batch.id} value={batch.id}>
-                    {batch.batchName}
-                  </option>
-                ))}
+                selectedBranch?.batches
+                  ?.filter((batch: BatchInBranch) => batch?.status === "active")
+                  .map((batch: BatchInBranch) => (
+                    <option key={batch.id} value={batch.id}>
+                      {batch.batchName}
+                    </option>
+                  ))}
             </select>
           </div>
         </Field>

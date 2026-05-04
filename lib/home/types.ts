@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 // Product related types
 export type Price = {
-  wholesale: number;   // supplier price
-  sale: number;        // selling price
-  shipping?: number;   // delivery / dropshipping cost
-  profit: number;      // calculated profit
+  wholesale: number; // supplier price
+  sale: number; // selling price
+  shipping?: number; // delivery / dropshipping cost
+  profit: number; // calculated profit
   currency: "BDT" | string; // currency code, default is BDT
 };
 
@@ -14,7 +14,7 @@ export type Product = {
   title: string;
   slug: string;
   description: string;
-  price: Price; 
+  price: Price;
   stock: number;
   isInStock: boolean;
   thumbnail: string;
@@ -33,7 +33,7 @@ export interface SearchParamsProps {
 export interface NavigationItem {
   label: string;
   href: string;
-  icon: React.ElementType; 
+  icon: React.ElementType;
 }
 
 export interface ProductCardProps {
@@ -51,7 +51,7 @@ export interface BatchInBranch {
   batchName: string;
   branchId: number;
   maxStudents: number;
-  status: string;
+  status: "active" | "inactive";
   createdAt: string;
   updatedAt: string;
   _count: {
@@ -63,10 +63,16 @@ export interface Branch {
   id: number;
   branchName: string;
   branchDescription: string;
-  status: string;
+  status: "active" | "inactive";
   createdAt: string;
   updatedAt: string;
-  batches: BatchInBranch[];
+  batches?: BatchInBranch[];
+}
+
+export interface BranchFormData {
+  branchName: string;
+  branchDescription: string;
+  status: "active" | "inactive";
 }
 
 // Dashboard related types
@@ -147,8 +153,6 @@ export type OrderStatus =
   | "untraceable"
   | "cancelled";
 
-
-
 // Dashboard Payment related types
 export interface NetProfitItem {
   label: string;
@@ -168,8 +172,6 @@ export interface PaymentData {
   currency?: string;
 }
 
-
-
 export interface ProfileData {
   mobile: string;
   name: string;
@@ -184,8 +186,7 @@ export interface ProfileFormState extends ProfileData {
   shopLogo: File | null;
 }
 
-
-// Pending orders related types 
+// Pending orders related types
 export interface PendingOrder {
   sn: number;
   orderDate: string;
@@ -195,7 +196,7 @@ export interface PendingOrder {
   packagingCharge: number;
   wholesalePrice: number;
   netProfit: number;
-  status:OrderStatus;
+  status: OrderStatus;
   orderTracking: string;
 }
 
@@ -214,7 +215,7 @@ export type AllOrderStatus =
   | "cancelled"
   | "returned";
 
-  export interface AllOrder {
+export interface AllOrder {
   sn: number;
   orderDate: string;
   itemCount: number;
@@ -227,10 +228,9 @@ export type AllOrderStatus =
   orderTracking: string | null;
 }
 
-
 // Untrackable orders types
 export type UntrackedOrderStatus = "cancelled" | "pending" | "delivered";
- 
+
 export interface UntrackedOrder {
   sl: number;
   orderId: string;
@@ -239,29 +239,3 @@ export interface UntrackedOrder {
   items: number;
   status: UntrackedOrderStatus;
 }
-
-// ─── Products Types ────────────────────────────────────────────────────────────────────
-
-export interface ProductsTableItem {
-  id: number;
-  name: string;
-  previousPrice: number;
-  yourPrice: number;
-  status: "active" | "inactive";
-  home: boolean;
-  added: string;
-  category?: string;
-}
-
-// ─── Categories Types ────────────────────────────────────────────────────────────────────
-
-export interface CategoryItem {
-  id: number;
-  category: string;
-  subcategory: string;
-  label: string;
-  sort: number;
-  status: "active" | "inactive";
-  home: boolean;
-  added: string;
-};
