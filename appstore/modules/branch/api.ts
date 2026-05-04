@@ -10,6 +10,7 @@ const branchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getBranches: builder.query<BranchResponse, void>({
       query: () => "/branch",
+      providesTags: ["Branch"],
     }),
 
     createBranch: builder.mutation({
@@ -18,6 +19,7 @@ const branchApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Branch"],
     }),
 
     updateBranch: builder.mutation({
@@ -26,6 +28,7 @@ const branchApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Branch"],
     }),
 
     deleteBranch: builder.mutation({
@@ -33,6 +36,7 @@ const branchApi = baseApi.injectEndpoints({
         url: `/branch/delete/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Branch"],
     }),
   }),
 });
