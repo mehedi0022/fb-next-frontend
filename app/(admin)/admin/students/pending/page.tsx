@@ -7,7 +7,6 @@ import { Button } from "antd"
 import { ColumnsType } from "antd/es/table"
 import { Space } from "lucide-react"
 import { useEffect, useState } from "react"
-import { set } from "zod"
 
 
 export default function PendingStudents() {
@@ -74,7 +73,7 @@ export default function PendingStudents() {
   {
     title: "Actions",
     align: "center",
-    render: (_, record) => (
+    render: () => (
       <Space>
         <Button
           type="primary"
