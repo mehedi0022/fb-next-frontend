@@ -1,9 +1,17 @@
 import { baseApi } from "@/appstore/api/baseApi";
+import { Batch } from "@/lib/home";
+
+export type BatchResponse = {
+  success: boolean;
+  message: string;
+  data: Batch[];
+};
 
 const batchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getBatches: builder.query({
+    getBatches: builder.query<BatchResponse, void>({
       query: () => "/batch",
+      providesTags: ["Batch"],
     }),
 
     createBatch: builder.mutation({
@@ -12,6 +20,7 @@ const batchApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Batch"],
     }),
 
     updateBatch: builder.mutation({
@@ -20,6 +29,7 @@ const batchApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Batch"],
     }),
 
     deleteBatch: builder.mutation({
@@ -27,6 +37,7 @@ const batchApi = baseApi.injectEndpoints({
         url: `/batch/delete/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Batch"],
     }),
   }),
 });

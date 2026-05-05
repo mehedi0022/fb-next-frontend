@@ -36,6 +36,10 @@ export default function BranchPage() {
   const [updateBranch] = useUpdateBranchMutation();
   const [deleteBranch] = useDeleteBranchMutation();
 
+  if (isLoading) {
+    return <p>Loading branches...</p>;
+  }
+
   const branches = data?.branches || [];
 
   const filtered = branches.filter((b) =>
@@ -71,13 +75,16 @@ export default function BranchPage() {
   };
 
   const handleDelete = async () => {
-    try{
+    try {
       if (!deleteId) return;
       await deleteBranch(deleteId).unwrap();
       setDeleteId(null);
-    }catch(err){
+    } catch (err) {
       console.error("Delete error:", err);
-      toast.error((err as { code: string }).code  || "Failed to delete branch. Please try again.");
+      toast.error(
+        (err as { code: string }).code ||
+          "Failed to delete branch. Please try again.",
+      );
     }
   };
 
