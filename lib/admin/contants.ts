@@ -16,10 +16,10 @@ import {
         label: "Students",
         icon: GraduationCap,
         children: [
-            { label: "Pending Students", href: "/students/pending" },
-            { label: "Registered Students", href: "/students/registered" },
-            { label: "Cancel Students", href: "/students/cancelled" },
-            { label: "Students Profit Payment", href: "/students/profit" },
+            { label: "Pending Students", href: "/admin/students/pending" },
+            { label: "Registered Students", href: "/admin/students/registered" },
+            { label: "Cancel Students", href: "/admin/students/cancelled" },
+            { label: "Students Profit Payment", href: "/admin/students/profit" },
         ],
     },
     { label: "Branches", icon: GitBranch, href: "/admin/branches" },
@@ -28,7 +28,7 @@ import {
         label: "Orders",
         icon: ShoppingCart,
         children: [
-            { label: "All Orders", href: "/orders/all" },
+            { label: "All Orders", href: "/admin/orders/all" },
             { label: "Pending Orders", href: "/orders/pending" },
             { label: "Cancelled Orders", href: "/orders/cancelled" },
         ],
@@ -38,8 +38,8 @@ import {
         label: "Seller Panel",
         icon: Monitor,
         children: [
-            { label: "Seller List", href: "/seller/list" },
-            { label: "Seller Requests", href: "/seller/requests" },
+            { label: "Seller List", href: "/admin/sellerlist" },
+            { label: "Active Sellers", href: "/admin/active-sellers" },
         ],
     },
     {
