@@ -22,8 +22,7 @@ export function ReusableTable<T extends { id: number }>({
         pagination={{ pageSize: 10 }}
         scroll={{ x: true }}
         // className="rounded-lg overflow-hidden"
-                size="middle"
-
+        size="middle"
       />
     </div>
   );

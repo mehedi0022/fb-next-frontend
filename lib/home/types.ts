@@ -46,6 +46,7 @@ export interface ContainerProps {
   className?: string;
 }
 
+// -------- Branch Related -----------
 export interface BatchInBranch {
   id: number;
   batchName: string;
@@ -66,7 +67,7 @@ export interface Branch {
   status: "active" | "inactive";
   createdAt: string;
   updatedAt: string;
-  batches?: BatchInBranch[];
+  batches: BatchInBranch[];
 }
 
 export interface BranchFormData {
@@ -74,6 +75,35 @@ export interface BranchFormData {
   branchDescription: string;
   status: "active" | "inactive";
 }
+
+// -------- Batch Related -----------
+export type Batch = {
+  id: number;
+  batchName: string;
+  branchId: number;
+  maxStudents: number;
+  status: "active" | "inactive";
+  branch: {
+    id: number;
+    branchName: string;
+    branchDescription: string;
+    status: "active" | "inactive";
+    createdAt: string;
+    updatedAt: string;
+  };
+  _count: {
+    users: number;
+  };
+};
+
+export type BatchFormData = {
+  batchName: string;
+  branchId: number;
+  maxStudents: number;
+  status: "active" | "inactive";
+};
+
+
 
 // Dashboard related types
 
