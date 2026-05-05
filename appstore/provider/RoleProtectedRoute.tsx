@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRole } from "../hooks/hooks";
-import { usePathname, useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
 
 const RoleProtectedRoute = ({
   children,
@@ -12,24 +12,27 @@ const RoleProtectedRoute = ({
   allowRoles: string[];
 }) => {
   const role = useRole();
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!role) {
+      router.replace("/login");
+    }
+  }, [role, router]);
 
   if (!role) {
-    router.replace(`/login`);
-    return null; 
+    return null;
   }
 
-  if (allowRoles.includes(role)) {
-    return <div>{children}</div>;
-  } else {
+  if (!allowRoles.includes(role)) {
     return (
       <div>
-        Access Denied. You do not have permission to view this page. forbidden
-        user.
+        Access Denied. You do not have permission to view this page.
       </div>
     );
   }
+
+  return <>{children}</>;
 };
 
 export default RoleProtectedRoute;

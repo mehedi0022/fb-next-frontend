@@ -9,9 +9,14 @@ const sellerApi = baseApi.injectEndpoints({
             query: () => "/seller",
             providesTags: ["Seller"]
         }),
+
+        getSellerByid: builder.query<SellerResponse, number>({
+            query: (id) => `/seller/profile/${id}`,
+            providesTags: ["Seller"]
+        }),
     })
 })
 
 
-export const { useGetAllSellerQuery } = sellerApi;
+export const { useGetAllSellerQuery, useGetSellerByidQuery } = sellerApi;
 
