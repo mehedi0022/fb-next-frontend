@@ -53,6 +53,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    updatePassword: builder.mutation<{ message: string }, { email: string; currentPassword: string; newPassword: string }>({
+      query: (body) => ({
+        url: "/auth/update-password",
+        method: "POST",
+        body,
+
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -62,4 +71,5 @@ export const {
   useResendOtpMutation,
   useCheckMeQuery,
   useLogoutMutation,
+  useUpdatePasswordMutation,
 } = authApi;

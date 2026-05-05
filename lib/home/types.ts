@@ -269,3 +269,30 @@ export interface UntrackedOrder {
   items: number;
   status: UntrackedOrderStatus;
 }
+
+
+// ─── Products Types ────────────────────────────────────────────────────────────────────
+
+export interface ProductsTableItem {
+  id: number;
+  name: string;
+  previousPrice: number;
+  yourPrice: number;
+  status: "active" | "inactive";
+  home: boolean;
+  added: string;
+  category?: string;
+}
+
+// ─── Categories Types ────────────────────────────────────────────────────────────────────
+
+export interface CategoryItem {
+  id: number;
+  category: string;
+  subcategory: string;
+  label: string;
+  sort: number;
+  status: "active" | "inactive";
+  home: boolean;
+  added: string;
+};

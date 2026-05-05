@@ -34,6 +34,8 @@ import type {
   PendingOrder,
   AllOrder,
   UntrackedOrder,
+  ProductsTableItem,
+  CategoryItem,
 } from "./types";
 
 // ─── Navigation Items ─────────────────────────────────────────────────────────
@@ -396,3 +398,81 @@ export const UNTRACKED_ORDERS: UntrackedOrder[] = [
   { sl: 4, orderId: "#3536", customer: "Test Order",           phone: "01700111222",             items: 1, status: "cancelled" },
   { sl: 5, orderId: "#3026", customer: "Freelancer Bangladesh", phone: "01931645490",            items: 1, status: "cancelled" },
 ]; 
+
+// ─── My Products Constants ────────────────────────────────────────────────────────────────
+
+export const PRODUCTS: ProductsTableItem[] = [
+  { id: 1,  name: "Manual Oil Extractor Siphon Pump for Car and Truck With Water Diesel Hose", previousPrice: 800,  yourPrice: 670,  status: "active",   home: true,  added: "May 02, 2026" },
+  { id: 2,  name: "Personal Usb Juicer Cup Portable Juicer Blender",                           previousPrice: 1200, yourPrice: 1050, status: "active",   home: true,  added: "May 02, 2026" },
+  { id: 3,  name: "Portable Mini Rechargeable Juicer",                                         previousPrice: 1100, yourPrice: 950,  status: "active",   home: true,  added: "May 01, 2026" },
+  { id: 4,  name: "12 in 1 Multifunctional Manual Vegetable Chopper Saving Food Chopper",      previousPrice: 1100, yourPrice: 1050, status: "active",   home: true,  added: "Apr 30, 2026" },
+  { id: 5,  name: "Silver Crest 3000W Grinder",                                                previousPrice: 1200, yourPrice: 1150, status: "active",   home: true,  added: "Apr 30, 2026" },
+  { id: 6,  name: "Portable Juicer Blender",                                                   previousPrice: 1050, yourPrice: 900,  status: "active",   home: true,  added: "Apr 29, 2026" },
+  { id: 7,  name: "Electric Hand Mixer with 5 Speed",                                          previousPrice: 950,  yourPrice: 800,  status: "active",   home: true,  added: "Apr 28, 2026" },
+  { id: 8,  name: "Stainless Steel Pressure Cooker 5L",                                        previousPrice: 1800, yourPrice: 1500, status: "active",   home: false, added: "Apr 27, 2026" },
+  { id: 9,  name: "Non Stick Frying Pan Set 3pcs",                                             previousPrice: 1200, yourPrice: 990,  status: "inactive", home: false, added: "Apr 26, 2026" },
+  { id: 10, name: "Digital Kitchen Scale 5kg",                                                 previousPrice: 600,  yourPrice: 490,  status: "active",   home: true,  added: "Apr 25, 2026" },
+  { id: 11, name: "Rechargeable LED Camping Lantern",                                          previousPrice: 750,  yourPrice: 590,  status: "active",   home: false, added: "Apr 24, 2026" },
+  { id: 12, name: "Portable Electric Kettle 1.5L",                                             previousPrice: 850,  yourPrice: 700,  status: "inactive", home: false, added: "Apr 23, 2026" },
+  { id: 13, name: "Bamboo Cutting Board Set",                                                  previousPrice: 500,  yourPrice: 390,  status: "active",   home: true,  added: "Apr 22, 2026" },
+  { id: 14, name: "Silicone Cooking Utensil Set 6pcs",                                        previousPrice: 680,  yourPrice: 550,  status: "active",   home: false, added: "Apr 21, 2026" },
+  { id: 15, name: "Stainless Steel Water Bottle 750ml",                                        previousPrice: 450,  yourPrice: 350,  status: "active",   home: true,  added: "Apr 20, 2026" },
+  { id: 16, name: "Vegetable Spiralizer 3 Blade",                                              previousPrice: 700,  yourPrice: 560,  status: "inactive", home: false, added: "Apr 19, 2026" },
+  { id: 17, name: "Handheld Immersion Blender 500W",                                           previousPrice: 1100, yourPrice: 880,  status: "active",   home: true,  added: "Apr 18, 2026" },
+  { id: 18, name: "Cast Iron Skillet 10 inch",                                                 previousPrice: 2200, yourPrice: 1800, status: "active",   home: false, added: "Apr 17, 2026" },
+];
+
+// ─── My Categories Constants ────────────────────────────────────────────────────────────────
+
+export const CATEGORY_DATA: CategoryItem[] = [
+  {
+    id: 1,
+    category: "Hot Deals",
+    subcategory: "Plug In Quran",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 29, 2026",
+  },
+  {
+    id: 2,
+    category: "Hot Deals",
+    subcategory: "Juicers",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 3,
+    category: "Hot Deals",
+    subcategory: "",
+    label: "-",
+    sort: 0,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 4,
+    category: "New Arrival",
+    subcategory: "",
+    label: "-",
+    sort: 1,
+    status: "active",
+    home: true,
+    added: "Apr 19, 2026",
+  },
+  {
+    id: 5,
+    category: "Gadgets",
+    subcategory: "",
+    label: "-",
+    sort: 2,
+    status: "active",
+    home: true,
+    added: "Mar 02, 2026",
+  },
+];

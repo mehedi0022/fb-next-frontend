@@ -121,7 +121,6 @@ export default function RegisterForm() {
   const { data: branches, isError: branchesError } = useGetBranchesQuery();
   const [registerUser] = useRegisterUserMutation();
 
-  console.log({ branches, branchesError });
 
   const {
     register,

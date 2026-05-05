@@ -113,7 +113,7 @@ export default function ForgetPasswordForm() {
         </div>
 
         {/* Back to Login */}
-        <Link href="/auth/login">
+        <Link href="/login">
           <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             <ArrowLeft className="h-5 w-5" />
             লগইন পেজে ফিরে যান

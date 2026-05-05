@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Avatar, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -107,7 +107,7 @@ export default function AdminHeader() {
           <Dropdown
             placement="bottomRight"
             arrow
-            dropdownRender={() => (
+            popupRender={() => (
               <div className="w-72 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
