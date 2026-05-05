@@ -11,7 +11,6 @@ const batchApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getBatches: builder.query<BatchResponse, void>({
       query: () => "/batch",
-      providesTags: ["Batch"],
     }),
 
     createBatch: builder.mutation({
@@ -20,7 +19,7 @@ const batchApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Batch"],
+      invalidatesTags: ["Branch"],
     }),
 
     updateBatch: builder.mutation({
@@ -29,7 +28,7 @@ const batchApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Batch"],
+      invalidatesTags: ["Branch"],
     }),
 
     deleteBatch: builder.mutation({
@@ -37,7 +36,7 @@ const batchApi = baseApi.injectEndpoints({
         url: `/batch/delete/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Batch"],
+      invalidatesTags: ["Branch"],
     }),
   }),
 });
