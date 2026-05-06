@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Field } from "@/lib/home";
-import { Phone, User, AlertCircle, Save } from "lucide-react";
+import { Phone, User, AlertCircle, Save, Mail, StoreIcon, Globe } from "lucide-react";
 import {
   useGetSellerByidQuery,
   useUpdateSellerMutation,
@@ -55,6 +55,11 @@ type Props = {
     id: number;
   };
 };
+
+// Validation 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DOMAIN_PATTERN =
+  /^(?:https?:\/\/)?(?:www\.)?([\da-z.-]+)\.([a-z.]{2,})([\/\w .-]*)*\/?$/i;
 
 // ==================== COMPONENT ====================
 export default function EditSellerForm({ params }: Props) {
@@ -242,11 +247,10 @@ export default function EditSellerForm({ params }: Props) {
                     "সঠিক বাংলাদেশী মোবাইল নাম্বার দিন",
                 },
               })}
-              className={`input !pl-10 ${
-                errors.phone
+              className={`input !pl-10 ${errors.phone
                   ? "border-red-500"
                   : ""
-              }`}
+                }`}
               placeholder="01XXXXXXXXX"
               disabled={isLoading}
             />
@@ -270,43 +274,67 @@ export default function EditSellerForm({ params }: Props) {
                     "নাম কমপক্ষে ২ অক্ষরের হতে হবে",
                 },
               })}
-              className={`input !pl-10 ${
-                errors.name
+              className={`input !pl-10 ${errors.name
                   ? "border-red-500"
                   : ""
-              }`}
+                }`}
               placeholder="আপনার পূর্ণ নাম লিখুন"
               disabled={isLoading}
             />
           </div>
         </Field>
-        {/* Name */}
-        <Field
-          label="পূর্ণ নাম *"
-          error={errors.name}
-        >
+
+        {/* Email */}
+        <Field label="ইমেইল ঠিকানা" error={errors.email}>
           <div className="relative">
-            <User className="input-icon" />
+            <Mail className="input-icon" />
             <input
-              type="text"
-              {...register("name", {
-                required: "নাম আবশ্যক",
-                minLength: {
-                  value: 2,
-                  message:
-                    "নাম কমপক্ষে ২ অক্ষরের হতে হবে",
+              type="email"
+              {...register("email", {
+                pattern: {
+                  value: EMAIL_PATTERN,
+                  message: "সঠিক ইমেইল ঠিকানা দিন",
                 },
               })}
-              className={`input !pl-10 ${
-                errors.name
-                  ? "border-red-500"
-                  : ""
-              }`}
-              placeholder="আপনার পূর্ণ নাম লিখুন"
+              className={`input !pl-10 ${errors.email ? "border-red-500" : ""}`}
+              placeholder="example@email.com"
               disabled={isLoading}
             />
           </div>
         </Field>
+
+        <Field label="শপের নাম *" error={errors.shopName}>
+          <div className="relative">
+            <StoreIcon className="input-icon text-blue-600" />
+            <input
+              type="text"
+              {...register("shopName", { required: "শপের নাম আবশ্যক" })}
+              className={`input !pl-10 ${errors.shopName ? "border-red-500" : ""}`}
+              placeholder="আপনার শপের নাম"
+              disabled={isLoading}
+            />
+          </div>
+        </Field>
+
+          {/* Domain */}
+                <Field label="ওয়েবসাইট/ডোমেইন" error={errors.domain}>
+                  <div className="relative">
+                    <Globe className="input-icon" />
+                    <input
+                      type="url"
+                      {...register("domain", {
+                        pattern: {
+                          value: DOMAIN_PATTERN,
+                          message: "সঠিক ওয়েবসাইট ঠিকানা দিন",
+                        },
+                      })}
+                      className={`input !pl-10 ${errors.domain ? "border-red-500" : ""}`}
+                      placeholder="https://www.yourshop.com"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </Field>
+
       </div>
 
       {/* Submit */}
@@ -314,11 +342,10 @@ export default function EditSellerForm({ params }: Props) {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${
-            isLoading
+          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          }`}
+            }`}
         >
           {isLoading ? (
             <>
