@@ -1,3 +1,4 @@
+import RoleProtectedRoute from "@/appstore/provider/RoleProtectedRoute";
 import AdminHeader from "@/components/admin/Layout/AdminHeader";
 import AdminSidebar from "@/components/admin/Layout/AdminSidebar";
 
@@ -7,18 +8,20 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="!min-h-screen flex">
-      {/* Sidebar */}
-      <AdminSidebar />
+    <RoleProtectedRoute allowRoles={["super_admin", "admin"]}>
+      <div className="!min-h-screen flex">
+        {/* Sidebar */}
+        <AdminSidebar />
 
-      {/* Main */}
-      <div className="!bg-gray-50 flex flex-col min-w-0 overflow-hidden w-full">
-        {/* Header */}
-        <AdminHeader />
+        {/* Main */}
+        <div className="!bg-gray-50 flex flex-col min-w-0 overflow-hidden w-full">
+          {/* Header */}
+          <AdminHeader />
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto p-4">{children}</main>
+          {/* Page Content */}
+          <main className="flex-1 overflow-y-auto p-4">{children}</main>
+        </div>
       </div>
-    </div>
+    </RoleProtectedRoute>
   );
 }

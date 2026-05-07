@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import Profile from "./Profile";
+import { useRole } from "@/appstore/hooks/hooks";
 
 type Props = {
   auth: boolean;
@@ -20,6 +21,7 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
   const isDrawer = from === "drawer";
   const [open, setOpen] = useState(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
+  const { role, isLoading } = useRole();
 
   useEffect(() => {
     const handleClickOutSide = (e: MouseEvent) => {
@@ -36,6 +38,8 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
     return () => document.removeEventListener("mousedown", handleClickOutSide);
   }, []);
 
+  if (isLoading) return <div>Loading.......</div>;
+
   return (
     <div
       className={`
@@ -46,7 +50,9 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
       {/* AUTH */}
       {auth ? (
         <Link
-          href="/dashboard"
+          href={
+            role === "admin" || role === "super_admin" ? "/admin" : "/dashboard"
+          }
           className="btn-primary bg-black/80 text-white flex items-center gap-2 w-full justify-center py-2 px-4 rounded"
         >
           <DashboardOutlined />
