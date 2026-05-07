@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRole } from "../hooks/hooks";
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 
 const RoleProtectedRoute = ({
   children,
@@ -13,7 +13,7 @@ const RoleProtectedRoute = ({
 }) => {
   const role = useRole();
   const router = useRouter()
-  const pathname = usePathname()
+  // const pathname = usePathname()
 
   if (!role) {
     router.replace(`/login`);
