@@ -22,6 +22,8 @@ export interface Seller {
   phone: string;
   address: string;
   district: string;
+  shopName?: string;
+  branchId?: number;
   domain_name: string | null; 
   seller_code: string;
   status: string;
@@ -36,4 +38,9 @@ export interface SellerResponse {
     totalPages: number;
   };
   data: Seller[]; 
+}
+
+export interface SellerSingleResponse {
+  success: boolean;
+  data: Seller;
 }

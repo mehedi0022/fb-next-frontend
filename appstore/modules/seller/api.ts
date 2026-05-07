@@ -1,5 +1,5 @@
 import { baseApi } from "@/appstore/api/baseApi";
-import { SellerResponse } from "@/lib/admin/types";
+import { SellerResponse, SellerSingleResponse,} from "@/lib/admin/types";
 
 
 const sellerApi = baseApi.injectEndpoints({
@@ -9,9 +9,22 @@ const sellerApi = baseApi.injectEndpoints({
             query: () => "/seller",
             providesTags: ["Seller"]
         }),
+
+        getSellerByid: builder.query<SellerSingleResponse, number>({
+            query: (id) => `/seller/profile/${id}`,
+            providesTags: ["Seller"]
+        }),
+        updateSeller: builder.mutation({
+            query: ({ id, ...rest }) => ({
+                url: `/seller/update/${id}`,
+                method: "PUT",
+                body: rest
+            }),
+            invalidatesTags: ["Seller"]
+        })
     })
 })
 
 
-export const { useGetAllSellerQuery } = sellerApi;
+export const { useGetAllSellerQuery, useGetSellerByidQuery, useUpdateSellerMutation } = sellerApi;
 

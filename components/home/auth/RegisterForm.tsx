@@ -113,7 +113,7 @@ const BANGLADESH_DISTRICTS = [
 const PHONE_PATTERN = /^(\+88)?01[3-9]\d{8}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DOMAIN_PATTERN =
-  /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+  /^(?:https?:\/\/)?(?:www\.)?([\da-z.-]+)\.([a-z.]{2,})([\/\w .-]*)*\/?$/i;
 
 // ==================== COMPONENT ====================
 export default function RegisterForm() {
