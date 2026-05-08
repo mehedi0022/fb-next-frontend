@@ -17,6 +17,7 @@ import {
   Building,
   Users,
   ImageIcon,
+  // Package,
 } from "lucide-react";
 import {
   useGetSellerByidQuery,
@@ -27,6 +28,8 @@ import { toast } from "react-toastify";
 import LoadingSkeleton from "@/components/admin/common/Skeleton";
 import { BatchInBranch } from "@/lib/home/types";
 import Image from "next/image";
+// import { useGetAllPackagesQuery, } from "@/appstore/modules/packages/api";
+// import { PackagesResponse } from "@/lib/admin/types";
 
 // ==================== TYPES ====================
 interface FormData {
@@ -37,8 +40,9 @@ interface FormData {
   address: string;
   district: string;
   domain: string;
-  branchId: string;
-  batchId: string;
+  branchId: number | null;
+  batchId: number | null;
+  // packageId: string;
   agreeToTerms: boolean;
   shopLogo: FileList | null;
 }
@@ -54,21 +58,21 @@ interface SellerData {
   domain?: string;
   domain_name?: string;
   shopLogo?: string;
+  batchId?: number;
   batch?: {
     id?: number;
     batchName?: string;
-    branch?: {
-      id?: number;
-      branchName?: string;
-    };
+    branchId?: number;
   };
+  // sellerAccount?: {
+  //   sellerPackageId?: number;
+  // };
 }
 
 interface SellerResponse {
   data?: SellerData;
 }
 
-// Branch types — match whatever useGetBranchesQuery returns
 interface BranchItem {
   id: number;
   branchName: string;
@@ -122,7 +126,16 @@ export default function EditSellerForm({ params }: Props) {
     isError: boolean;
   };
 
+  // const {
+  //   data: packages,
+  //   isError: packagesError,
+  // } = useGetAllPackagesQuery() as {
+  //   data?: PackagesResponse;
+  //   isError: boolean;
+  // };
+
   const [updateSeller] = useUpdateSellerMutation();
+  // const [updatePackage] = useUpdatePackageMutation();
 
   // ── Form ─────────────────────────────────────────────────
   const {
@@ -141,8 +154,9 @@ export default function EditSellerForm({ params }: Props) {
       address: "",
       district: "",
       domain: "",
-      branchId: "",
-      batchId: "",
+      branchId: null,
+      batchId: null,
+      // packageId: "",
       agreeToTerms: true,
       shopLogo: null,
     },
@@ -153,12 +167,12 @@ export default function EditSellerForm({ params }: Props) {
   const [logoPreview, setLogoPreview] = useState<string>("");
 
   // ── Branch → Batch map ────────────────────────────────────
-  const branchMap = useMemo(()=>{
-    if(!branches?.branches) return new Map<number, BranchItem>();
-    return new Map<number,BranchItem>(
+  const branchMap = useMemo(() => {
+    if (!branches?.branches) return new Map<number, BranchItem>();
+    return new Map<number, BranchItem>(
       branches.branches.map((b) => [b.id, b])
-    )
-  },[branches])
+    );
+  }, [branches]);
 
   const selectedBranchId = watch("branchId");
   const selectedBranch = branchMap.get(Number(selectedBranchId));
@@ -177,15 +191,15 @@ export default function EditSellerForm({ params }: Props) {
       address: seller.address ?? "",
       district: seller.district ?? "",
       domain: seller.domain_name ?? seller.domain ?? "",
-      branchId: seller.batch?.branch?.id
-        ? String(seller.batch.branch.id)
-        : "",
-      batchId: seller.batch?.id
-        ? String(seller.batch.id)
-        : "",
+      branchId: seller.batch?.branchId ?? null,
+      batchId: seller.batchId ?? null,
+      // packageId: seller.sellerAccount?.sellerPackageId
+      //   ? String(seller.sellerAccount.sellerPackageId)
+      //   : "",
       shopLogo: null,
     });
 
+    // shopLogo snake_case
     if (seller.shopLogo) {
       setLogoPreview(seller.shopLogo);
     }
@@ -194,9 +208,14 @@ export default function EditSellerForm({ params }: Props) {
   // ── Submit ────────────────────────────────────────────────
   const onSubmit = async (formData: FormData) => {
     setIsLoading(true);
+    console.log(formData)
 
     try {
+      // ── Seller info payload (FormData — file upload এর জন্য) ──
       const payload = new FormData();
+      const batchId = Number(formData.batchId);
+      const branchIdId = Number(formData.branchId);
+      console.log(batchId, branchIdId)
       payload.append("phone", formData.phone);
       payload.append("name", formData.name);
       payload.append("email", formData.email);
@@ -204,37 +223,66 @@ export default function EditSellerForm({ params }: Props) {
       payload.append("address", formData.address);
       payload.append("district", formData.district);
       payload.append("domain", formData.domain);
-      payload.append("branchId", formData.branchId);
-      payload.append("batchId", formData.batchId);
+      payload.append("branchId", String(Number(formData.branchId)));
+      payload.append("batchId", String(Number(formData.batchId)));
 
       if (formData.shopLogo?.[0]) {
         payload.append("shopLogo", formData.shopLogo[0]);
       }
 
-      const result = await updateSeller(payload);
+      console.log("ttttt", payload)
+      // ── Call all api ─────────────────────────────
+      const [sellerResult,] = await Promise.all([
+        updateSeller({ id, payload }),
+        // updatePackage({ id, packageId: Number(formData.packageId) }),
+      ]);
 
-      if (
-        "data" in result &&
-        (result.data as UpdateSellerResponse)?.success
-      ) {
+      const sellerSuccess =
+        "data" in sellerResult &&
+        (sellerResult.data as UpdateSellerResponse)?.success;
+
+      // const packageSuccess =
+      //   "data" in packageResult &&
+      //   (packageResult.data as UpdateSellerResponse)?.success;
+
+      // ── redirect pages ───────────────────────────
+      if (sellerSuccess) {
         toast.success("তথ্য সফলভাবে আপডেট হয়েছে!");
-        router.push("/admin/sellers");
+        router.push("/admin/students/pending");
         return;
       }
 
-      let errorMessage = "আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
-
-      if ("error" in result) {
-        const apiError = result.error as { data?: { message?: string } };
-        errorMessage = apiError?.data?.message ?? errorMessage;
+      // ── Errors ──────────────────
+      if (!sellerSuccess) {
+        const apiError =
+          "error" in sellerResult
+            ? (sellerResult.error as { data?: { message?: string } })
+            : null;
+        toast.error(
+          apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।"
+        );
       }
 
-      toast.error(errorMessage);
-      setError("agreeToTerms", { type: "manual", message: errorMessage });
+      // if (!packageSuccess) {
+      //   const apiError =
+      //     "error" in packageResult
+      //       ? (packageResult.error as { data?: { message?: string } })
+      //       : null;
+      //   toast.error(
+      //     apiError?.data?.message ?? "প্যাকেজ আপডেটে সমস্যা হয়েছে।"
+      //   );
+      // }
+
+      setError("agreeToTerms", {
+        type: "manual",
+        message: "আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+      });
     } catch {
-      const message = "আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
-      toast.error(message);
-      setError("agreeToTerms", { type: "manual", message });
+      toast.error("আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      setError("agreeToTerms", {
+        type: "manual",
+        message: "আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -390,17 +438,50 @@ export default function EditSellerForm({ params }: Props) {
           </div>
         </Field>
 
+        {/* Package
+        <Field
+          label="প্যাকেজ নির্বাচন *"
+          error={
+            errors.packageId ??
+            (packagesError
+              ? { message: "প্যাকেজ লোড করতে সমস্যা হয়েছে" }
+              : undefined)
+          }
+        >
+          <div className="relative">
+            <Package className="input-icon" />
+            <select
+              {...register("packageId", { required: "প্যাকেজ নির্বাচন করুন" })}
+              className={`input !pl-10 ${errors.packageId || packagesError ? "border-red-500" : ""}`}
+              disabled={isLoading || packagesError}
+            >
+              <option value="">প্যাকেজ নির্বাচন করুন</option>
+              {packages?.data
+                ?.filter((pkg) => pkg.status === "active")
+                .map((pkg) => (
+                  <option key={pkg.id} value={pkg.id}>
+                    {pkg.name} — ৳{pkg.price}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </Field> */}
+
         {/* Branch */}
         <Field
           label="ব্রাঞ্চ নির্বাচন *"
-          error={errors.batchId}
+          error={
+            errors.branchId ??
+            (branchesError
+              ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে", }
+              : undefined)
+          }
         >
           <div className="relative">
             <Building className="input-icon" />
             <select
               {...register("branchId", { required: "ব্রাঞ্চ নির্বাচন করুন" })}
-              className={`input !pl-10 ${errors.branchId || branchesError ? "border-red-500" : ""
-                }`}
+              className={`input !pl-10 ${errors.branchId || branchesError ? "border-red-500" : ""}`}
               disabled={isLoading || branchesError}
             >
               <option value="">ব্রাঞ্চ নির্বাচন করুন</option>
@@ -418,10 +499,7 @@ export default function EditSellerForm({ params }: Props) {
         {/* Batch */}
         <Field
           label="ব্যাচ নির্বাচন *"
-          error={
-            errors.branchId ??
-            (branchesError ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে", } : undefined)
-          }
+          error={errors.batchId}
         >
           <div className="relative">
             <Users className="input-icon" />
@@ -449,8 +527,7 @@ export default function EditSellerForm({ params }: Props) {
           </div>
         </Field>
 
-
-        {/* Shop Logo Field — errors.shopLogo any সরিয়ে type assertion */}
+        {/* Shop Logo */}
         <Field label="শপ লোগো" error={errors.shopLogo as unknown as FieldError}>
           <div className="space-y-2">
             {logoPreview && (
@@ -493,8 +570,8 @@ export default function EditSellerForm({ params }: Props) {
           type="submit"
           disabled={isLoading}
           className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             }`}
         >
           {isLoading ? (
