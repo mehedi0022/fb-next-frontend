@@ -44,3 +44,18 @@ export interface SellerSingleResponse {
   success: boolean;
   data: Seller;
 }
+
+
+// Package Types
+
+interface PackageItem {
+  id: number;
+  name: string;
+  price: string;
+  status: string;
+}
+
+export interface PackagesResponse {
+  success: boolean;
+  data: PackageItem[];
+}
