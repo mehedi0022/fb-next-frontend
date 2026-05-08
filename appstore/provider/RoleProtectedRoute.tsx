@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useRole } from "../hooks/hooks";
-import {useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../hooks/hooks";
+import { useRouter } from "next/navigation";
+import ForbiddenPage from "@/components/home/common/Forbidden";
 
 const RoleProtectedRoute = ({
   children,
@@ -11,24 +12,36 @@ const RoleProtectedRoute = ({
   children: React.ReactNode;
   allowRoles: string[];
 }) => {
-  const role = useRole();
+  const { user, status, isLoggedOut } = useAuth();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!role) {
+    if (status === "loading") {
+      setIsLoading(true);
+      return;
+    } else if (status === "authenticated" || status === "unauthenticated") {
+      setIsLoading(false);
+    }
+
+    if (!user?.role || isLoggedOut) {
       router.replace("/login");
     }
-  }, [role, router]);
+  }, [user, isLoggedOut, status, router]);
 
-  if (!role) {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user?.role) {
     return null;
   }
 
-  if (!allowRoles.includes(role)) {
+  if (!allowRoles.includes(user?.role)) {
     return (
-      <div>
-        Access Denied. You do not have permission to view this page.
-      </div>
+      <>
+        <ForbiddenPage />
+      </>
     );
   }
 

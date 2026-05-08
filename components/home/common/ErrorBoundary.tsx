@@ -37,7 +37,11 @@ class ErrorBoundary extends Component<Props, State> {
               We&apos;re sorry, but something unexpected happened.
             </p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.location.reload();
+                }
+              }}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Reload Page
