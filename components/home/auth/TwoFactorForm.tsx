@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { z } from "zod";
-import { useVerifyOtpMutation, useResendOtpMutation } from "@/appstore/api/authApi";
+import {
+  useVerifyOtpMutation,
+  useResendOtpMutation,
+} from "@/appstore/api/authApi";
 
 // Zod validation schemas for regex patterns
 const singleDigitSchema = z
@@ -20,6 +23,7 @@ export default function TwoFactorForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [timeLeft, setTimeLeft] = useState(1800);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [verifyOtp] = useVerifyOtpMutation();
@@ -30,6 +34,12 @@ export default function TwoFactorForm() {
     // Check if we're in browser environment
     if (typeof window !== "undefined" && window.sessionStorage) {
       const tempEmail = sessionStorage.getItem("tempEmail");
+      const rememberMe = sessionStorage.getItem("tempRememberMe") === "true";
+
+      if (rememberMe) {
+        setRememberMe(rememberMe);
+      }
+
       if (tempEmail) {
         setEmail(tempEmail);
       } else {
@@ -132,7 +142,7 @@ export default function TwoFactorForm() {
     setError("");
 
     try {
-      await verifyOtp({ email, otp: otpString }).unwrap();
+      await verifyOtp({ email, otp: otpString, rememberMe }).unwrap();
 
       sessionStorage.removeItem("tempEmail");
       router.replace("/");
@@ -155,6 +165,8 @@ export default function TwoFactorForm() {
       setError("কোড পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     }
   };
+
+  console.log(rememberMe);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

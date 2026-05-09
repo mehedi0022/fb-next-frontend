@@ -2,6 +2,7 @@
 
 import { useGetAllSellerQuery } from "@/appstore/modules/seller/api"
 import { ReusableTable } from "@/components/admin/common/ReusableTable"
+import LoadingSkeleton from "@/components/admin/common/Skeleton"
 import { Seller } from "@/lib/admin/types"
 import { Button, Space } from "antd"
 import { ColumnsType } from "antd/es/table"
@@ -58,7 +59,7 @@ export default function PendingStudents() {
         },
         {
             title: "Shop Name",
-            dataIndex: "shopName",
+            dataIndex: "page_name",
             render: (shopName: string) => shopName || "N/A",
         },
         {
@@ -78,6 +79,12 @@ export default function PendingStudents() {
                                 Edit
                             </Button>
                         </Link>
+
+                        <Link href={`/admin/students/packages/${r.id}`}>
+                            <Button type="primary" className="bg-secondary" size="small">
+                                Packages
+                            </Button>
+                        </Link>
                     </Space>
                 )
             },
@@ -87,7 +94,7 @@ export default function PendingStudents() {
 
     return (
         <div>
-            <ReusableTable columns={columns} data={seller} loading={isLoading} />
+            <ReusableTable columns={columns} data={seller} loading={isLoading} loadingComponent={<LoadingSkeleton />} />
         </div>
     )
 }
