@@ -10,6 +10,7 @@ import Link from "next/link";
 interface FormData {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 interface FormErrors {
@@ -24,6 +25,7 @@ export default function SignInForm() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
+    rememberMe: false,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -54,10 +56,11 @@ export default function SignInForm() {
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
 
     // Clear specific field error when user starts typing
@@ -87,6 +90,7 @@ export default function SignInForm() {
       // ✅ If OTP sent
       if (res?.message === "OTP sent to email") {
         sessionStorage.setItem("tempEmail", formData.email);
+        sessionStorage.setItem("tempRememberMe", String(formData.rememberMe));
         router.push("/login/two-factor");
         return;
       }
@@ -116,8 +120,7 @@ export default function SignInForm() {
       {/* Email Field */}
       <Field
         label="ইমেইল ঠিকানা"
-        error={errors.email ? { message: errors.email } : undefined}
-      >
+        error={errors.email ? { message: errors.email } : undefined}>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Mail className="h-5 w-5 text-gray-400" />
@@ -139,8 +142,7 @@ export default function SignInForm() {
       {/* Password Field */}
       <Field
         label="পাসওয়ার্ড"
-        error={errors.password ? { message: errors.password } : undefined}
-      >
+        error={errors.password ? { message: errors.password } : undefined}>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Lock className="h-5 w-5 text-gray-400" />
@@ -160,8 +162,7 @@ export default function SignInForm() {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            disabled={isLoading}
-          >
+            disabled={isLoading}>
             {showPassword ? (
               <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             ) : (
@@ -176,15 +177,17 @@ export default function SignInForm() {
         <label className="flex items-center">
           <input
             type="checkbox"
+            name="rememberMe"
+            checked={formData.rememberMe}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             disabled={isLoading}
+            onChange={handleChange}
           />
           <span className="ml-2 text-sm text-gray-600">আমাকে মনে রাখুন</span>
         </label>
         <Link
           href="/forgot-password"
-          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-        >
+          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
           পাসওয়ার্ড ভুলে গেছেন?
         </Link>
       </div>
@@ -197,8 +200,7 @@ export default function SignInForm() {
           isLoading
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        }`}
-      >
+        }`}>
         {isLoading ? (
           <>
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

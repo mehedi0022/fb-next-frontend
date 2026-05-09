@@ -118,10 +118,7 @@ export default function EditSellerForm({ params }: Props) {
     isError: boolean;
   };
 
-  const {
-    data: branches,
-    isError: branchesError,
-  } = useGetBranchesQuery() as {
+  const { data: branches, isError: branchesError } = useGetBranchesQuery() as {
     data?: BranchesResponse;
     isError: boolean;
   };
@@ -169,9 +166,7 @@ export default function EditSellerForm({ params }: Props) {
   // ── Branch → Batch map ────────────────────────────────────
   const branchMap = useMemo(() => {
     if (!branches?.branches) return new Map<number, BranchItem>();
-    return new Map<number, BranchItem>(
-      branches.branches.map((b) => [b.id, b])
-    );
+    return new Map<number, BranchItem>(branches.branches.map((b) => [b.id, b]));
   }, [branches]);
 
   const selectedBranchId = watch("branchId");
@@ -208,14 +203,10 @@ export default function EditSellerForm({ params }: Props) {
   // ── Submit ────────────────────────────────────────────────
   const onSubmit = async (formData: FormData) => {
     setIsLoading(true);
-    console.log(formData)
 
     try {
       // ── Seller info payload (FormData — file upload এর জন্য) ──
       const payload = new FormData();
-      const batchId = Number(formData.batchId);
-      const branchIdId = Number(formData.branchId);
-      console.log(batchId, branchIdId)
       payload.append("phone", formData.phone);
       payload.append("name", formData.name);
       payload.append("email", formData.email);
@@ -230,10 +221,9 @@ export default function EditSellerForm({ params }: Props) {
         payload.append("shopLogo", formData.shopLogo[0]);
       }
 
-      console.log("ttttt", payload)
       // ── Call all api ─────────────────────────────
-      const [sellerResult,] = await Promise.all([
-        updateSeller({ id, payload }),
+      const [sellerResult] = await Promise.all([
+        updateSeller({ id, body: payload }),
         // updatePackage({ id, packageId: Number(formData.packageId) }),
       ]);
 
@@ -258,9 +248,7 @@ export default function EditSellerForm({ params }: Props) {
           "error" in sellerResult
             ? (sellerResult.error as { data?: { message?: string } })
             : null;
-        toast.error(
-          apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।"
-        );
+        toast.error(apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।");
       }
 
       // if (!packageSuccess) {
@@ -317,7 +305,6 @@ export default function EditSellerForm({ params }: Props) {
       <h2 className="text-xl font-semibold">Edit Seller</h2>
 
       <div className="grid md:grid-cols-2 gap-6">
-
         {/* Phone */}
         <Field label="মোবাইল নাম্বার *" error={errors.phone}>
           <div className="relative">
@@ -473,17 +460,15 @@ export default function EditSellerForm({ params }: Props) {
           error={
             errors.branchId ??
             (branchesError
-              ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে", }
+              ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে" }
               : undefined)
-          }
-        >
+          }>
           <div className="relative">
             <Building className="input-icon" />
             <select
               {...register("branchId", { required: "ব্রাঞ্চ নির্বাচন করুন" })}
               className={`input !pl-10 ${errors.branchId || branchesError ? "border-red-500" : ""}`}
-              disabled={isLoading || branchesError}
-            >
+              disabled={isLoading || branchesError}>
               <option value="">ব্রাঞ্চ নির্বাচন করুন</option>
               {branches?.branches
                 ?.filter((branch) => branch.status === "active")
@@ -497,17 +482,13 @@ export default function EditSellerForm({ params }: Props) {
         </Field>
 
         {/* Batch */}
-        <Field
-          label="ব্যাচ নির্বাচন *"
-          error={errors.batchId}
-        >
+        <Field label="ব্যাচ নির্বাচন *" error={errors.batchId}>
           <div className="relative">
             <Users className="input-icon" />
             <select
               {...register("batchId", { required: "ব্যাচ নির্বাচন করুন" })}
               className={`input !pl-10 ${errors.batchId ? "border-red-500" : ""}`}
-              disabled={isLoading || !selectedBranchId}
-            >
+              disabled={isLoading || !selectedBranchId}>
               <option value="">ব্যাচ নির্বাচন করুন</option>
 
               {!selectedBranch && (
@@ -561,7 +542,6 @@ export default function EditSellerForm({ params }: Props) {
             </p>
           </div>
         </Field>
-
       </div>
 
       {/* Submit */}
@@ -569,11 +549,11 @@ export default function EditSellerForm({ params }: Props) {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading
+          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${
+            isLoading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            }`}
-        >
+          }`}>
           {isLoading ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
