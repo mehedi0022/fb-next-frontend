@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/appstore/hooks/hooks";
 import {
   setSession,
   clearSession,
+  setLoading,
   selectIsLoggedOut,
 } from "@/appstore/slices/sessionSlice";
 import { useEffect } from "react";
@@ -17,18 +18,31 @@ export default function AuthProvider({
   const dispatch = useAppDispatch();
   const isLoggedOut = useAppSelector(selectIsLoggedOut);
 
-  const { data, isError, isSuccess } = useCheckMeQuery(undefined, {
-    // skip: isLoggedOut,
+  const { data, isError, isSuccess, isLoading } = useCheckMeQuery(undefined, {
+    skip: isLoggedOut,
     refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
   });
 
+  // Set loading state
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setLoading());
+    }
+  }, [isLoading, dispatch]);
+
+  // Set session when checkMe succeeds
   useEffect(() => {
     if (isSuccess && data?.user) {
       dispatch(setSession({ user: data.user }));
-    } else if (isError) {
+    }
+  }, [isSuccess, data, dispatch]);
+
+  useEffect(() => {
+    if (isError) {
       dispatch(clearSession());
     }
-  }, [isSuccess, isError, data, dispatch]);
+  }, [isError, dispatch]);
 
   return <>{children}</>;
 }

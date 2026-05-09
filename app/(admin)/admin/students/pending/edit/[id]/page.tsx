@@ -114,10 +114,7 @@ export default function EditSellerForm({ params }: Props) {
     isError: boolean;
   };
 
-  const {
-    data: branches,
-    isError: branchesError,
-  } = useGetBranchesQuery() as {
+  const { data: branches, isError: branchesError } = useGetBranchesQuery() as {
     data?: BranchesResponse;
     isError: boolean;
   };
@@ -156,9 +153,7 @@ export default function EditSellerForm({ params }: Props) {
   // ── Branch → Batch map ────────────────────────────────────
   const branchMap = useMemo(() => {
     if (!branches?.branches) return new Map<number, BranchItem>();
-    return new Map<number, BranchItem>(
-      branches.branches.map((b) => [b.id, b])
-    );
+    return new Map<number, BranchItem>(branches.branches.map((b) => [b.id, b]));
   }, [branches]);
 
   const selectedBranchId = watch("branchId");
@@ -274,7 +269,6 @@ export default function EditSellerForm({ params }: Props) {
       <h2 className="text-xl font-semibold">Edit Seller</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
-
         {/* Phone */}
         <Field label="মোবাইল নাম্বার *" error={errors.phone}>
           <div className="relative">
@@ -402,8 +396,7 @@ export default function EditSellerForm({ params }: Props) {
             <select
               {...register("status", { required: "স্ট্যাটাস নির্বাচন করুন" })}
               className={`input !pl-10 ${errors.status ? "border-red-500" : ""}`}
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
               <option value="">স্ট্যাটাস নির্বাচন করুন</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
@@ -420,15 +413,13 @@ export default function EditSellerForm({ params }: Props) {
             (branchesError
               ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে" }
               : undefined)
-          }
-        >
+          }>
           <div className="relative">
             <Building className="input-icon" />
             <select
               {...register("branchId", { required: "ব্রাঞ্চ নির্বাচন করুন" })}
               className={`input !pl-10 ${errors.branchId || branchesError ? "border-red-500" : ""}`}
-              disabled={isLoading || branchesError}
-            >
+              disabled={isLoading || branchesError}>
               <option value="">ব্রাঞ্চ নির্বাচন করুন</option>
               {branches?.branches
                 ?.filter((branch) => branch.status === "active")
@@ -448,8 +439,7 @@ export default function EditSellerForm({ params }: Props) {
             <select
               {...register("batchId", { required: "ব্যাচ নির্বাচন করুন" })}
               className={`input !pl-10 ${errors.batchId ? "border-red-500" : ""}`}
-              disabled={isLoading || !selectedBranchId}
-            >
+              disabled={isLoading || !selectedBranchId}>
               <option value="">ব্যাচ নির্বাচন করুন</option>
 
               {!selectedBranch && (
@@ -503,7 +493,6 @@ export default function EditSellerForm({ params }: Props) {
             </p>
           </div>
         </Field>
-
       </div>
 
       {/* Submit */}
@@ -515,8 +504,7 @@ export default function EditSellerForm({ params }: Props) {
             isLoading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          }`}
-        >
+          }`}>
           {isLoading ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />

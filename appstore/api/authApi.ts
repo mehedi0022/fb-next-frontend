@@ -17,7 +17,7 @@ export const authApi = baseApi.injectEndpoints({
     // verify OTP
     verifyOtp: builder.mutation<
       { message: string },
-      { email?: string; phone?: string; otp: string }
+      { email?: string; phone?: string; otp: string; rememberMe: boolean }
     >({
       query: (body) => ({
         url: "/auth/verify-otp",
@@ -40,7 +40,7 @@ export const authApi = baseApi.injectEndpoints({
     checkMe: builder.query<{ user: unknown }, void>({
       query: () => ({
         url: "/auth/check-me",
-        method: "GET"
+        method: "GET",
       }),
       providesTags: ["User"],
     }),
@@ -53,12 +53,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-    updatePassword: builder.mutation<{ message: string }, { email: string; currentPassword: string; newPassword: string }>({
+    updatePassword: builder.mutation<
+      { message: string },
+      { email: string; currentPassword: string; newPassword: string }
+    >({
       query: (body) => ({
         url: "/auth/update-password",
         method: "POST",
         body,
-
       }),
       invalidatesTags: ["User"],
     }),
