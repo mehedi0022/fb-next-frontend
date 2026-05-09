@@ -17,7 +17,6 @@ import {
   Building,
   Users,
   ImageIcon,
-  // Package,
 } from "lucide-react";
 import {
   useGetSellerByidQuery,
@@ -28,11 +27,9 @@ import { toast } from "react-toastify";
 import LoadingSkeleton from "@/components/admin/common/Skeleton";
 import { BatchInBranch } from "@/lib/home/types";
 import Image from "next/image";
-// import { useGetAllPackagesQuery, } from "@/appstore/modules/packages/api";
-// import { PackagesResponse } from "@/lib/admin/types";
 
 // ==================== TYPES ====================
-interface FormData {
+interface SellerFormData {
   phone: string;
   name: string;
   email: string;
@@ -40,9 +37,9 @@ interface FormData {
   address: string;
   district: string;
   domain: string;
-  branchId: number | null;
-  batchId: number | null;
-  // packageId: string;
+  status: string;
+  branchId: string;
+  batchId: string;
   agreeToTerms: boolean;
   shopLogo: FileList | null;
 }
@@ -55,18 +52,17 @@ interface SellerData {
   shopName?: string;
   address?: string;
   district?: string;
-  domain?: string;
   domain_name?: string;
+  status: string;
   shopLogo?: string;
-  batchId?: number;
   batch?: {
     id?: number;
     batchName?: string;
-    branchId?: number;
+    branch?: {
+      id: number;
+      branchName?: string;
+    };
   };
-  // sellerAccount?: {
-  //   sellerPackageId?: number;
-  // };
 }
 
 interface SellerResponse {
@@ -126,16 +122,7 @@ export default function EditSellerForm({ params }: Props) {
     isError: boolean;
   };
 
-  // const {
-  //   data: packages,
-  //   isError: packagesError,
-  // } = useGetAllPackagesQuery() as {
-  //   data?: PackagesResponse;
-  //   isError: boolean;
-  // };
-
   const [updateSeller] = useUpdateSellerMutation();
-  // const [updatePackage] = useUpdatePackageMutation();
 
   // ── Form ─────────────────────────────────────────────────
   const {
@@ -145,7 +132,7 @@ export default function EditSellerForm({ params }: Props) {
     reset,
     watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<SellerFormData>({
     defaultValues: {
       phone: "",
       name: "",
@@ -154,9 +141,9 @@ export default function EditSellerForm({ params }: Props) {
       address: "",
       district: "",
       domain: "",
-      branchId: null,
-      batchId: null,
-      // packageId: "",
+      status: "",
+      branchId: "",
+      batchId: "",
       agreeToTerms: true,
       shopLogo: null,
     },
@@ -190,49 +177,40 @@ export default function EditSellerForm({ params }: Props) {
       shopName: seller.page_name ?? seller.shopName ?? "",
       address: seller.address ?? "",
       district: seller.district ?? "",
-      domain: seller.domain_name ?? seller.domain ?? "",
-      branchId: seller.batch?.branchId ?? null,
-      batchId: seller.batchId ?? null,
-      // packageId: seller.sellerAccount?.sellerPackageId
-      //   ? String(seller.sellerAccount.sellerPackageId)
-      //   : "",
+      domain: seller.domain_name ?? "",
+      status: seller.status ?? "",
+      branchId: seller.batch?.branch?.id ? String(seller.batch.branch.id) : "",
+      batchId: seller.batch?.id ? String(seller.batch.id) : "",
       shopLogo: null,
     });
 
-    // shopLogo snake_case
     if (seller.shopLogo) {
       setLogoPreview(seller.shopLogo);
     }
   }, [data, reset]);
 
   // ── Submit ────────────────────────────────────────────────
-  const onSubmit = async (formData: FormData) => {
+  const onSubmit = async (formData: SellerFormData) => {
     setIsLoading(true);
-    console.log(formData)
 
     try {
-      // ── Seller info payload (FormData — file upload এর জন্য) ──
       const payload = new FormData();
-      const batchId = Number(formData.batchId);
-      const branchIdId = Number(formData.branchId);
-      console.log(batchId, branchIdId)
       payload.append("phone", formData.phone);
       payload.append("name", formData.name);
       payload.append("email", formData.email);
       payload.append("page_name", formData.shopName);
-      payload.append("address", formData.address);
-      payload.append("district", formData.district);
-      payload.append("domain", formData.domain);
-      payload.append("branchId", String(Number(formData.branchId)));
-      payload.append("batchId", String(Number(formData.batchId)));
+      payload.append("address", formData.address ?? "");
+      payload.append("district", formData.district ?? "");
+      payload.append("domain", formData.domain ?? "");
+      payload.append("status", formData.status);
+      payload.append("branchId", formData.branchId);
+      payload.append("batchId", formData.batchId);
 
       if (formData.shopLogo?.[0]) {
         payload.append("shopLogo", formData.shopLogo[0]);
       }
 
-      console.log("ttttt", payload)
-      // ── Call all api ─────────────────────────────
-      const [sellerResult,] = await Promise.all([
+      const [sellerResult] = await Promise.all([
         updateSeller({ id, body: payload }),
       ]);
 
@@ -240,39 +218,18 @@ export default function EditSellerForm({ params }: Props) {
         "data" in sellerResult &&
         (sellerResult.data as UpdateSellerResponse)?.success;
 
-      // const packageSuccess =
-      //   "data" in packageResult &&
-      //   (packageResult.data as UpdateSellerResponse)?.success;
-
-      // ── redirect pages ───────────────────────────
       if (sellerSuccess) {
         toast.success("তথ্য সফলভাবে আপডেট হয়েছে!");
         router.push("/admin/students/pending");
         return;
       }
 
-      // ── Errors ──────────────────
-      if (!sellerSuccess) {
-        const apiError =
-          "error" in sellerResult
-            ? (sellerResult.error as { data?: { message?: string } })
-            : null;
-        toast.error(
-          apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।"
-        );
-      }
-      console.log("API Result:", JSON.stringify(sellerResult, null, 2));
+      const apiError =
+        "error" in sellerResult
+          ? (sellerResult.error as { data?: { message?: string } })
+          : null;
 
-      // if (!packageSuccess) {
-      //   const apiError =
-      //     "error" in packageResult
-      //       ? (packageResult.error as { data?: { message?: string } })
-      //       : null;
-      //   toast.error(
-      //     apiError?.data?.message ?? "প্যাকেজ আপডেটে সমস্যা হয়েছে।"
-      //   );
-      // }
-
+      toast.error(apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।");
       setError("agreeToTerms", {
         type: "manual",
         message: "আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
@@ -316,7 +273,7 @@ export default function EditSellerForm({ params }: Props) {
 
       <h2 className="text-xl font-semibold">Edit Seller</h2>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
 
         {/* Phone */}
         <Field label="মোবাইল নাম্বার *" error={errors.phone}>
@@ -438,34 +395,22 @@ export default function EditSellerForm({ params }: Props) {
           </div>
         </Field>
 
-        {/* Package
-        <Field
-          label="প্যাকেজ নির্বাচন *"
-          error={
-            errors.packageId ??
-            (packagesError
-              ? { message: "প্যাকেজ লোড করতে সমস্যা হয়েছে" }
-              : undefined)
-          }
-        >
+        {/* Status */}
+        <Field label="স্ট্যাটাস *" error={errors.status}>
           <div className="relative">
-            <Package className="input-icon" />
+            <Building className="input-icon" />
             <select
-              {...register("packageId", { required: "প্যাকেজ নির্বাচন করুন" })}
-              className={`input !pl-10 ${errors.packageId || packagesError ? "border-red-500" : ""}`}
-              disabled={isLoading || packagesError}
+              {...register("status", { required: "স্ট্যাটাস নির্বাচন করুন" })}
+              className={`input !pl-10 ${errors.status ? "border-red-500" : ""}`}
+              disabled={isLoading}
             >
-              <option value="">প্যাকেজ নির্বাচন করুন</option>
-              {packages?.data
-                ?.filter((pkg) => pkg.status === "active")
-                .map((pkg) => (
-                  <option key={pkg.id} value={pkg.id}>
-                    {pkg.name} — ৳{pkg.price}
-                  </option>
-                ))}
+              <option value="">স্ট্যাটাস নির্বাচন করুন</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
             </select>
           </div>
-        </Field> */}
+        </Field>
 
         {/* Branch */}
         <Field
@@ -473,7 +418,7 @@ export default function EditSellerForm({ params }: Props) {
           error={
             errors.branchId ??
             (branchesError
-              ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে", }
+              ? { message: "ব্রাঞ্চ লোড করতে সমস্যা হয়েছে" }
               : undefined)
           }
         >
@@ -497,10 +442,7 @@ export default function EditSellerForm({ params }: Props) {
         </Field>
 
         {/* Batch */}
-        <Field
-          label="ব্যাচ নির্বাচন *"
-          error={errors.batchId}
-        >
+        <Field label="ব্যাচ নির্বাচন *" error={errors.batchId}>
           <div className="relative">
             <Users className="input-icon" />
             <select
@@ -565,14 +507,15 @@ export default function EditSellerForm({ params }: Props) {
       </div>
 
       {/* Submit */}
-      <div className="pt-4">
+      <div className="pt-4 container mx-auto">
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            }`}
+          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${
+            isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          }`}
         >
           {isLoading ? (
             <>

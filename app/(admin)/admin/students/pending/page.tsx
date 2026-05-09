@@ -58,7 +58,7 @@ export default function PendingStudents() {
         },
         {
             title: "Shop Name",
-            dataIndex: "shopName",
+            dataIndex: "page_name",
             render: (shopName: string) => shopName || "N/A",
         },
         {
