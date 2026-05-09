@@ -18,7 +18,7 @@ const sellerApi = baseApi.injectEndpoints({
             query: ({ id, body }) => ({  
                 url: `/seller/update/${id}`,
                 method: "PUT",
-                body: body, 
+                body, 
             }),
             invalidatesTags: ["Seller"],
         }),

@@ -5,13 +5,18 @@ interface ReusableTableProps<T> {
   columns: ColumnsType<T>;
   data: T[];
   loading?: boolean;
+  loadingComponent?: React.ReactNode;
 }
 
 export function ReusableTable<T extends { id: number }>({
   columns,
   data,
   loading,
+  loadingComponent,
 }: ReusableTableProps<T>) {
+  if (loading && loadingComponent) {
+    return <div className="table-wrapper">{loadingComponent}</div>;
+  }
   return (
     <div className="table-wrapper">
       <Table
@@ -21,7 +26,6 @@ export function ReusableTable<T extends { id: number }>({
         loading={loading}
         pagination={{ pageSize: 10 }}
         scroll={{ x: true }}
-        // className="rounded-lg overflow-hidden"
         size="middle"
       />
     </div>
