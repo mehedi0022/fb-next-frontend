@@ -233,8 +233,7 @@ export default function EditSellerForm({ params }: Props) {
       console.log("ttttt", payload)
       // ── Call all api ─────────────────────────────
       const [sellerResult,] = await Promise.all([
-        updateSeller({ id, body:payload }),
-        // updatePackage({ id, packageId: Number(formData.packageId) }),
+        updateSeller({ id, body: payload }),
       ]);
 
       const sellerSuccess =
@@ -262,6 +261,7 @@ export default function EditSellerForm({ params }: Props) {
           apiError?.data?.message ?? "Seller আপডেটে সমস্যা হয়েছে।"
         );
       }
+      console.log("API Result:", JSON.stringify(sellerResult, null, 2));
 
       // if (!packageSuccess) {
       //   const apiError =
@@ -570,8 +570,8 @@ export default function EditSellerForm({ params }: Props) {
           type="submit"
           disabled={isLoading}
           className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold transition-all ${isLoading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             }`}
         >
           {isLoading ? (
