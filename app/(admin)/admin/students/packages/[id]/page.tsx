@@ -8,7 +8,7 @@ type Props = {
 };
 
 function Packages({ params }: Props) {
-      const { id } = params; 
+      const { id } = params; d
   return (
     <div>Packages:{id} </div>
   )
