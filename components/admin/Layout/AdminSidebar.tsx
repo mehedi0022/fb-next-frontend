@@ -22,25 +22,6 @@ function Tooltip({
   );
 }
 
-// Tooltip — useState দিয়ে, CSS hover এ নয়
-// function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
-//   const [show, setShow] = useState(false);
-//   return (
-//     <div
-//       className="relative"
-//       onMouseEnter={() => setShow(true)}
-//       onMouseLeave={() => setShow(false)}
-//     >
-//       {children}
-//       {show && (
-//         <div className="pointer-events-none absolute left-full top-1/2 z-[999] ml-2 -translate-y-1/2 whitespace-nowrap rounded-md bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-white shadow-lg">
-//           {label}
-//           <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-800" />
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 
 export default function Sidebar() {
   const pathname = usePathname();
