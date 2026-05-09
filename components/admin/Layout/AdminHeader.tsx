@@ -14,7 +14,7 @@ import {
   ProfileOutlined,
   SunOutlined,
 } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector } from "@/appstore/hooks/hooks";
+import { useAppDispatch, useAppSelector, useAuth } from "@/appstore/hooks/hooks";
 import { toggleSidebar } from "@/appstore/slices/sidebarSlice";
 
 const userDropdownItems: MenuProps["items"] = [
@@ -36,7 +36,9 @@ export default function AdminHeader() {
   const dispatch = useAppDispatch();
   const collapsed = useAppSelector((state) => state.sidebar.collapsed);
   const [darkMode, setDarkMode] = useState(false);
-
+  const {user, status} = useAuth();
+  console.log("AdminHeader", {user, status});
+  
   // Fullscreen toggle
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
