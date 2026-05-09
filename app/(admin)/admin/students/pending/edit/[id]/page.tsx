@@ -233,7 +233,7 @@ export default function EditSellerForm({ params }: Props) {
       console.log("ttttt", payload)
       // ── Call all api ─────────────────────────────
       const [sellerResult,] = await Promise.all([
-        updateSeller({ id, payload }),
+        updateSeller({ id, body:payload }),
         // updatePackage({ id, packageId: Number(formData.packageId) }),
       ]);
 
