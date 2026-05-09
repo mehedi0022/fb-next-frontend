@@ -14,7 +14,7 @@ const baseQueryWithRefresh: typeof rawBaseQuery = async (
 
   if (result.error?.status === 401) {
     const refreshResult = await rawBaseQuery(
-      { url: "/auth/refresh-token", method: "POST" },
+      { url: "/auth/regenerate-access-token", method: "POST" },
       api,
       extraOptions,
     );
