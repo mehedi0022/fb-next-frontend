@@ -12,71 +12,7 @@ export const toBanglaNumber = (num: number | string): string => {
   return String(num).replace(/[0-9]/g, (digit) => englishDigits[digit]);
 };
 
-// /**
-//  * Format price with currency
-//  * @param price - Price number
-//  * @param currency - Currency string (default: 'BDT')
-//  * @returns Formatted price string
-//  */
-// export const formatPrice = (price: number, currency: string = 'BDT'): string => {
-//   return `${price} ${currency}`;
-// };
 
-// /**
-//  * Calculate profit from wholesale and sale price
-//  * @param wholesale - Wholesale price
-//  * @param sale - Sale price
-//  * @returns Profit amount
-//  */
-// export const calculateProfit = (wholesale: number, sale: number): number => {
-//   return sale - wholesale;
-// };
-
-// /**
-//  * Generate slug from title
-//  * @param title - Title string
-//  * @returns URL-friendly slug
-//  */
-// export const generateSlug = (title: string): string => {
-//   return title
-//     .toLowerCase()
-//     .replace(/[^a-z0-9 -]/g, '')
-//     .replace(/\s+/g, '-')
-//     .replace(/-+/g, '-')
-//     .trim();
-// };
-
-// /**
-//  * Truncate text to specified length
-//  * @param text - Text to truncate
-//  * @param length - Maximum length
-//  * @returns Truncated text with ellipsis
-//  */
-// export const truncateText = (text: string, length: number): string => {
-//   if (text.length <= length) return text;
-//   return text.substring(0, length).trim() + '...';
-// };
-
-// Password strength utility
-// export function getPasswordStrength(password: string) {
-//   let strength = 0;
-//   if (password.length >= 6) strength++;
-//   if (password.length >= 8) strength++;
-//   if (/[A-Z]/.test(password)) strength++;
-//   if (/[0-9]/.test(password)) strength++;
-//   if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-//   const info = {
-//     0: { text: "দুর্বল", color: "text-red-500", bg: "bg-red-500" },
-//     1: { text: "দুর্বল", color: "text-red-500", bg: "bg-red-500" },
-//     2: { text: "মাঝারি", color: "text-yellow-500", bg: "bg-yellow-500" },
-//     3: { text: "ভালো", color: "text-blue-500", bg: "bg-blue-500" },
-//     4: { text: "শক্তিশালী", color: "text-green-500", bg: "bg-green-500" },
-//     5: { text: "শক্তিশালী", color: "text-green-500", bg: "bg-green-500" },
-//   } as const;
-
-//   return { strength, ...info[strength as keyof typeof info] };
-// }
 
 export function getPasswordStrength(password: string) {
   if (!password) {
