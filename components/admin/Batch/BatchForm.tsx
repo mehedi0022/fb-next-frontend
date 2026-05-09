@@ -90,6 +90,7 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
       <Field label="Max Students">
         <input
           type="number"
+          defaultValue={100}
           {...register("maxStudents", { required: true })}
           className="input"
           disabled={loading}
@@ -103,12 +104,33 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
         </select>
       </Field>
 
-      <button
+      {/* <button
         className="btn-primary w-full flex items-center justify-center gap-2"
         disabled={loading}
       >
         <CheckCircle size={16} />
         Submit
+      </button> */}
+      <button
+        type="submit"
+        disabled={loading}
+        className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg text-white font-semibold transition ${
+          loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+      >
+        {loading ? (
+          <>
+            <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <CheckCircle className="w-5 h-5" />
+            Submit
+          </>
+        )}
       </button>
     </form>
   );

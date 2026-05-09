@@ -36,10 +36,6 @@ export default function BranchPage() {
   const [updateBranch] = useUpdateBranchMutation();
   const [deleteBranch] = useDeleteBranchMutation();
 
-  if (isLoading) {
-    return <p>Loading branches...</p>;
-  }
-
   const branches = data?.branches || [];
 
   const filtered = branches.filter((b) =>
@@ -90,10 +86,10 @@ export default function BranchPage() {
 
   const columns: ColumnsType<Branch> = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: "SL",
       width: 80,
-      align: "center" as const,
+      align: "center",
+      render: (_: unknown, __: Branch, index: number) => index + 1,
     },
     {
       title: "Branch",

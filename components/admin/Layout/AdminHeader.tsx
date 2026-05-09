@@ -14,31 +14,58 @@ import {
   ProfileOutlined,
   SunOutlined,
 } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector, useAuth } from "@/appstore/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/appstore/hooks/hooks";
 import { toggleSidebar } from "@/appstore/slices/sidebarSlice";
-
-const userDropdownItems: MenuProps["items"] = [
-  {
-    key: "profile",
-    icon: <ProfileOutlined />,
-    label: <span className="text-sm">Profile</span>,
-  },
-  { type: "divider" },
-  {
-    key: "logout",
-    icon: <LogoutOutlined />,
-    label: <span className="text-sm">Logout</span>,
-    danger: true,
-  },
-];
+import { useLogoutMutation } from "@/appstore/api/authApi";
+import { clearSession } from "@/appstore/slices/sessionSlice";
+import { baseApi } from "@/appstore/api/baseApi";
+import { toast } from "react-toastify";
 
 export default function AdminHeader() {
   const dispatch = useAppDispatch();
   const collapsed = useAppSelector((state) => state.sidebar.collapsed);
   const [darkMode, setDarkMode] = useState(false);
-  const {user, status} = useAuth();
-  console.log("AdminHeader", {user, status});
-  
+  const [logout] = useLogoutMutation();
+  // const {user, status} = useAuth();
+  // console.log("AdminHeader", {user, status});
+
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await logout().unwrap();
+
+      // Clear Redux state first
+      dispatch(clearSession());
+      dispatch(baseApi.util.resetApiState());
+    } catch (error) {
+      console.error("Logout failed:", error);
+
+      // Even if API fails, clear local state and cookies
+      dispatch(clearSession());
+      dispatch(baseApi.util.resetApiState());
+    } finally {
+      dispatch(clearSession());
+      dispatch(baseApi.util.resetApiState());
+      toast.success("Logged out successfully");
+    }
+  };
+
+  const userDropdownItems: MenuProps["items"] = [
+    {
+      key: "profile",
+      icon: <ProfileOutlined />,
+      label: <span className="text-sm">Profile</span>,
+    },
+    { type: "divider" },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: <span className="text-sm">Logout</span>,
+      danger: true,
+      onClick: () => handleLogout(),
+    },
+  ];
+
   // Fullscreen toggle
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {

@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, Circle } from "lucide-react";
 import { useAppSelector } from "@/appstore/hooks/hooks";
 import { AdminNAV_ITEMS } from "@/lib/admin/contants";
 import { Tooltip as AntTooltip } from "antd";
+import Image from "next/image";
 
 function Tooltip({
   label,
@@ -72,11 +73,15 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div className="flex !h-14 items-center justify-center border-b border-slate-100  shrink-0">
-          <div className="flex p-2 shrink-0 items-center justify-center rounded-xl bg-sky-500 shadow-md shadow-sky-200">
-            <span className="text-xs font-black text-white leading-tight text-center">
-              NP
-            </span>
-          </div>
+          <figure>
+            <Image
+              src="/favicon.ico"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="ml-1"
+            />
+          </figure>
         </div>
 
         {/* Nav */}

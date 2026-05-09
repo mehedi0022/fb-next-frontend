@@ -46,11 +46,6 @@ export default function BatchPage() {
   const [updateBatch] = useUpdateBatchMutation();
   const [deleteBatch] = useDeleteBatchMutation();
 
-  if (isLoading) {
-    return <p>Loading batches...</p>;
-  }
-
-  // const batches: Batch[] = data?.data || [];
   const branches = branchData?.branches || [];
 
   const openModal = (type: "create" | "edit", item?: TableRow) => {
@@ -211,7 +206,11 @@ export default function BatchPage() {
       />
 
       {/* table */}
-      <ReusableTable columns={columns} data={filtered} loading={isLoading} />
+      <ReusableTable
+        columns={columns}
+        data={filtered}
+        loading={isLoading}
+      />
 
       {/* modal */}
       <AppModal

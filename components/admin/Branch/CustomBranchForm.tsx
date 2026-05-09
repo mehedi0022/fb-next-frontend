@@ -94,7 +94,6 @@ export const CustomBranchForm = ({ initial, onSubmit }: Props) => {
               className={`input ${errors.status ? "border-red-500" : ""}`}
               disabled={loading}
             >
-              <option value="">Select status</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
@@ -103,13 +102,11 @@ export const CustomBranchForm = ({ initial, onSubmit }: Props) => {
 
         {/* Description */}
         <div className="md:col-span-2">
-          <Field label="Description *" error={errors.branchDescription}>
+          <Field label="Description" error={errors.branchDescription}>
             <div className="relative">
               <FileText className="input-icon" />
               <textarea
-                {...register("branchDescription", {
-                  required: "Description is required",
-                })}
+                {...register("branchDescription")}
                 className={`input !pl-10 ${
                   errors.branchDescription ? "border-red-500" : ""
                 }`}

@@ -28,19 +28,12 @@ const Profile = ({ open, onClose }: Props) => {
       // Clear Redux state first
       dispatch(clearSession());
       dispatch(baseApi.util.resetApiState());
-      
-      // // Force clear cookies from browser (fallback)
-      // document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      // document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      
     } catch (error) {
       console.error('Logout failed:', error);
       
       // Even if API fails, clear local state and cookies
       dispatch(clearSession());
       dispatch(baseApi.util.resetApiState());
-      // document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      // document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     } finally {
       dispatch(clearSession());
       dispatch(baseApi.util.resetApiState()); 
