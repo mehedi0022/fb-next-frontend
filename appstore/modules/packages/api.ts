@@ -33,9 +33,27 @@ const packagesApi = baseApi.injectEndpoints({
             method: "DELETE",
             }),
             invalidatesTags: ["Packages"]
-        })
+        }),
+
+        setSellerPackage: builder.mutation<
+            { success: boolean; message?: string },
+            { sellerId: number; sellerPackageId: number }
+        >({
+            query: ({ sellerId, sellerPackageId }) => ({
+                url: `/seller/set-seller-package/${sellerId}`,
+                method: "POST",
+                body: { sellerPackageId },
+            }),
+            invalidatesTags: ["Seller"],
+        }),
     }),
 })
 
-export const { useGetAllPackagesQuery, useUpdatePackageMutation, useCreatePackageMutation, useDeletePackageMutation } = packagesApi;
+export const {
+    useGetAllPackagesQuery,
+    useUpdatePackageMutation,
+    useCreatePackageMutation,
+    useDeletePackageMutation,
+    useSetSellerPackageMutation,
+} = packagesApi;
 

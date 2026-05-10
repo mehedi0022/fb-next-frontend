@@ -50,7 +50,7 @@ export default function Sidebar() {
       `}</style>
 
       <aside
-        className={`flex h-screen flex-col border-r border-slate-200 bg-white transition-[width] duration-300 ease-in-out overflow-hidden ${collapsed ? "w-14" : "w-56"}`}
+        className={`flex h-screen flex-col border-r border-slate-200 bg-white transition-[width] duration-300 ease-in-out overflow-hidden ${collapsed ? "w-14" : "w-56"} sticky top-0 shrink-0`} 
       >
         {/* Logo */}
         <div className="flex !h-14 items-center justify-center border-b border-slate-100  shrink-0">

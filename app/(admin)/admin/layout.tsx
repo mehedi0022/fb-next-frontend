@@ -14,12 +14,12 @@ export default function AdminLayout({
         <AdminSidebar />
 
         {/* Main */}
-        <div className="!bg-gray-50 flex flex-col min-w-0 overflow-hidden w-full">
+        <div className="!bg-gray-50 flex flex-col min-w-0 w-full">
           {/* Header */}
           <AdminHeader />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-y-auto p-4">{children}</main>
+          <main className="flex-1 p-4">{children}</main>
         </div>
       </div>
     </RoleProtectedRoute>

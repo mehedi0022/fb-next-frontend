@@ -1,5 +1,10 @@
 import { baseApi } from "@/appstore/api/baseApi";
-import { SellerResponse, SellerSingleResponse, } from "@/lib/admin/types";
+import {
+    SellerAccountSummaryResponse,
+    SellerPaymentHistoryResponse,
+    SellerResponse,
+    SellerSingleResponse,
+} from "@/lib/admin/types";
 
 
 const sellerApi = baseApi.injectEndpoints({
@@ -22,9 +27,39 @@ const sellerApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Seller"],
         }),
+
+        createSellerPayment: builder.mutation<
+            { success: boolean; message?: string },
+            { sellerId: number; amount: number; method: string; type: string; note?: string }
+        >({
+            query: ({ sellerId, ...body }) => ({
+                url: `/seller/payment/${sellerId}`,
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Seller"],
+        }),
+
+        getSellerAccountSummary: builder.query<SellerAccountSummaryResponse, number>({
+            query: (sellerId) => `/seller/account-summery/${sellerId}`,
+            providesTags: ["Seller"],
+        }),
+
+        getSellerPaymentHistory: builder.query<SellerPaymentHistoryResponse, number>({
+            query: (sellerId) => `/seller/payment/history/${sellerId}`,
+            providesTags: ["Seller"],
+        }),
     })
 })
 
 
-export const { useGetAllSellerQuery, useGetSellerByidQuery, useUpdateSellerMutation } = sellerApi;
+export const {
+    useGetAllSellerQuery,
+    useGetSellerByidQuery,
+    useUpdateSellerMutation,
+    useCreateSellerPaymentMutation,
+    useGetSellerAccountSummaryQuery,
+    useLazyGetSellerAccountSummaryQuery,
+    useGetSellerPaymentHistoryQuery,
+} = sellerApi;
 

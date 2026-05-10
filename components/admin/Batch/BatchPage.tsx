@@ -80,25 +80,8 @@ export default function BatchPage() {
   };
 
   const tableData = branches.flatMap((branch: Branch): TableRow[] => {
-    // If no batches → still show branch (optional)
-    // if (branch.batches.length === 0) {
-    //   return [
-    //     {
-    //       key: `branch-${branch.id}`,
-    //       id: 0,
-    //       batchName: "-",
-    //       maxStudents: "-",
-    //       status: branch.status,
-    //       users: 0,
-    //       branchName: branch.branchName,
-    //       rowSpan: 1,
-    //       isEmpty: true,
-    //     },
-    //   ];
-    // }
 
     return branch.batches.map((batch, index) => ({
-      // key: batch.id,
       id: batch.id,
       batchName: batch.batchName,
       maxStudents: batch.maxStudents,
@@ -122,6 +105,8 @@ export default function BatchPage() {
     {
       title: "Branch",
       dataIndex: "branchName",
+      width: 160,
+      ellipsis: true,
       render: (text, record) => ({
         children: text,
         props: {
@@ -132,20 +117,26 @@ export default function BatchPage() {
     {
       title: "Batch",
       dataIndex: "batchName",
+      width: 160,
+      ellipsis: true,
     },
     {
       title: "Max Students",
       dataIndex: "maxStudents",
+      width: 120,
       align: "center",
     },
     {
       title: "Users",
       dataIndex: "users",
+      width: 100,
       align: "center",
     },
     {
       title: "Status",
       dataIndex: "status",
+      width: 100,
+      align: "center",
       render: (s) => (
         <span
           className={`px-2 py-1 rounded text-xs ${
@@ -160,6 +151,7 @@ export default function BatchPage() {
     },
     {
       title: "Actions",
+      width: 140,
       align: "center",
       render: (_, record) => (
         <Space>
@@ -173,7 +165,7 @@ export default function BatchPage() {
       ),
     },
   ];
-
+  
   const initial = selected
     ? {
         batchName: selected.batchName,

@@ -13,6 +13,13 @@ import { useEffect, useState } from "react"
 export default function RegisteredStudents() {
     const { data, isLoading } = useGetAllSellerQuery()
     const [seller, setSeller] = useState<Seller[]>([])
+    const toCurrency = (value?: string | number) =>
+        `BDT ${Number(value || 0).toLocaleString()}`
+    const getSellerPackageName = (item: Seller) =>
+        item.sellerPackageName ??
+        item.sellerPackage?.name ??
+        item.sellerAccount?.sellerPackage?.name ??
+        null
 
     useEffect(() => {
         if (data?.data) {
@@ -67,6 +74,32 @@ export default function RegisteredStudents() {
             title: "Address",
             dataIndex: "address",
             render: (address: string) => address || "N/A",
+        },
+        {
+            title: "Package",
+            dataIndex: "sellerPackageName",
+            render: (_: unknown, record: Seller) => getSellerPackageName(record) || "Not Assigned",
+        },
+        {
+            title: "Total",
+            dataIndex: "totalAmount",
+            align: "right",
+            render: (_: unknown, record: Seller) =>
+                toCurrency(record.totalAmount ?? record.sellerAccount?.totalAmount),
+        },
+        {
+            title: "Paid",
+            dataIndex: "totalPaid",
+            align: "right",
+            render: (_: unknown, record: Seller) =>
+                toCurrency(record.totalPaid ?? record.sellerAccount?.totalPaid),
+        },
+        {
+            title: "Due",
+            dataIndex: "dueAmount",
+            align: "right",
+            render: (_: unknown, record: Seller) =>
+                toCurrency(record.dueAmount ?? record.sellerAccount?.dueAmount),
         },
         {
             title: "Action",
