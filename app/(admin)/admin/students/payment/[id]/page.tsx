@@ -85,6 +85,7 @@ export default function StudentPaymentPage({ params }: Props) {
           <PaymentHistoryTable
             data={historyResponse?.data || []}
             loading={historyLoading || summaryLoading}
+            summary={summaryResponse?.data}
           />
         </div>
       </div>
