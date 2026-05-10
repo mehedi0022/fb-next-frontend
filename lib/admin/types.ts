@@ -67,3 +67,27 @@ export interface PackagesResponse {
   success: boolean;
   data: PackageItem[];
 }
+
+export interface DashboardFilters {
+  branchId: number | null;
+  batchId: number | null;
+  dateFrom: string | null;
+  dateTo: string | null;
+}
+
+export interface DashboardMetrics {
+  totalUsers: number;
+  totalPendingUsers: number;
+  totalRegisteredUsers: number;
+  totalRejectedUsers: number;
+  todayRegisteredUsers: number;
+  totalPayment: number;
+  totalDue: number;
+  todayCollection: number;
+}
+
+export interface DashboardMetricsResponse {
+  success: boolean;
+  filters: DashboardFilters;
+  data: DashboardMetrics;
+}
