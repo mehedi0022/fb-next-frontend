@@ -19,6 +19,7 @@ import {
             { label: "Pending Students", href: "/admin/students/pending" },
             { label: "Registered Students", href: "/admin/students/registered" },
             { label: "Cancel Students", href: "/admin/students/cancelled" },
+            { label: "Packages", href: "/admin/students/packages" },
             { label: "Students Profit Payment", href: "/admin/students/profit" },
         ],
     },

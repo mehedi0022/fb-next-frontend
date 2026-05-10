@@ -4,11 +4,11 @@ export interface AdminNavChild {
   label: string;
   href: string;
 }
- 
+
 export interface AdminNavItem {
   label: string;
   icon: React.ElementType;
-  href?: string;       
+  href?: string;
   badge?: number;
   children?: AdminNavChild[];
 }
@@ -24,7 +24,7 @@ export interface Seller {
   district: string;
   shopName?: string;
   branchId?: number;
-  domain_name: string | null; 
+  domain_name: string | null;
   seller_code: string;
   status: string;
 }
@@ -37,7 +37,7 @@ export interface SellerResponse {
     limit: number;
     totalPages: number;
   };
-  data: Seller[]; 
+  data: Seller[];
 }
 
 export interface SellerSingleResponse {
@@ -48,12 +48,20 @@ export interface SellerSingleResponse {
 
 // Package Types
 
-interface PackageItem {
+export interface PackageItem {
   id: number;
   name: string;
   price: string;
-  status: string;
+  status: "active" | "inactive";
+  createdAt?: string;
 }
+
+export interface PackageFormData {
+  name: string;
+  price: string;
+  status: "active" | "inactive";
+}
+
 
 export interface PackagesResponse {
   success: boolean;

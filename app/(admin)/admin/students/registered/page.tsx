@@ -10,14 +10,14 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 
 
-export default function PendingStudents() {
+export default function RegisteredStudents() {
     const { data, isLoading } = useGetAllSellerQuery()
     const [seller, setSeller] = useState<Seller[]>([])
 
     useEffect(() => {
         if (data?.data) {
-            const pendingSellers = data?.data.filter((seller) => seller.status === 'pending');
-            setSeller(pendingSellers)
+            const registerSellers = data?.data.filter((seller) => seller.status === 'approved');
+            setSeller(registerSellers)
         }
     }, [data])
 
@@ -72,7 +72,6 @@ export default function PendingStudents() {
             title: "Action",
             align: "center",
             render: (_, r) => {
-                console.log("Row data:", r)  
                 return (
                     <Space>
                         <Link href={`/admin/students/pending/edit/${r.id}`}>
@@ -81,9 +80,25 @@ export default function PendingStudents() {
                             </Button>
                         </Link>
 
-                        <Link href={`/admin/students/packages/${r.id}`}>
-                            <Button type="primary" className="bg-black" size="small">
-                                Packages
+                        <Link href={`#`}>
+                            <Button type="primary" className="bg-lime-700" size="small">
+                               View
+                            </Button>
+                        </Link>
+
+                        <Link href={`#`}>
+                            <Button type="primary" className="bg-green-800 " size="small">
+                               Payment
+                            </Button>
+                        </Link>
+                        <Link href={`#`}>
+                            <Button type="primary" className="bg-sky-500" size="small">
+                              Complete
+                            </Button>
+                        </Link>
+                        <Link href={`#`}>
+                            <Button type="primary" className="bg-red-500" size="small">
+                              Invoice
                             </Button>
                         </Link>
                     </Space>
