@@ -63,9 +63,11 @@ import {
         label: "Products",
         icon: Package,
         children: [
-            { label: "All Products", href: "/products/all" },
-            { label: "Add Product", href: "/products/add" },
-            { label: "Categories", href: "/products/categories" },
+            { label: "All Products", href: "/admin/products/all" },
+            { label: "Add Product", href: "/admin/products/add" },
+            { label: "Brands", href: "/admin/products/brands" },
+            { label: "Categories", href: "/admin/products/categories" },
+            { label: "Attributes", href: "/admin/products/attributes" },
         ],
     },
     {

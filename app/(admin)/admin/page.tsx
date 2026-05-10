@@ -296,7 +296,7 @@ export default function AdminDashboardPage() {
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight">
           Overview & Collection Metrics
         </h1>
-        <p className="mt-2 text-sm text-sky-50 font-medium">
+        <p className="max-w-lg mt-2 text-sm text-sky-50 font-medium">
           Track performance, monitor collections, and gain real-time insights
           into your business growth.
         </p>
