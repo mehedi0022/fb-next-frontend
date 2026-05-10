@@ -22,12 +22,6 @@ const HomePage = async ({
       {/* Hero Section */}
       <Banner />
 
-      {/* How to work section */}
-      <HowItWorks />
-
-      {/* Special Features */}
-      <SpecialFeatures />
-
       {/* ২. Category List  */}
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
         <CategoryList searchParams={resolvedParams} isCarousel={true} />
@@ -37,6 +31,12 @@ const HomePage = async ({
       <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
         <ProductsList searchParams={resolvedParams} />
       </Suspense>
+      
+      {/* How to work section */}
+      <HowItWorks />
+
+      {/* Special Features */}
+      <SpecialFeatures />
 
       {/* FAQ Section */}
       <FAQ />
