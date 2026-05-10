@@ -5,6 +5,131 @@ type ApiSuccessResponse = {
   message?: string;
 };
 
+export type ProductListItem = {
+  id: number;
+  name: string;
+  slug: string;
+  coverImage?: string | null;
+  thumbnail?: string | null;
+  isActive: boolean;
+  totalStock?: number;
+  variantCount?: number;
+  wholesalePrice?: number;
+  suggestedPrice?:
+    | { type: "fixed"; value: number }
+    | { type: "range"; min: number; max: number };
+  createdAt?: string;
+  category?: {
+    id: number;
+    name: string;
+    slug?: string;
+  };
+  brand?: {
+    id: number;
+    name: string;
+    slug?: string;
+  } | null;
+};
+
+export type ProductVariantPayload = {
+  sku: string;
+  costPrice: number;
+  wholesalePrice: number;
+  suggestedPrice: number;
+  stock: number;
+  attributes: number[];
+};
+
+export type CreateProductPayload = {
+  name: string;
+  categoryId: number;
+  brandId?: number | null;
+  shortDescription?: string;
+  description?: string;
+  videoUrl?: string;
+  variants?: ProductVariantPayload[];
+  costPrice?: number;
+  wholesalePrice?: number;
+  suggestedPrice?: number;
+  stock?: number;
+  coverImage: File;
+  images?: File[];
+};
+
+export type UpdateProductPayload = {
+  id: number;
+  name: string;
+  categoryId: number;
+  brandId?: number | null;
+  shortDescription?: string;
+  description?: string;
+  videoUrl?: string;
+  isActive?: boolean;
+  slug?: string;
+  variants?: ProductVariantPayload[];
+  costPrice?: number;
+  wholesalePrice?: number;
+  suggestedPrice?: number;
+  stock?: number;
+  coverImage?: File;
+  images?: File[];
+};
+
+export type ProductDetails = {
+  id: number;
+  name: string;
+  slug: string;
+  coverImage?: string | null;
+  shortDescription?: string | null;
+  description?: string | null;
+  videoUrl?: string | null;
+  isActive: boolean;
+  category: {
+    id: number;
+    name: string;
+    slug?: string;
+    breadcrumb?: string;
+  };
+  brand?: {
+    id: number;
+    name: string;
+    slug?: string;
+  } | null;
+  images: { id: number; url: string }[];
+  variants: {
+    id: number;
+    sku: string;
+    costPrice: number;
+    wholesalePrice: number;
+    suggestedPrice: number;
+    stock: number;
+    attributes: {
+      attributeId: number;
+      attributeName: string;
+      valueId: number;
+      valueName: string;
+    }[];
+  }[];
+};
+
+type ProductListResponse = {
+  success: boolean;
+  data: ProductListItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+};
+
+type ProductSingleResponse = {
+  success: boolean;
+  data: ProductDetails;
+};
+
 export type ProductBrand = {
   id: number;
   name: string;
@@ -83,8 +208,117 @@ export type AddAttributeValuesPayload = {
   values: string[];
 };
 
+export type ProductListParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  categoryId?: number;
+  brandId?: number;
+  isActive?: boolean;
+};
+
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAllProducts: builder.query<ProductListResponse, ProductListParams | void>({
+      query: (params) => ({
+        url: "/product",
+        params: params ?? undefined,
+      }),
+      providesTags: ["Product"],
+    }),
+
+    getSingleProduct: builder.query<ProductSingleResponse, string | number>({
+      query: (slugOrId) => `/product/${slugOrId}`,
+      providesTags: ["Product"],
+    }),
+
+    createProduct: builder.mutation<ApiSuccessResponse, CreateProductPayload>({
+      query: (payload) => {
+        const formData = new FormData();
+        formData.append("name", payload.name);
+        formData.append("categoryId", String(payload.categoryId));
+        if (payload.brandId) formData.append("brandId", String(payload.brandId));
+        if (payload.shortDescription)
+          formData.append("shortDescription", payload.shortDescription);
+        if (payload.description) formData.append("description", payload.description);
+        if (payload.videoUrl) formData.append("videoUrl", payload.videoUrl);
+        if (payload.variants?.length) {
+          formData.append("variants", JSON.stringify(payload.variants));
+        } else {
+          formData.append("costPrice", String(payload.costPrice ?? 0));
+          formData.append("wholesalePrice", String(payload.wholesalePrice ?? 0));
+          formData.append("suggestedPrice", String(payload.suggestedPrice ?? 0));
+          formData.append("stock", String(payload.stock ?? 0));
+        }
+        formData.append("coverImage", payload.coverImage);
+        (payload.images || []).forEach((file) => {
+          formData.append("images", file);
+        });
+        return {
+          url: "/product/create",
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
+    updateProduct: builder.mutation<ApiSuccessResponse, UpdateProductPayload>({
+      query: ({ id, ...payload }) => {
+        const formData = new FormData();
+        formData.append("name", payload.name);
+        formData.append("categoryId", String(payload.categoryId));
+        if (payload.slug) formData.append("slug", payload.slug);
+        if (payload.brandId) formData.append("brandId", String(payload.brandId));
+        if (payload.shortDescription !== undefined) {
+          formData.append("shortDescription", payload.shortDescription ?? "");
+        }
+        if (payload.description !== undefined) {
+          formData.append("description", payload.description ?? "");
+        }
+        if (payload.videoUrl !== undefined) {
+          formData.append("videoUrl", payload.videoUrl ?? "");
+        }
+        if (payload.isActive !== undefined) {
+          formData.append("isActive", String(payload.isActive));
+        }
+        if (payload.variants?.length) {
+          formData.append("variants", JSON.stringify(payload.variants));
+        } else {
+          formData.append("costPrice", String(payload.costPrice ?? 0));
+          formData.append("wholesalePrice", String(payload.wholesalePrice ?? 0));
+          formData.append("suggestedPrice", String(payload.suggestedPrice ?? 0));
+          formData.append("stock", String(payload.stock ?? 0));
+        }
+        if (payload.coverImage) formData.append("coverImage", payload.coverImage);
+        (payload.images || []).forEach((file) => {
+          formData.append("images", file);
+        });
+        return {
+          url: `/product/update/${id}`,
+          method: "PUT",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Product"],
+    }),
+
+    deleteProduct: builder.mutation<ApiSuccessResponse, number>({
+      query: (id) => ({
+        url: `/product/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    hardDeleteProduct: builder.mutation<ApiSuccessResponse, number>({
+      query: (id) => ({
+        url: `/product/delete/${id}/hard`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
     getAllBrands: builder.query<ProductBrandResponse, void>({
       query: () => "/product/brand",
       providesTags: ["Product"],
@@ -207,6 +441,12 @@ const productApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetAllProductsQuery,
+  useGetSingleProductQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useHardDeleteProductMutation,
   useGetAllBrandsQuery,
   useCreateBrandMutation,
   useUpdateBrandMutation,
