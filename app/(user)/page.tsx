@@ -24,7 +24,7 @@ const HomePage = async ({
 
       {/* ২. Category List  */}
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
-        <CategoryList searchParams={resolvedParams} isCarousel={true} />
+        <CategoryList  searchParams={resolvedParams} isCarousel={true} />
       </Suspense>
 
       {/* Products Section */}
