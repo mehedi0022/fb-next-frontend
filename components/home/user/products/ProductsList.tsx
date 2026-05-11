@@ -102,6 +102,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
       createdAt: "2026-04-04T11:15:00Z",
     },
   ];
+    
   const products: Product[] = Array(30)
     .fill(null)
     .map((_, index) => {

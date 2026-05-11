@@ -64,14 +64,14 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
         >
           <Link
             href="/register"
-            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border"
+            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded "
           >
             <UserAddOutlined /> রেজিস্ট্রেশন
           </Link>
 
           <Link
             href="/login"
-            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded border"
+            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded "
           >
             <LoginOutlined /> লগইন
           </Link>
@@ -82,7 +82,7 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
       <a
         href="https://wa.me/8801777458099?text=Hello%20I%20want%20to%20order"
         target="_blank"
-        className="btn-primary text-xl font-semibold border"
+        className="btn-whatsapp text-xl font-semibold "
       >
         <WhatsAppOutlined />
         WhatsApp
