@@ -204,12 +204,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                   before:absolute before:inset-0 before:bg-blue-700
                   before:translate-x-[-100%] before:transition-transform before:duration-[250ms]
                   hover:before:translate-x-0
-                  [&>*]:relative [&>*]:z-10
                   [&>svg]:transition-transform [&>svg]:duration-200 hover:[&>svg]:rotate-90
                 "
               >
-                <Plus className="w-3 h-3" />
-                যোগ করুন
+                <Plus className="w-3 h-3 relative z-10" />
+                <span className="relative z-10">যোগ করুন</span>
               </button>
             </div>
           </div>
