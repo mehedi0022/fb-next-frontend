@@ -66,17 +66,8 @@
 }
 
 .btn-primary {
-  @apply px-5 py-2 rounded-lg text-[14px] font-medium text-white relative flex items-center gap-2;
+  @apply px-5 py-2 rounded-lg text-[14px] font-medium text-white relative flex items-center gap-2 transition-all duration-300;
   isolation: isolate;
-  background: transparent;
-}
-
-.btn-primary::before {
-  content: none;
-}
-
-.btn-primary {
-  @apply relative rounded-lg text-white transition-all duration-300;
   background: linear-gradient(135deg, #945bce, #424a94, #4b88d3, #050504);
   background-size: 200% 200%;
   animation: gradientMove 6s ease infinite;
@@ -84,36 +75,12 @@
 
 .btn-primary:hover {
   @apply shadow-lg scale-105;
-  background: linear-gradient(135deg, #9459cf, #4851a7, #437bc0, #0e0e0b);
-}
-
-/* WhatsApp বাটন */
-.btn-whatsapp {
-  @apply px-4 py-2 text-white rounded-lg flex items-center gap-2 text-lg transition-all duration-300 h-12;
-  background: linear-gradient(135deg, #945bce, #424a94, #4b88d3, #050504);
-  background-size: 200% 200%;
-  animation: gradientMove 6s ease infinite;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-}
-
-.btn-whatsapp:hover {
-  background: linear-gradient(135deg, #9459cf, #4851a7, #437bc0, #0e0e0b);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.45);
 }
 
 @keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 
