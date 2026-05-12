@@ -1,17 +1,29 @@
 "use client";
 
-import { useGetAllSellerQuery } from "@/appstore/modules/seller/api";
+import {
+  SellerListParams,
+  useGetAllSellerQuery,
+} from "@/appstore/modules/seller/api";
 import { ReusableTable } from "@/components/admin/common/ReusableTable";
 import LoadingSkeleton from "@/components/admin/common/Skeleton";
+import StudentFilterBar from "@/components/admin/common/StudentFilterBar";
 import { Seller } from "@/lib/admin/types";
 import { Button, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function RegisteredStudents() {
-  const { data, isLoading } = useGetAllSellerQuery();
-  const [seller, setSeller] = useState<Seller[]>([]);
+  const defaultFilters = useMemo<SellerListParams>(() => ({
+    page: 1,
+    limit: 10,
+    status: "approved",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  }), []);
+  const [filters, setFilters] = useState<SellerListParams>(defaultFilters);
+  const { data, isLoading } = useGetAllSellerQuery(filters);
+  const seller = data?.data || [];
   const toCurrency = (value?: string | number) =>
     `৳ ${Number(value || 0).toLocaleString()}`;
   const getSellerPackageName = (item: Seller) =>
@@ -19,15 +31,6 @@ export default function RegisteredStudents() {
     item.sellerPackage?.name ??
     item.sellerAccount?.sellerPackage?.name ??
     null;
-
-  useEffect(() => {
-    if (data?.data) {
-      const registerSellers = data?.data.filter(
-        (seller) => seller.status === "approved",
-      );
-      setSeller(registerSellers);
-    }
-  }, [data]);
 
   // Colums
   const columns: ColumnsType<Seller> = [
@@ -144,6 +147,12 @@ export default function RegisteredStudents() {
 
   return (
     <div>
+      <StudentFilterBar
+        value={filters}
+        defaultFilters={defaultFilters}
+        onChange={setFilters}
+      />
+
       <ReusableTable
         columns={columns}
         data={seller}

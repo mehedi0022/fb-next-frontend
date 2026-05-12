@@ -1,6 +1,9 @@
 "use client";
 
-import { useGetAllSellerQuery } from "@/appstore/modules/seller/api";
+import {
+  SellerListParams,
+  useGetAllSellerQuery,
+} from "@/appstore/modules/seller/api";
 import { useLazyGetSellerAccountSummaryQuery } from "@/appstore/modules/seller/api";
 import {
   useGetAllPackagesQuery,
@@ -8,12 +11,13 @@ import {
 } from "@/appstore/modules/packages/api";
 import { ReusableTable } from "@/components/admin/common/ReusableTable";
 import LoadingSkeleton from "@/components/admin/common/Skeleton";
+import StudentFilterBar from "@/components/admin/common/StudentFilterBar";
 import { PackageItem, Seller } from "@/lib/admin/types";
 import { AppModal } from "@/components/admin/common/AppModal";
 import { Button, Card, Empty, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 type ApiError = {
@@ -23,7 +27,15 @@ type ApiError = {
 };
 
 export default function PendingStudents() {
-  const { data, isLoading } = useGetAllSellerQuery();
+  const defaultFilters = useMemo<SellerListParams>(() => ({
+    page: 1,
+    limit: 10,
+    status: "pending",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  }), []);
+  const [filters, setFilters] = useState<SellerListParams>(defaultFilters);
+  const { data, isLoading } = useGetAllSellerQuery(filters);
   const { data: packageData, isLoading: packageLoading } =
     useGetAllPackagesQuery();
   const [setSellerPackage, { isLoading: settingPackage }] =
@@ -31,7 +43,6 @@ export default function PendingStudents() {
   const [getSellerAccountSummary, { isFetching: accountSummaryLoading }] =
     useLazyGetSellerAccountSummaryQuery();
 
-  const [seller, setSeller] = useState<Seller[]>([]);
   const [packageModalOpen, setPackageModalOpen] = useState(false);
   const [selectedSeller, setSelectedSeller] = useState<Seller | null>(null);
   const [selectedPackageId, setSelectedPackageId] = useState<number | null>(
@@ -39,13 +50,7 @@ export default function PendingStudents() {
   );
   const [initialPaymentDone, setInitialPaymentDone] = useState(false);
 
-  useEffect(() => {
-    if (!data?.data) return;
-    const pendingSellers = data.data.filter(
-      (item) => item.status === "pending",
-    );
-    setSeller(pendingSellers);
-  }, [data]);
+  const seller = data?.data || [];
 
   const getErrorMessage = (error: unknown, fallback: string) => {
     const apiError = error as ApiError;
@@ -112,21 +117,6 @@ export default function PendingStudents() {
       }).unwrap();
 
       if (result?.success) {
-        const pickedPackage =
-          activePackages.find((pkg) => pkg.id === selectedPackageId) || null;
-        setSeller((previous) =>
-          previous.map((item) =>
-            item.id === selectedSeller.id
-              ? {
-                  ...item,
-                  sellerPackageId: selectedPackageId,
-                  sellerPackage: pickedPackage,
-                  sellerPackageName:
-                    pickedPackage?.name || item.sellerPackageName,
-                }
-              : item,
-          ),
-        );
         toast.success(result?.message || "Package assigned successfully.");
         closePackageModal();
         return;
@@ -257,6 +247,12 @@ export default function PendingStudents() {
 
   return (
     <div>
+      <StudentFilterBar
+        value={filters}
+        defaultFilters={defaultFilters}
+        onChange={setFilters}
+      />
+
       <ReusableTable
         columns={columns}
         data={seller}
