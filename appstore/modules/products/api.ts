@@ -11,6 +11,7 @@ export type ProductListItem = {
   slug: string;
   coverImage?: string | null;
   thumbnail?: string | null;
+  shortDescription?: string | null;
   isActive: boolean;
   totalStock?: number;
   variantCount?: number;
@@ -201,6 +202,11 @@ export type UpdateCategoryPayload = {
 export type UpdateAttributePayload = {
   id: number;
   name: string;
+};
+
+export type UpdateAttributeValuePayload = {
+  valueId: number;
+  value: string;
 };
 
 export type AddAttributeValuesPayload = {
@@ -431,6 +437,18 @@ const productApi = baseApi.injectEndpoints({
       invalidatesTags: ["Product"],
     }),
 
+    updateAttributeValue: builder.mutation<
+      ApiSuccessResponse,
+      UpdateAttributeValuePayload
+    >({
+      query: ({ valueId, value }) => ({
+        url: `/product/attribute/update/values/${valueId}`,
+        method: "PUT",
+        body: { value },
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
     addAttributeValues: builder.mutation<
       ApiSuccessResponse,
       AddAttributeValuesPayload
@@ -479,6 +497,7 @@ export const {
   useGetAllAttributesQuery,
   useCreateAttributeMutation,
   useUpdateAttributeMutation,
+  useUpdateAttributeValueMutation,
   useAddAttributeValuesMutation,
   useDeleteAttributeValueMutation,
   useDeleteAttributeMutation,
