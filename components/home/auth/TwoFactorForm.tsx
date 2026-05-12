@@ -7,7 +7,10 @@ import { z } from "zod";
 import {
   useVerifyOtpMutation,
   useResendOtpMutation,
+  useCheckMeQuery,
 } from "@/appstore/api/authApi";
+import { useAppDispatch } from "@/appstore/hooks/hooks";
+import { setSession } from "@/appstore/slices/sessionSlice";
 
 // Zod validation schemas for regex patterns
 const singleDigitSchema = z
@@ -17,7 +20,7 @@ const pastedOtpSchema = z
   .string()
   .regex(/^\d{6}$/, "সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন");
 
-export default function TwoFactorForm() {
+export default function TwoFactorForm({ redirect }: { redirect: string }) {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +31,8 @@ export default function TwoFactorForm() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [verifyOtp] = useVerifyOtpMutation();
   const [resendOtp] = useResendOtpMutation();
+  const { refetch } = useCheckMeQuery();
+  const dispatch = useAppDispatch();
 
   // Get email from sessionStorage
   useEffect(() => {
@@ -145,7 +150,16 @@ export default function TwoFactorForm() {
       await verifyOtp({ email, otp: otpString, rememberMe }).unwrap();
 
       sessionStorage.removeItem("tempEmail");
-      router.replace("/");
+      const result = await refetch();
+
+      // Check if user data is returned and set session
+      if (result.data?.user) {
+        dispatch(setSession({ user: result.data.user }));
+
+        router.replace(redirect);
+      }else{
+        setError("ব্যবহারকারী তথ্য পুনরুদ্ধার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      }
     } catch {
       setError("ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।");
     } finally {
@@ -232,7 +246,8 @@ export default function TwoFactorForm() {
           isLoading || otp.join("").length !== 6
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-green-600 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-        }`}>
+        }`}
+      >
         {isLoading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -251,7 +266,8 @@ export default function TwoFactorForm() {
         <button
           type="button"
           onClick={handleResendCode}
-          className="w-full py-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
+          className="w-full py-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
+        >
           নতুন কোড পাঠান
         </button>
       ) : (

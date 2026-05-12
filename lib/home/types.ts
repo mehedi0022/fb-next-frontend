@@ -11,6 +11,7 @@ export type Price = {
 
 export type Product = {
   id: string;
+  sku?: string;
   title: string;
   slug: string;
   description: string;

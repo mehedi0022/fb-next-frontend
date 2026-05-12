@@ -19,7 +19,7 @@ interface FormErrors {
   general?: string;
 }
 
-export default function SignInForm() {
+export default function SignInForm({ redirect }: { redirect: string }) {
   const [login] = useLoginMutation();
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -91,12 +91,14 @@ export default function SignInForm() {
       if (res?.message === "OTP sent to email") {
         sessionStorage.setItem("tempEmail", formData.email);
         sessionStorage.setItem("tempRememberMe", String(formData.rememberMe));
-        router.push("/login/two-factor");
+        router.push(
+          `/login/two-factor?redirect=${encodeURIComponent(redirect)}`,
+        );
         return;
       }
 
       // ✅ If backend directly logs in (optional case)
-      router.push("/");
+      router.push(redirect);
     } catch (err: unknown) {
       console.error("Login error:", err);
       const error = err as { data?: { message?: string } };
@@ -120,7 +122,8 @@ export default function SignInForm() {
       {/* Email Field */}
       <Field
         label="ইমেইল ঠিকানা"
-        error={errors.email ? { message: errors.email } : undefined}>
+        error={errors.email ? { message: errors.email } : undefined}
+      >
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Mail className="h-5 w-5 text-gray-400" />
@@ -142,7 +145,8 @@ export default function SignInForm() {
       {/* Password Field */}
       <Field
         label="পাসওয়ার্ড"
-        error={errors.password ? { message: errors.password } : undefined}>
+        error={errors.password ? { message: errors.password } : undefined}
+      >
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Lock className="h-5 w-5 text-gray-400" />
@@ -162,7 +166,8 @@ export default function SignInForm() {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            disabled={isLoading}>
+            disabled={isLoading}
+          >
             {showPassword ? (
               <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             ) : (
@@ -187,7 +192,8 @@ export default function SignInForm() {
         </label>
         <Link
           href="/forgot-password"
-          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors">
+          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+        >
           পাসওয়ার্ড ভুলে গেছেন?
         </Link>
       </div>
@@ -200,7 +206,8 @@ export default function SignInForm() {
           isLoading
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        }`}>
+        }`}
+      >
         {isLoading ? (
           <>
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

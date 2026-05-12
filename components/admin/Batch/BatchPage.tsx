@@ -80,8 +80,7 @@ export default function BatchPage() {
   };
 
   const tableData = branches.flatMap((branch: Branch): TableRow[] => {
-
-    return branch.batches.map((batch, index) => ({
+    return branch.batches.map((batch) => ({
       id: batch.id,
       batchName: batch.batchName,
       maxStudents: batch.maxStudents,
@@ -89,7 +88,7 @@ export default function BatchPage() {
       users: batch._count.users,
       branchId: branch.id,
       branchName: branch.branchName,
-      rowSpan: index === 0 ? branch.batches.length : 0,
+      rowSpan: 0,
     }));
   });
 
@@ -100,6 +99,21 @@ export default function BatchPage() {
       b.branchName.toLowerCase().includes(search.toLowerCase()),
   );
   // console.log(filtered);
+
+  const groupSizeMap = filtered.reduce<Record<number, number>>((acc, row) => {
+    acc[row.branchId] = (acc[row.branchId] || 0) + 1;
+    return acc;
+  }, {});
+
+  const seenBranches = new Set<number>();
+
+  const filteredWithRowSpan = filtered.map((row) => {
+    if (seenBranches.has(row.branchId)) {
+      return { ...row, rowSpan: 0 };
+    }
+    seenBranches.add(row.branchId);
+    return { ...row, rowSpan: groupSizeMap[row.branchId] };
+  });
 
   const columns: ColumnsType<TableRow> = [
     {
@@ -165,7 +179,7 @@ export default function BatchPage() {
       ),
     },
   ];
-  
+
   const initial = selected
     ? {
         batchName: selected.batchName,
@@ -198,11 +212,7 @@ export default function BatchPage() {
       />
 
       {/* table */}
-      <ReusableTable
-        columns={columns}
-        data={filtered}
-        loading={isLoading}
-      />
+      <ReusableTable columns={columns} data={filteredWithRowSpan} loading={isLoading} />
 
       {/* modal */}
       <AppModal
