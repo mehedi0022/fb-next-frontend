@@ -23,18 +23,27 @@ type Props = {
 
 export default function EditProductPage({ params }: Props) {
   const router = useRouter();
-  const productId = Number(params.id);
+  const productKey = params.id;
   const { data: brandsResponse } = useGetAllBrandsQuery();
   const { data: categoriesResponse } = useGetAllCategoriesQuery();
   const { data: attributesResponse } = useGetAllAttributesQuery();
-  const { data: productResponse, isLoading: productLoading } =
-    useGetSingleProductQuery(productId, { skip: Number.isNaN(productId) });
+  const {
+    data: productResponse,
+    isLoading: productLoading,
+    isFetching: productFetching,
+    error: productError,
+  } = useGetSingleProductQuery(productKey, { skip: !productKey });
   const [updateProduct, { isLoading }] = useUpdateProductMutation();
 
   const onSubmit = async (payload: ProductFormSubmitPayload) => {
+    if (!productResponse?.data?.id) {
+      toast.error("Product data is not ready yet.");
+      return;
+    }
+
     try {
       const result = await updateProduct({
-        id: productId,
+        id: productResponse.data.id,
         ...payload,
         coverImage: payload.coverImage,
         images: payload.images,
@@ -49,16 +58,20 @@ export default function EditProductPage({ params }: Props) {
     }
   };
 
-  if (Number.isNaN(productId)) {
+  if (!productKey) {
     return <div className="p-6 text-red-600">Invalid product id.</div>;
   }
 
-  if (productLoading) {
+  if (productLoading || productFetching) {
     return <div className="p-6">Loading product...</div>;
   }
 
   if (!productResponse?.data) {
-    return <div className="p-6 text-red-600">Product not found.</div>;
+    const message =
+      (productError as { data?: { message?: string } })?.data?.message ||
+      "Product not found.";
+
+    return <div className="p-6 text-red-600">{message}</div>;
   }
 
   return (

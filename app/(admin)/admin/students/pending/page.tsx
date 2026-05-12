@@ -56,7 +56,7 @@ export default function PendingStudents() {
     (pkg: PackageItem) => pkg.status === "active",
   );
   const toCurrency = (value?: string | number) =>
-    `BDT ${Number(value || 0).toLocaleString()}`;
+    `৳ ${Number(value || 0).toLocaleString()}`;
   const getSellerPackageId = (item: Seller | null) =>
     item
       ? (item.sellerPackageId ?? item.sellerAccount?.sellerPackageId ?? null)
@@ -173,8 +173,7 @@ export default function PendingStudents() {
               : status === "pending"
                 ? "bg-yellow-100 text-yellow-600"
                 : "bg-red-100 text-red-600"
-          }`}
-        >
+          }`}>
           {status}
         </span>
       ),
@@ -237,8 +236,7 @@ export default function PendingStudents() {
               type="primary"
               className="!bg-black"
               size="small"
-              onClick={() => openPackageModal(r)}
-            >
+              onClick={() => openPackageModal(r)}>
               {getSellerPackageId(r) ? "Package Selected" : "Set Package"}
             </Button>
 
@@ -270,8 +268,7 @@ export default function PendingStudents() {
         open={packageModalOpen}
         onClose={closePackageModal}
         title={`${getSellerPackageId(selectedSeller) ? "Change" : "Set"} Package${selectedSeller?.name ? ` - ${selectedSeller.name}` : ""}`}
-        width={760}
-      >
+        width={760}>
         <div className="space-y-4">
           {selectedSeller && getSellerPackageName(selectedSeller) && (
             <div className="rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-sm text-blue-700">
@@ -321,8 +318,7 @@ export default function PendingStudents() {
                       selected
                         ? "!border-blue-500 !bg-blue-50"
                         : "!border-slate-200"
-                    }`}
-                  >
+                    }`}>
                     <h3 className="text-base font-semibold text-slate-900">
                       {pkg.name}
                     </h3>
@@ -338,8 +334,7 @@ export default function PendingStudents() {
           <div className="flex justify-end gap-2">
             <Button
               onClick={closePackageModal}
-              disabled={settingPackage || accountSummaryLoading}
-            >
+              disabled={settingPackage || accountSummaryLoading}>
               Cancel
             </Button>
             <Button
@@ -351,8 +346,7 @@ export default function PendingStudents() {
                 (initialPaymentDone &&
                   !!(selectedSeller && getSellerPackageId(selectedSeller)))
               }
-              onClick={handleSetPackage}
-            >
+              onClick={handleSetPackage}>
               {selectedSeller && getSellerPackageId(selectedSeller)
                 ? "Change Package"
                 : "Set Package"}

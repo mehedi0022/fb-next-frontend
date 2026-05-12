@@ -6,6 +6,8 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "freelancerbangladesh.com" },
       { protocol: "https", hostname: "picsum.photos" },
+      { protocol: "https", hostname: "demoapi.save71.com" },
+      { protocol: "http", hostname: "localhost", port: "5000" },
     ],
   },
 

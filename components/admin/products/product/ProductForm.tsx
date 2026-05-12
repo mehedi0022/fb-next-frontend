@@ -10,16 +10,27 @@ import {
 import {
   Button,
   Card,
+  Divider,
   Form,
+  Image,
   Input,
   InputNumber,
   Select,
   Space,
+  Tag,
+  Typography,
   Switch,
   Upload,
 } from "antd";
 import type { UploadFile } from "antd/es/upload/interface";
-import { Plus, Trash2 } from "lucide-react";
+import {
+  Boxes,
+  ImagePlus,
+  Info,
+  PackagePlus,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 type ProductFormValues = {
@@ -58,12 +69,22 @@ type Props = {
 };
 
 const DEFAULT_VARIANT: VariantFormItem = {
-  sku: "",
   costPrice: 0,
   wholesalePrice: 0,
   suggestedPrice: 0,
   stock: 0,
   attributes: [],
+};
+
+const resolveAssetUrl = (url?: string | null) => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  const baseUrl = apiUrl.replace(/\/api\/v\d+$/i, "");
+  const normalizedUrl = url.startsWith("/") ? url : `/${url}`;
+
+  return `${baseUrl}${normalizedUrl}`;
 };
 
 const flattenCategories = (
@@ -101,6 +122,7 @@ export default function ProductForm({
       : [{ ...DEFAULT_VARIANT }],
   );
   const [coverFile, setCoverFile] = useState<File | undefined>(undefined);
+  const [coverUploadFiles, setCoverUploadFiles] = useState<UploadFile[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<UploadFile[]>([]);
 
   const flatCategories = useMemo(
@@ -141,7 +163,36 @@ export default function ProductForm({
     setVariants((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const resetForm = () => {
+    form.resetFields();
+    setVariants(
+      initialData?.variants?.length
+        ? initialData.variants.map((item) => ({
+            sku: item.sku,
+            costPrice: Number(item.costPrice),
+            wholesalePrice: Number(item.wholesalePrice),
+            suggestedPrice: Number(item.suggestedPrice),
+            stock: Number(item.stock),
+            attributes: item.attributes.map((attr) => attr.valueId),
+          }))
+        : [{ ...DEFAULT_VARIANT }],
+    );
+    setCoverFile(undefined);
+    setCoverUploadFiles([]);
+    setGalleryFiles([]);
+  };
+
   const submit = (values: ProductFormValues) => {
+    const normalizedVariants = variants.map((variant) => {
+      if (mode === "create") {
+        const variantWithoutSku = { ...variant };
+        delete variantWithoutSku.sku;
+        return variantWithoutSku;
+      }
+
+      return variant;
+    });
+
     onSubmit({
       name: values.name,
       categoryId: values.categoryId,
@@ -150,7 +201,7 @@ export default function ProductForm({
       description: values.description,
       videoUrl: values.videoUrl,
       isActive: values.isActive,
-      variants,
+      variants: normalizedVariants,
       coverImage: coverFile,
       images: galleryFiles
         .map((file) => file.originFileObj)
@@ -173,184 +224,367 @@ export default function ProductForm({
         isActive: initialData?.isActive ?? true,
       }}
       className="space-y-5">
-      <Card title="Basic Information">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Form.Item
-            label="Product Name"
-            name="name"
-            rules={[{ required: true, message: "Product name is required" }]}>
-            <Input placeholder="Enter product name" />
-          </Form.Item>
-
-          <Form.Item
-            label="Category (Leaf only)"
-            name="categoryId"
-            rules={[{ required: true, message: "Category is required" }]}>
-            <Select
-              showSearch
-              optionFilterProp="label"
-              options={leafCategoryOptions}
-              placeholder="Select subcategory"
-            />
-          </Form.Item>
-
-          <Form.Item label="Brand" name="brandId">
-            <Select
-              allowClear
-              options={brands.map((item) => ({
-                value: item.id,
-                label: item.name,
-              }))}
-              placeholder="Select brand"
-            />
-          </Form.Item>
-
-          {mode === "edit" && (
-            <Form.Item
-              label="Active Status"
-              name="isActive"
-              valuePropName="checked">
-              <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-            </Form.Item>
-          )}
-        </div>
-
-        <Form.Item label="Short Description" name="shortDescription">
-          <Input.TextArea rows={2} placeholder="Short description" />
-        </Form.Item>
-
-        <Form.Item label="Description" name="description">
-          <Input.TextArea rows={4} placeholder="Detailed description" />
-        </Form.Item>
-
-        <Form.Item label="Video URL" name="videoUrl">
-          <Input placeholder="https://..." />
-        </Form.Item>
-      </Card>
-
-      <Card title="Images">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Form.Item
-            label="Cover Image"
-            required={mode === "create"}
-            extra={
-              mode === "edit" ? "Upload to replace current cover image" : ""
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="space-y-5">
+          <Card
+            title={
+              <Space size={8}>
+                <PackagePlus size={18} />
+                <span>Product Details</span>
+              </Space>
             }>
-            <Upload
-              beforeUpload={(file) => {
-                setCoverFile(file);
-                return false;
-              }}
-              maxCount={1}
-              accept="image/*">
-              <Button>Select Cover Image</Button>
-            </Upload>
-          </Form.Item>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Form.Item
+                label="Product Name"
+                name="name"
+                rules={[
+                  { required: true, message: "Product name is required" },
+                ]}>
+                <Input placeholder="Enter product name" />
+              </Form.Item>
 
-          <Form.Item label="Gallery Images (max 20)">
-            <Upload
-              beforeUpload={(file) => {
-                setGalleryFiles((prev) => [...prev, file]);
-                return false;
-              }}
-              onRemove={(file) => {
-                setGalleryFiles((prev) =>
-                  prev.filter((item) => item.uid !== file.uid),
-                );
-              }}
-              multiple
-              maxCount={20}
-              accept="image/*">
-              <Button>Select Gallery Images</Button>
-            </Upload>
-          </Form.Item>
-        </div>
-      </Card>
-
-      <Card
-        title="Variants"
-        extra={
-          <Button type="primary" icon={<Plus size={14} />} onClick={addVariant}>
-            Add Variant
-          </Button>
-        }>
-        <div className="space-y-4">
-          {variants.map((variant, index) => (
-            <Card
-              key={`variant-${index}`}
-              type="inner"
-              title={`Variant ${index + 1}`}
-              extra={
-                <Button
-                  danger
-                  size="small"
-                  onClick={() => removeVariant(index)}
-                  disabled={variants.length === 1}>
-                  <Trash2 size={14} />
-                </Button>
-              }>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <Input
-                  placeholder="SKU"
-                  value={variant.sku}
-                  onChange={(e) => updateVariant(index, "sku", e.target.value)}
-                />
-                <InputNumber
-                  className="!w-full"
-                  placeholder="Cost Price"
-                  min={0}
-                  value={variant.costPrice}
-                  onChange={(value) =>
-                    updateVariant(index, "costPrice", Number(value || 0))
-                  }
-                />
-                <InputNumber
-                  className="!w-full"
-                  placeholder="Wholesale Price"
-                  min={0}
-                  value={variant.wholesalePrice}
-                  onChange={(value) =>
-                    updateVariant(index, "wholesalePrice", Number(value || 0))
-                  }
-                />
-                <InputNumber
-                  className="!w-full"
-                  placeholder="Suggested Price"
-                  min={0}
-                  value={variant.suggestedPrice}
-                  onChange={(value) =>
-                    updateVariant(index, "suggestedPrice", Number(value || 0))
-                  }
-                />
-                <InputNumber
-                  className="!w-full"
-                  placeholder="Stock"
-                  min={0}
-                  value={variant.stock}
-                  onChange={(value) =>
-                    updateVariant(index, "stock", Number(value || 0))
-                  }
-                />
+              <Form.Item
+                label="Category"
+                name="categoryId"
+                extra="Only subcategories are shown because parent categories cannot hold products."
+                rules={[{ required: true, message: "Category is required" }]}>
                 <Select
-                  mode="multiple"
-                  options={attributeValueOptions}
-                  value={variant.attributes}
-                  onChange={(value) =>
-                    updateVariant(index, "attributes", value)
-                  }
-                  placeholder="Select attributes"
+                  showSearch
+                  optionFilterProp="label"
+                  options={leafCategoryOptions}
+                  placeholder="Select subcategory"
                 />
+              </Form.Item>
+
+              <Form.Item label="Brand" name="brandId">
+                <Select
+                  allowClear
+                  options={brands.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                  }))}
+                  placeholder="Select brand"
+                />
+              </Form.Item>
+
+              {mode === "edit" && (
+                <Form.Item
+                  label="Active Status"
+                  name="isActive"
+                  valuePropName="checked">
+                  <Switch
+                    checkedChildren="Active"
+                    unCheckedChildren="Inactive"
+                  />
+                </Form.Item>
+              )}
+            </div>
+
+            <Form.Item
+              label="Short Description"
+              name="shortDescription"
+              extra="A compact summary shown in product previews.">
+              <Input.TextArea
+                rows={2}
+                placeholder="Example: Premium cotton shirt for daily wear"
+                showCount
+                maxLength={180}
+              />
+            </Form.Item>
+
+            <Form.Item label="Description" name="description">
+              <Input.TextArea
+                rows={5}
+                placeholder="Add product materials, sizing, care instructions, warranty, or other selling details"
+              />
+            </Form.Item>
+
+            <Form.Item label="Video URL" name="videoUrl">
+              <Input placeholder="https://..." />
+            </Form.Item>
+          </Card>
+
+          <Card
+            title={
+              <Space size={8}>
+                <ImagePlus size={18} />
+                <span>Product Images</span>
+              </Space>
+            }>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Form.Item
+                label="Cover Image"
+                required={mode === "create"}
+                extra={
+                  mode === "edit"
+                    ? "Upload a new file only if you want to replace the current cover."
+                    : "Required. This image appears first in product listings."
+                }>
+                <Upload
+                  listType="picture-card"
+                  fileList={coverUploadFiles}
+                  beforeUpload={(file) => {
+                    setCoverFile(file);
+                    setCoverUploadFiles([file]);
+                    return false;
+                  }}
+                  onRemove={() => {
+                    setCoverFile(undefined);
+                    setCoverUploadFiles([]);
+                  }}
+                  maxCount={1}
+                  accept="image/*">
+                  <div className="flex flex-col items-center gap-2 text-slate-600">
+                    <ImagePlus size={22} />
+                    <span>Select</span>
+                  </div>
+                </Upload>
+                {mode === "edit" && initialData?.coverImage ? (
+                  <div className="mt-3">
+                    <Typography.Text
+                      type="secondary"
+                      className="mb-2 block text-xs">
+                      Current cover
+                    </Typography.Text>
+                    <Image
+                      src={resolveAssetUrl(initialData.coverImage)}
+                      alt={initialData.name}
+                      width={96}
+                      height={96}
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                ) : null}
+              </Form.Item>
+
+              <Form.Item
+                label="Gallery Images"
+                extra="Optional. Add up to 20 supporting product photos.">
+                <Upload
+                  listType="picture-card"
+                  fileList={galleryFiles}
+                  beforeUpload={(file) => {
+                    setGalleryFiles((prev) => [...prev, file]);
+                    return false;
+                  }}
+                  onRemove={(file) => {
+                    setGalleryFiles((prev) =>
+                      prev.filter((item) => item.uid !== file.uid),
+                    );
+                  }}
+                  multiple
+                  maxCount={20}
+                  accept="image/*">
+                  <div className="flex flex-col items-center gap-2 text-slate-600">
+                    <Plus size={22} />
+                    <span>Add</span>
+                  </div>
+                </Upload>
+                {mode === "edit" && initialData?.images?.length ? (
+                  <div className="mt-3">
+                    <Typography.Text
+                      type="secondary"
+                      className="mb-2 block text-xs">
+                      Current gallery
+                    </Typography.Text>
+                    <div className="flex flex-wrap gap-2">
+                      {initialData.images.map((image) => (
+                        <Image
+                          key={image.id}
+                          src={resolveAssetUrl(image.url)}
+                          alt={`${initialData.name} gallery image`}
+                          width={64}
+                          height={64}
+                          className="rounded-md object-cover"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </Form.Item>
+            </div>
+          </Card>
+
+          <Card
+            title={
+              <Space size={8}>
+                <Boxes size={18} />
+                <span>Pricing & Stock</span>
+              </Space>
+            }
+            extra={
+              <Button
+                type="primary"
+                icon={<Plus size={14} />}
+                onClick={addVariant}>
+                Add Variant
+              </Button>
+            }>
+            <div className="space-y-4">
+              {variants.map((variant, index) => (
+                <div
+                  key={`variant-${index}`}
+                  className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <Space size={8}>
+                      <Tag color="blue">Variant {index + 1}</Tag>
+                      {mode === "edit" && variant.sku ? (
+                        <Typography.Text type="secondary">
+                          SKU: {variant.sku}
+                        </Typography.Text>
+                      ) : null}
+                    </Space>
+                    <Button
+                      danger
+                      size="small"
+                      icon={<Trash2 size={14} />}
+                      onClick={() => removeVariant(index)}
+                      disabled={variants.length === 1}>
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div>
+                      <Typography.Text className="mb-1 block text-sm">
+                        Cost Price
+                      </Typography.Text>
+                      <InputNumber
+                        className="!w-full"
+                        placeholder="0"
+                        min={0}
+                        value={variant.costPrice}
+                        onChange={(value) =>
+                          updateVariant(index, "costPrice", Number(value || 0))
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Typography.Text className="mb-1 block text-sm">
+                        Wholesale Price
+                      </Typography.Text>
+                      <InputNumber
+                        className="!w-full"
+                        placeholder="0"
+                        min={0}
+                        value={variant.wholesalePrice}
+                        onChange={(value) =>
+                          updateVariant(
+                            index,
+                            "wholesalePrice",
+                            Number(value || 0),
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Typography.Text className="mb-1 block text-sm">
+                        Suggested Price
+                      </Typography.Text>
+                      <InputNumber
+                        className="!w-full"
+                        placeholder="0"
+                        min={0}
+                        value={variant.suggestedPrice}
+                        onChange={(value) =>
+                          updateVariant(
+                            index,
+                            "suggestedPrice",
+                            Number(value || 0),
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Typography.Text className="mb-1 block text-sm">
+                        Stock
+                      </Typography.Text>
+                      <InputNumber
+                        className="!w-full"
+                        placeholder="0"
+                        min={0}
+                        value={variant.stock}
+                        onChange={(value) =>
+                          updateVariant(index, "stock", Number(value || 0))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <Divider className="!my-4" />
+                  <Typography.Text className="mb-1 block text-sm">
+                    Attributes
+                  </Typography.Text>
+                  <Select
+                    className="!w-full"
+                    mode="multiple"
+                    options={attributeValueOptions}
+                    value={variant.attributes}
+                    onChange={(value) =>
+                      updateVariant(index, "attributes", value)
+                    }
+                    placeholder="Select size, color, or other options"
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        <div className="space-y-5">
+          <Card>
+            <Space align="start" size={12}>
+              <Info size={18} className="mt-1 text-blue-600" />
+              <div>
+                <Typography.Title level={5} className="!mb-1">
+                  SKU is automatic
+                </Typography.Title>
+                <Typography.Paragraph type="secondary" className="!mb-0">
+                  {mode === "edit"
+                    ? "Existing SKU values are shown for reference only. Price, stock, images, status, and details can be updated here."
+                    : "The backend creates product and variant SKU values. You only need to add category, images, price, stock, and optional attributes."}
+                </Typography.Paragraph>
               </div>
-            </Card>
-          ))}
+            </Space>
+          </Card>
+
+          <Card>
+            <Typography.Title level={5} className="!mb-3">
+              Before submitting
+            </Typography.Title>
+            <div className="space-y-3 text-sm text-slate-600">
+              <div>
+                <Tag color="green">1</Tag>
+                Select a subcategory, not a parent category.
+              </div>
+              <div>
+                <Tag color="green">2</Tag>
+                Add a clear cover image.
+              </div>
+              <div>
+                <Tag color="green">3</Tag>
+                Use variants when size, color, or price changes.
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <Card>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Typography.Text type="secondary">
+            {mode === "create"
+              ? "Review product details before creating it."
+              : "Changes will update this product after submission."}
+          </Typography.Text>
+          <Space>
+            <Button htmlType="button" onClick={resetForm}>
+              Reset
+            </Button>
+            <Button type="primary" htmlType="submit" loading={submitting}>
+              {mode === "create" ? "Create Product" : "Update Product"}
+            </Button>
+          </Space>
         </div>
       </Card>
-
-      <Space>
-        <Button type="primary" htmlType="submit" loading={submitting}>
-          {mode === "create" ? "Create Product" : "Update Product"}
-        </Button>
-      </Space>
     </Form>
   );
 }

@@ -1,46 +1,65 @@
-import React from 'react';
-import productsData from "@/public/assets/products.json";
-import { ProductDetails } from '@/components/home';
-import { Product } from '@/lib/home';
-import { Metadata } from 'next';
+"use client";
 
-// Product SEO
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const products: Product[] = productsData || [];
-  const product = products.find((p) => p.id === params.id);
+import React from "react";
+import { ProductDetails, ProductDetailsSkeleton } from "@/components/home";
+import { useGetSingleProductQuery } from "@/appstore/modules/products/api";
+import type { Product } from "@/lib/home";
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-    };
+const ProductDetailsPage = ({ params }: { params: { id: string } }) => {
+  const { data, isLoading, isError } = useGetSingleProductQuery(params.id);
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  const siteBaseUrl = apiUrl.replace(/\/api\/v\d+$/i, "");
+  const resolveAssetUrl = (url?: string | null) => {
+    if (!url) return "";
+    if (/^https?:\/\//i.test(url)) return url;
+    const normalizedUrl = url.startsWith("/") ? url : `/${url}`;
+    return `${siteBaseUrl}${normalizedUrl}`;
+  };
+
+  const raw = data?.data;
+  const firstVariant = raw?.variants?.[0];
+  const sku = firstVariant?.sku ?? "";
+  const wholesale = firstVariant?.wholesalePrice ?? 0;
+  const sale = firstVariant?.suggestedPrice ?? 0;
+  const stock = (raw?.variants ?? []).reduce((sum, item) => sum + item.stock, 0);
+  const thumbnail = resolveAssetUrl(raw?.coverImage ?? "");
+  const gallery = (raw?.images ?? []).map((item) => resolveAssetUrl(item.url));
+
+  const product: Product | null = raw
+    ? {
+        id: String(raw.id),
+        sku,
+        title: raw.name,
+        slug: raw.slug,
+        description: raw.description ?? "",
+        price: {
+          wholesale,
+          sale,
+          shipping: 0,
+          profit: sale - wholesale,
+          currency: "BDT",
+        },
+        stock,
+        isInStock: stock > 0,
+        thumbnail,
+        images: gallery.length > 0 ? gallery : thumbnail ? [thumbnail] : [],
+        category: raw.category?.name ?? "",
+        brand: raw.brand?.name,
+        createdAt: "",
+      }
+    : null;
+
+  if (isLoading) return <ProductDetailsSkeleton />;
+  if (isError || !product) {
+    return <div className="p-6 text-center text-red-500">Product not found.</div>;
   }
 
-  return {
-    title: product.title,
-    description: product.description,
-    openGraph: {
-      title: product.title,
-      description: product.description,
-      images: [product.thumbnail],
-    },
-  };
-}
-
-const page = async({params}:{params: { id: string }}) => {
-    const {id} = await params;
-  const products: Product[] = productsData || [];
-
-  const product = products.find(p => p.id === id);
-
-    return (
-        <div>
-            <ProductDetails product={product!} />
-        </div>
-    );
+  return (
+    <div>
+      <ProductDetails product={product} />
+    </div>
+  );
 };
 
-export default page;
+export default ProductDetailsPage;
