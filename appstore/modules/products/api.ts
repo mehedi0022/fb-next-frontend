@@ -32,7 +32,7 @@ export type ProductListItem = {
 };
 
 export type ProductVariantPayload = {
-  sku: string;
+  sku?: string;
   costPrice: number;
   wholesalePrice: number;
   suggestedPrice: number;
@@ -217,6 +217,15 @@ export type ProductListParams = {
   isActive?: boolean;
 };
 
+const getSimpleProductVariant = (variants?: ProductVariantPayload[]) => {
+  if (!variants || variants.length !== 1) return null;
+
+  const [variant] = variants;
+  if (variant.attributes?.length) return null;
+
+  return variant;
+};
+
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllProducts: builder.query<ProductListResponse, ProductListParams | void>({
@@ -242,7 +251,13 @@ const productApi = baseApi.injectEndpoints({
           formData.append("shortDescription", payload.shortDescription);
         if (payload.description) formData.append("description", payload.description);
         if (payload.videoUrl) formData.append("videoUrl", payload.videoUrl);
-        if (payload.variants?.length) {
+        const simpleVariant = getSimpleProductVariant(payload.variants);
+        if (simpleVariant) {
+          formData.append("costPrice", String(simpleVariant.costPrice));
+          formData.append("wholesalePrice", String(simpleVariant.wholesalePrice));
+          formData.append("suggestedPrice", String(simpleVariant.suggestedPrice));
+          formData.append("stock", String(simpleVariant.stock));
+        } else if (payload.variants?.length) {
           formData.append("variants", JSON.stringify(payload.variants));
         } else {
           formData.append("costPrice", String(payload.costPrice ?? 0));
@@ -282,7 +297,13 @@ const productApi = baseApi.injectEndpoints({
         if (payload.isActive !== undefined) {
           formData.append("isActive", String(payload.isActive));
         }
-        if (payload.variants?.length) {
+        const simpleVariant = getSimpleProductVariant(payload.variants);
+        if (simpleVariant) {
+          formData.append("costPrice", String(simpleVariant.costPrice));
+          formData.append("wholesalePrice", String(simpleVariant.wholesalePrice));
+          formData.append("suggestedPrice", String(simpleVariant.suggestedPrice));
+          formData.append("stock", String(simpleVariant.stock));
+        } else if (payload.variants?.length) {
           formData.append("variants", JSON.stringify(payload.variants));
         } else {
           formData.append("costPrice", String(payload.costPrice ?? 0));
