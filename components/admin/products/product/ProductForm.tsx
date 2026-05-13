@@ -33,6 +33,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import RichTextEditor from "@/components/admin/common/RichTextEditor";
 
 type ProductFormValues = {
   name: string;
@@ -180,7 +181,9 @@ export default function ProductForm({
   const switchProductMode = (nextMode: ProductMode) => {
     setProductMode(nextMode);
     if (nextMode === "simple") {
-      setVariants((prev) => [{ ...(prev[0] ?? DEFAULT_VARIANT), attributes: [] }]);
+      setVariants((prev) => [
+        { ...(prev[0] ?? DEFAULT_VARIANT), attributes: [] },
+      ]);
     }
   };
 
@@ -215,7 +218,9 @@ export default function ProductForm({
 
   const submit = (values: ProductFormValues) => {
     const selectedVariants =
-      productMode === "simple" ? [{ ...variants[0], attributes: [] }] : variants;
+      productMode === "simple"
+        ? [{ ...variants[0], attributes: [] }]
+        : variants;
 
     const normalizedVariants = selectedVariants.map((variant) => {
       if (mode === "create") {
@@ -327,10 +332,7 @@ export default function ProductForm({
             </Form.Item>
 
             <Form.Item label="Description" name="description">
-              <Input.TextArea
-                rows={5}
-                placeholder="Add product materials, sizing, care instructions, warranty, or other selling details"
-              />
+              <RichTextEditor />
             </Form.Item>
 
             <Form.Item label="Video URL" name="videoUrl">
@@ -471,154 +473,165 @@ export default function ProductForm({
             </div>
 
             <div className="space-y-4">
-              {(productMode === "simple" ? variants.slice(0, 1) : variants).map((variant, index) => (
-                <div
-                  key={`variant-${index}`}
-                  className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <Space size={8}>
-                      <Tag color={productMode === "simple" ? "green" : "blue"}>
-                        {productMode === "simple"
-                          ? "Simple Product"
-                          : `Variant ${index + 1}`}
-                      </Tag>
-                      {mode === "edit" && productMode === "variants" && variant.sku ? (
-                        <Typography.Text type="secondary">
-                          SKU: {variant.sku}
-                        </Typography.Text>
+              {(productMode === "simple" ? variants.slice(0, 1) : variants).map(
+                (variant, index) => (
+                  <div
+                    key={`variant-${index}`}
+                    className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <Space size={8}>
+                        <Tag
+                          color={productMode === "simple" ? "green" : "blue"}>
+                          {productMode === "simple"
+                            ? "Simple Product"
+                            : `Variant ${index + 1}`}
+                        </Tag>
+                        {mode === "edit" &&
+                        productMode === "variants" &&
+                        variant.sku ? (
+                          <Typography.Text type="secondary">
+                            SKU: {variant.sku}
+                          </Typography.Text>
+                        ) : null}
+                      </Space>
+                      {productMode === "variants" ? (
+                        <Button
+                          danger
+                          size="small"
+                          icon={<Trash2 size={14} />}
+                          onClick={() => removeVariant(index)}
+                          disabled={variants.length === 1}>
+                          Remove
+                        </Button>
                       ) : null}
-                    </Space>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                      <div>
+                        <Typography.Text className="mb-1 block text-sm">
+                          Cost Price
+                        </Typography.Text>
+                        <InputNumber
+                          className="!w-full"
+                          placeholder="0"
+                          min={0}
+                          value={variant.costPrice}
+                          onChange={(value) =>
+                            updateVariant(
+                              index,
+                              "costPrice",
+                              Number(value || 0),
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Typography.Text className="mb-1 block text-sm">
+                          Wholesale Price
+                        </Typography.Text>
+                        <InputNumber
+                          className="!w-full"
+                          placeholder="0"
+                          min={0}
+                          value={variant.wholesalePrice}
+                          onChange={(value) =>
+                            updateVariant(
+                              index,
+                              "wholesalePrice",
+                              Number(value || 0),
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Typography.Text className="mb-1 block text-sm">
+                          Suggested Price
+                        </Typography.Text>
+                        <InputNumber
+                          className="!w-full"
+                          placeholder="0"
+                          min={0}
+                          value={variant.suggestedPrice}
+                          onChange={(value) =>
+                            updateVariant(
+                              index,
+                              "suggestedPrice",
+                              Number(value || 0),
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Typography.Text className="mb-1 block text-sm">
+                          Stock
+                        </Typography.Text>
+                        <InputNumber
+                          className="!w-full"
+                          placeholder="0"
+                          min={0}
+                          value={variant.stock}
+                          onChange={(value) =>
+                            updateVariant(index, "stock", Number(value || 0))
+                          }
+                        />
+                      </div>
+                    </div>
                     {productMode === "variants" ? (
-                      <Button
-                        danger
-                        size="small"
-                        icon={<Trash2 size={14} />}
-                        onClick={() => removeVariant(index)}
-                        disabled={variants.length === 1}>
-                        Remove
-                      </Button>
+                      <>
+                        <Divider className="!my-4" />
+                        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                          <Typography.Text className="block text-sm">
+                            Attributes
+                          </Typography.Text>
+                          <Typography.Text type="secondary" className="text-xs">
+                            Select one value from each needed attribute
+                          </Typography.Text>
+                        </div>
+                        {attributes.length ? (
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                            {attributes.map((attribute) => (
+                              <div key={attribute.id}>
+                                <Typography.Text className="mb-1 block text-xs text-slate-600">
+                                  {attribute.name}
+                                </Typography.Text>
+                                <Select
+                                  allowClear
+                                  className="!w-full"
+                                  options={attribute.values.map(
+                                    (valueItem) => ({
+                                      value: valueItem.id,
+                                      label: valueItem.value,
+                                    }),
+                                  )}
+                                  value={getVariantAttributeValue(
+                                    variant,
+                                    attribute,
+                                  )}
+                                  onChange={(value) =>
+                                    updateVariant(
+                                      index,
+                                      "attributes",
+                                      setVariantAttributeValue(
+                                        variant,
+                                        attribute,
+                                        value,
+                                      ),
+                                    )
+                                  }
+                                  placeholder={`Select ${attribute.name}`}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <Typography.Text type="secondary">
+                            Create attributes first to use product variations.
+                          </Typography.Text>
+                        )}
+                      </>
                     ) : null}
                   </div>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    <div>
-                      <Typography.Text className="mb-1 block text-sm">
-                        Cost Price
-                      </Typography.Text>
-                      <InputNumber
-                        className="!w-full"
-                        placeholder="0"
-                        min={0}
-                        value={variant.costPrice}
-                        onChange={(value) =>
-                          updateVariant(index, "costPrice", Number(value || 0))
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Typography.Text className="mb-1 block text-sm">
-                        Wholesale Price
-                      </Typography.Text>
-                      <InputNumber
-                        className="!w-full"
-                        placeholder="0"
-                        min={0}
-                        value={variant.wholesalePrice}
-                        onChange={(value) =>
-                          updateVariant(
-                            index,
-                            "wholesalePrice",
-                            Number(value || 0),
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Typography.Text className="mb-1 block text-sm">
-                        Suggested Price
-                      </Typography.Text>
-                      <InputNumber
-                        className="!w-full"
-                        placeholder="0"
-                        min={0}
-                        value={variant.suggestedPrice}
-                        onChange={(value) =>
-                          updateVariant(
-                            index,
-                            "suggestedPrice",
-                            Number(value || 0),
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Typography.Text className="mb-1 block text-sm">
-                        Stock
-                      </Typography.Text>
-                      <InputNumber
-                        className="!w-full"
-                        placeholder="0"
-                        min={0}
-                        value={variant.stock}
-                        onChange={(value) =>
-                          updateVariant(index, "stock", Number(value || 0))
-                        }
-                      />
-                    </div>
-                  </div>
-                  {productMode === "variants" ? (
-                    <>
-                      <Divider className="!my-4" />
-                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <Typography.Text className="block text-sm">
-                          Attributes
-                        </Typography.Text>
-                        <Typography.Text type="secondary" className="text-xs">
-                          Select one value from each needed attribute
-                        </Typography.Text>
-                      </div>
-                      {attributes.length ? (
-                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                          {attributes.map((attribute) => (
-                            <div key={attribute.id}>
-                              <Typography.Text className="mb-1 block text-xs text-slate-600">
-                                {attribute.name}
-                              </Typography.Text>
-                              <Select
-                                allowClear
-                                className="!w-full"
-                                options={attribute.values.map((valueItem) => ({
-                                  value: valueItem.id,
-                                  label: valueItem.value,
-                                }))}
-                                value={getVariantAttributeValue(
-                                  variant,
-                                  attribute,
-                                )}
-                                onChange={(value) =>
-                                  updateVariant(
-                                    index,
-                                    "attributes",
-                                    setVariantAttributeValue(
-                                      variant,
-                                      attribute,
-                                      value,
-                                    ),
-                                  )
-                                }
-                                placeholder={`Select ${attribute.name}`}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <Typography.Text type="secondary">
-                          Create attributes first to use product variations.
-                        </Typography.Text>
-                      )}
-                    </>
-                  ) : null}
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </Card>
         </div>

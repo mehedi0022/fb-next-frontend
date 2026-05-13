@@ -14,7 +14,8 @@ import { toast } from "react-toastify";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
-  if (price.type === "fixed") return `BDT ${Number(price.value).toLocaleString()}`;
+  if (price.type === "fixed")
+    return `BDT ${Number(price.value).toLocaleString()}`;
   return `BDT ${Number(price.min).toLocaleString()} - ${Number(price.max).toLocaleString()}`;
 };
 
@@ -52,7 +53,7 @@ export default function ProductListPage() {
     {
       title: "SI",
       width: 70,
-      align: "center",
+      align: "start",
       render: (_: unknown, __: ProductListItem, index: number) => index + 1,
     },
     { title: "Name", dataIndex: "name" },
@@ -66,22 +67,27 @@ export default function ProductListPage() {
     },
     {
       title: "Price",
-      render: (_: unknown, item: ProductListItem) => priceText(item.suggestedPrice),
+      render: (_: unknown, item: ProductListItem) =>
+        priceText(item.suggestedPrice),
     },
     {
       title: "Stock",
-      align: "center",
+      align: "start",
       render: (_: unknown, item: ProductListItem) => item.totalStock ?? 0,
     },
     {
       title: "Status",
-      align: "center",
+      align: "start",
       render: (_: unknown, item: ProductListItem) =>
-        item.isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>,
+        item.isActive ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
     },
     {
       title: "Action",
-      align: "center",
+      align: "end",
       render: (_: unknown, item: ProductListItem) => (
         <Space>
           <Link href={`/admin/products/edit/${item.id}`}>
@@ -90,8 +96,7 @@ export default function ProductListPage() {
           <Popconfirm
             title="Deactivate this product?"
             onConfirm={() => onSoftDelete(item.id)}
-            okButtonProps={{ loading: deleting }}
-          >
+            okButtonProps={{ loading: deleting }}>
             <Button size="small" danger>
               Deactivate
             </Button>
@@ -99,8 +104,7 @@ export default function ProductListPage() {
           <Popconfirm
             title="Permanently delete this product?"
             onConfirm={() => onHardDelete(item.id)}
-            okButtonProps={{ loading: hardDeleting }}
-          >
+            okButtonProps={{ loading: hardDeleting }}>
             <Button size="small">Hard Delete</Button>
           </Popconfirm>
         </Space>
@@ -116,7 +120,11 @@ export default function ProductListPage() {
           <Button type="primary">Create Product</Button>
         </Link>
       </div>
-      <ReusableTable columns={columns} data={data?.data || []} loading={isLoading} />
+      <ReusableTable
+        columns={columns}
+        data={data?.data || []}
+        loading={isLoading}
+      />
     </div>
   );
 }
