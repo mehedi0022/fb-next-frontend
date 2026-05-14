@@ -232,6 +232,10 @@ export default function ProductForm({
       return variant;
     });
 
+    const normalizedGalleryFiles = galleryFiles
+      .map((file) => (file.originFileObj as File | undefined) ?? (file as File))
+      .filter((file): file is File => file instanceof File);
+
     onSubmit({
       name: values.name,
       categoryId: values.categoryId,
@@ -242,9 +246,7 @@ export default function ProductForm({
       isActive: values.isActive,
       variants: normalizedVariants,
       coverImage: coverFile,
-      images: galleryFiles
-        .map((file) => file.originFileObj)
-        .filter(Boolean) as File[],
+      images: normalizedGalleryFiles,
     });
   };
 
