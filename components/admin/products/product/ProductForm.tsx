@@ -332,7 +332,11 @@ export default function ProductForm({
             </Form.Item>
 
             <Form.Item label="Description" name="description">
-              <RichTextEditor />
+              <RichTextEditor
+                value={form.getFieldValue("description")}
+                placeholder="Product Details..."
+                onChange={(html) => form.setFieldValue("description", html)}
+              />
             </Form.Item>
 
             <Form.Item label="Video URL" name="videoUrl">

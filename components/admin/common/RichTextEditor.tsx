@@ -19,20 +19,25 @@ import {
 import { useEffect } from "react";
 import "./RichTextEditor.css";
 
+interface RichTextEditorProps {
+  value?: string;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+}
 const { Option } = Select;
 
 const RichTextEditor = ({
   value,
   onChange,
   placeholder = "পণ্যের বিবরণ লিখুন...",
-}) => {
+}: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false, // StarterKit-এর heading বন্ধ করো, আলাদা extension ব্যবহার করবো
+        heading: false,
       }),
       Heading.configure({
-        levels: [1, 2, 3], // H1, H2, H3 support
+        levels: [1, 2, 3, 4],
       }),
       Link.configure({ openOnClick: false }),
       Placeholder.configure({ placeholder }),
@@ -46,27 +51,26 @@ const RichTextEditor = ({
   useEffect(() => {
     if (!editor) return;
     if (value && editor.getHTML() !== value) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor]);
+  }, [editor, value]);
 
   if (!editor) return null;
 
   const setLink = () => {
-    const url = window.prompt("URL দিন:");
+    const url = window.prompt("Enter a Valid Url:");
     if (url) editor.chain().focus().setLink({ href: url }).run();
   };
 
-  // বর্তমানে কোন heading/paragraph active সেটা বের করো
   const getActiveTextStyle = () => {
     if (editor.isActive("heading", { level: 1 })) return "h1";
     if (editor.isActive("heading", { level: 2 })) return "h2";
     if (editor.isActive("heading", { level: 3 })) return "h3";
+    if (editor.isActive("heading", { level: 4 })) return "h4";
     return "paragraph";
   };
 
-  const handleTextStyleChange = (value) => {
+  const handleTextStyleChange = (value: string) => {
     if (value === "paragraph") {
       editor.chain().focus().setParagraph().run();
     } else if (value === "h1") {
@@ -75,6 +79,8 @@ const RichTextEditor = ({
       editor.chain().focus().toggleHeading({ level: 2 }).run();
     } else if (value === "h3") {
       editor.chain().focus().toggleHeading({ level: 3 }).run();
+    } else if (value === "h4") {
+      editor.chain().focus().toggleHeading({ level: 4 }).run();
     }
   };
 
@@ -94,10 +100,13 @@ const RichTextEditor = ({
               <span style={{ fontSize: 18, fontWeight: 700 }}>Heading 1</span>
             </Option>
             <Option value="h2">
-              <span style={{ fontSize: 15, fontWeight: 600 }}>Heading 2</span>
+              <span style={{ fontSize: 16, fontWeight: 600 }}>Heading 2</span>
             </Option>
             <Option value="h3">
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Heading 3</span>
+              <span style={{ fontSize: 14, fontWeight: 600 }}>Heading 3</span>
+            </Option>
+            <Option value="h4">
+              <span style={{ fontSize: 12, fontWeight: 500 }}>Heading 4</span>
             </Option>
           </Select>
 

@@ -14,9 +14,8 @@ import { toast } from "react-toastify";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
-  if (price.type === "fixed")
-    return `BDT ${Number(price.value).toLocaleString()}`;
-  return `BDT ${Number(price.min).toLocaleString()} - ${Number(price.max).toLocaleString()}`;
+  if (price.type === "fixed") return `${Number(price.value).toLocaleString()}`;
+  return `${Number(price.min).toLocaleString()} - ${Number(price.max).toLocaleString()}`;
 };
 
 export default function ProductListPage() {
@@ -59,25 +58,28 @@ export default function ProductListPage() {
     { title: "Name", dataIndex: "name" },
     {
       title: "Category",
+      align: "center",
       render: (_: unknown, item: ProductListItem) => item.category?.name || "-",
     },
     {
       title: "Brand",
+      align: "center",
       render: (_: unknown, item: ProductListItem) => item.brand?.name || "-",
     },
     {
       title: "Price",
+      align: "center",
       render: (_: unknown, item: ProductListItem) =>
         priceText(item.suggestedPrice),
     },
     {
       title: "Stock",
-      align: "start",
+      align: "center",
       render: (_: unknown, item: ProductListItem) => item.totalStock ?? 0,
     },
     {
       title: "Status",
-      align: "start",
+      align: "center",
       render: (_: unknown, item: ProductListItem) =>
         item.isActive ? (
           <Tag color="green">Active</Tag>

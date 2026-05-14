@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
   content: [
@@ -8,6 +9,8 @@ const config: Config = {
     "./@modules/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
+    "prose",
+    "max-w-none",
     "bg-red-500",
     "bg-yellow-500",
     "bg-blue-500",
@@ -28,6 +31,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
+
 export default config;

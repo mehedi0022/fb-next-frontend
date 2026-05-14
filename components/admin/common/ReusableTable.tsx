@@ -17,6 +17,7 @@ export function ReusableTable<T extends { id: number }>({
   if (loading && loadingComponent) {
     return <div className="table-wrapper">{loadingComponent}</div>;
   }
+
   return (
     <div className="table-wrapper">
       <Table
@@ -24,6 +25,7 @@ export function ReusableTable<T extends { id: number }>({
         columns={columns}
         dataSource={data}
         loading={loading}
+        bordered
         pagination={{ pageSize: 10 }}
         scroll={{ x: true }}
         size="middle"
