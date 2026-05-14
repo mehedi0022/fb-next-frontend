@@ -42,7 +42,8 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
       id: String(item.id),
       title: item.name,
       slug: item.slug,
-      description: "",
+      shortDescription: item.shortDescription ?? "",
+      description: item.shortDescription ?? "",
       price: {
         wholesale,
         sale: salePrice,

@@ -8,12 +8,12 @@ export default function BannerLoginRegLink() {
     const auth = useAppSelector(selectIsAuthenticated);
     return (
         <div className={`flex flex-wrap gap-6 justify-center md:justify-start pt-2 ${auth ? 'hidden' : 'flex'}`}>
-            <Link href="/register" className="flex items-center btn-secondary border">
+            <Link href="/register" className="flex items-center btn-primary border">
                 রেজিস্ট্রেশন করুন
                 <ArrowRight className="w-5 h-5" />
             </Link>
 
-            <Link href="/login" className="flex items-center btn-secondary border">
+            <Link href="/login" className="flex items-center btn-primary border">
                 লগইন করুন
                 <LogIn className="w-5 h-5 " />
             </Link>

@@ -6,12 +6,30 @@ import {
     SellerSingleResponse,
 } from "@/lib/admin/types";
 
+export type SellerListParams = {
+    page?: number;
+    limit?: number;
+    search?: string;
+    branchId?: number;
+    batchId?: number;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    dateFrom?: string;
+    dateTo?: string;
+    status?: string;
+    isVerified?: "true" | "false";
+    email?: string;
+    name?: string;
+};
 
 const sellerApi = baseApi.injectEndpoints({
 
     endpoints: (builder) => ({
-        getAllSeller: builder.query<SellerResponse, void>({
-            query: () => "/seller",
+        getAllSeller: builder.query<SellerResponse, SellerListParams | void>({
+            query: (params) => ({
+                url: "/seller",
+                params: params ?? undefined,
+            }),
             providesTags: ["Seller"]
         }),
 

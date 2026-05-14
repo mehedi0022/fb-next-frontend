@@ -24,7 +24,12 @@ const ProductDetailsPage = ({ params }: { params: { id: string } }) => {
   const sale = firstVariant?.suggestedPrice ?? 0;
   const stock = (raw?.variants ?? []).reduce((sum, item) => sum + item.stock, 0);
   const thumbnail = resolveAssetUrl(raw?.coverImage ?? "");
-  const gallery = (raw?.images ?? []).map((item) => resolveAssetUrl(item.url));
+  const gallery = Array.from(
+    new Set(
+      [thumbnail, ...(raw?.images ?? []).map((item) => resolveAssetUrl(item.url))]
+        .filter(Boolean),
+    ),
+  );
 
   const product: Product | null = raw
     ? {
@@ -32,7 +37,9 @@ const ProductDetailsPage = ({ params }: { params: { id: string } }) => {
         sku,
         title: raw.name,
         slug: raw.slug,
+        shortDescription: raw.shortDescription ?? "",
         description: raw.description ?? "",
+        videoUrl: raw.videoUrl ?? null,
         price: {
           wholesale,
           sale,
@@ -43,7 +50,17 @@ const ProductDetailsPage = ({ params }: { params: { id: string } }) => {
         stock,
         isInStock: stock > 0,
         thumbnail,
-        images: gallery.length > 0 ? gallery : thumbnail ? [thumbnail] : [],
+        images: gallery,
+        variants: (raw.variants ?? []).map((variant) => ({
+          sku: variant.sku,
+          stock: variant.stock,
+          wholesalePrice: variant.wholesalePrice,
+          suggestedPrice: variant.suggestedPrice,
+          attributes: (variant.attributes ?? []).map((attr) => ({
+            attributeName: attr.attributeName,
+            valueName: attr.valueName,
+          })),
+        })),
         category: raw.category?.name ?? "",
         brand: raw.brand?.name,
         createdAt: "",

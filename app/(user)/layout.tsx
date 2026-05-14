@@ -10,9 +10,7 @@ export default function MainLayout({
     <>
       <Header />
 
-      <main className=" min-h-[calc(100vh-84px-680px)] mx-auto ">
-        {children}
-      </main>
+      <main>{children}</main>
 
       <Footer />
     </>

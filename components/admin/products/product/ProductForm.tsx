@@ -15,6 +15,7 @@ import {
   Image,
   Input,
   InputNumber,
+  Radio,
   Select,
   Space,
   Tag,
@@ -44,6 +45,7 @@ type ProductFormValues = {
 };
 
 type VariantFormItem = ProductVariantPayload;
+type ProductMode = "simple" | "variants";
 
 export type ProductFormSubmitPayload = {
   name: string;
@@ -99,6 +101,29 @@ const flattenCategories = (
   });
 };
 
+const getVariantAttributeValue = (
+  variant: VariantFormItem,
+  attribute: ProductAttribute,
+) => {
+  const valueIds = new Set(variant.attributes ?? []);
+  return attribute.values.find((valueItem) => valueIds.has(valueItem.id))?.id;
+};
+
+const setVariantAttributeValue = (
+  variant: VariantFormItem,
+  attribute: ProductAttribute,
+  valueId?: number,
+) => {
+  const attributeValueIds = new Set(attribute.values.map((item) => item.id));
+  const nextAttributes = (variant.attributes ?? []).filter(
+    (item) => !attributeValueIds.has(item),
+  );
+
+  if (valueId) nextAttributes.push(valueId);
+
+  return nextAttributes;
+};
+
 export default function ProductForm({
   mode,
   brands,
@@ -121,6 +146,11 @@ export default function ProductForm({
         }))
       : [{ ...DEFAULT_VARIANT }],
   );
+  const [productMode, setProductMode] = useState<ProductMode>(() =>
+    initialData?.variants?.some((variant) => variant.attributes.length > 0)
+      ? "variants"
+      : "simple",
+  );
   const [coverFile, setCoverFile] = useState<File | undefined>(undefined);
   const [coverUploadFiles, setCoverUploadFiles] = useState<UploadFile[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<UploadFile[]>([]);
@@ -132,17 +162,6 @@ export default function ProductForm({
   const leafCategoryOptions = flatCategories
     .filter((item) => item.isLeaf)
     .map((item) => ({ value: item.id, label: item.path }));
-
-  const attributeValueOptions = useMemo(
-    () =>
-      attributes.flatMap((attribute) =>
-        attribute.values.map((valueItem) => ({
-          value: valueItem.id,
-          label: `${attribute.name}: ${valueItem.value}`,
-        })),
-      ),
-    [attributes],
-  );
 
   const updateVariant = (
     index: number,
@@ -158,6 +177,13 @@ export default function ProductForm({
     setVariants((prev) => [...prev, { ...DEFAULT_VARIANT }]);
   };
 
+  const switchProductMode = (nextMode: ProductMode) => {
+    setProductMode(nextMode);
+    if (nextMode === "simple") {
+      setVariants((prev) => [{ ...(prev[0] ?? DEFAULT_VARIANT), attributes: [] }]);
+    }
+  };
+
   const removeVariant = (index: number) => {
     if (variants.length === 1) return;
     setVariants((prev) => prev.filter((_, i) => i !== index));
@@ -165,6 +191,11 @@ export default function ProductForm({
 
   const resetForm = () => {
     form.resetFields();
+    setProductMode(
+      initialData?.variants?.some((variant) => variant.attributes.length > 0)
+        ? "variants"
+        : "simple",
+    );
     setVariants(
       initialData?.variants?.length
         ? initialData.variants.map((item) => ({
@@ -183,7 +214,10 @@ export default function ProductForm({
   };
 
   const submit = (values: ProductFormValues) => {
-    const normalizedVariants = variants.map((variant) => {
+    const selectedVariants =
+      productMode === "simple" ? [{ ...variants[0], attributes: [] }] : variants;
+
+    const normalizedVariants = selectedVariants.map((variant) => {
       if (mode === "create") {
         const variantWithoutSku = { ...variant };
         delete variantWithoutSku.sku;
@@ -413,35 +447,57 @@ export default function ProductForm({
               </Space>
             }
             extra={
-              <Button
-                type="primary"
-                icon={<Plus size={14} />}
-                onClick={addVariant}>
-                Add Variant
-              </Button>
+              productMode === "variants" ? (
+                <Button
+                  type="primary"
+                  icon={<Plus size={14} />}
+                  onClick={addVariant}>
+                  Add Variant
+                </Button>
+              ) : null
             }>
+            <div className="mb-4">
+              <Typography.Text className="mb-2 block text-sm">
+                Product Type
+              </Typography.Text>
+              <Radio.Group
+                value={productMode}
+                onChange={(event) => switchProductMode(event.target.value)}
+                optionType="button"
+                buttonStyle="solid">
+                <Radio.Button value="simple">No Variation</Radio.Button>
+                <Radio.Button value="variants">Has Variations</Radio.Button>
+              </Radio.Group>
+            </div>
+
             <div className="space-y-4">
-              {variants.map((variant, index) => (
+              {(productMode === "simple" ? variants.slice(0, 1) : variants).map((variant, index) => (
                 <div
                   key={`variant-${index}`}
                   className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <Space size={8}>
-                      <Tag color="blue">Variant {index + 1}</Tag>
-                      {mode === "edit" && variant.sku ? (
+                      <Tag color={productMode === "simple" ? "green" : "blue"}>
+                        {productMode === "simple"
+                          ? "Simple Product"
+                          : `Variant ${index + 1}`}
+                      </Tag>
+                      {mode === "edit" && productMode === "variants" && variant.sku ? (
                         <Typography.Text type="secondary">
                           SKU: {variant.sku}
                         </Typography.Text>
                       ) : null}
                     </Space>
-                    <Button
-                      danger
-                      size="small"
-                      icon={<Trash2 size={14} />}
-                      onClick={() => removeVariant(index)}
-                      disabled={variants.length === 1}>
-                      Remove
-                    </Button>
+                    {productMode === "variants" ? (
+                      <Button
+                        danger
+                        size="small"
+                        icon={<Trash2 size={14} />}
+                        onClick={() => removeVariant(index)}
+                        disabled={variants.length === 1}>
+                        Remove
+                      </Button>
+                    ) : null}
                   </div>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div>
@@ -509,20 +565,58 @@ export default function ProductForm({
                       />
                     </div>
                   </div>
-                  <Divider className="!my-4" />
-                  <Typography.Text className="mb-1 block text-sm">
-                    Attributes
-                  </Typography.Text>
-                  <Select
-                    className="!w-full"
-                    mode="multiple"
-                    options={attributeValueOptions}
-                    value={variant.attributes}
-                    onChange={(value) =>
-                      updateVariant(index, "attributes", value)
-                    }
-                    placeholder="Select size, color, or other options"
-                  />
+                  {productMode === "variants" ? (
+                    <>
+                      <Divider className="!my-4" />
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <Typography.Text className="block text-sm">
+                          Attributes
+                        </Typography.Text>
+                        <Typography.Text type="secondary" className="text-xs">
+                          Select one value from each needed attribute
+                        </Typography.Text>
+                      </div>
+                      {attributes.length ? (
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                          {attributes.map((attribute) => (
+                            <div key={attribute.id}>
+                              <Typography.Text className="mb-1 block text-xs text-slate-600">
+                                {attribute.name}
+                              </Typography.Text>
+                              <Select
+                                allowClear
+                                className="!w-full"
+                                options={attribute.values.map((valueItem) => ({
+                                  value: valueItem.id,
+                                  label: valueItem.value,
+                                }))}
+                                value={getVariantAttributeValue(
+                                  variant,
+                                  attribute,
+                                )}
+                                onChange={(value) =>
+                                  updateVariant(
+                                    index,
+                                    "attributes",
+                                    setVariantAttributeValue(
+                                      variant,
+                                      attribute,
+                                      value,
+                                    ),
+                                  )
+                                }
+                                placeholder={`Select ${attribute.name}`}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <Typography.Text type="secondary">
+                          Create attributes first to use product variations.
+                        </Typography.Text>
+                      )}
+                    </>
+                  ) : null}
                 </div>
               ))}
             </div>

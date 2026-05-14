@@ -53,7 +53,7 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
           href={
             role === "admin" || role === "super_admin" ? "/admin" : "/dashboard"
           }
-          className="btn-primary bg-black/80 text-white flex items-center gap-2 w-full justify-center py-2 px-4 rounded"
+          className="btn-primary bg-black/80 h-10 text-white flex items-center gap-2 w-full justify-center py-2 px-4 rounded"
         >
           <DashboardOutlined />
           ড্যাশবোর্ড
@@ -64,14 +64,14 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
         >
           <Link
             href="/register"
-            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded "
+            className="btn-primary h-10 w-full flex items-center gap-2 py-2 px-4 rounded "
           >
             <UserAddOutlined /> রেজিস্ট্রেশন
           </Link>
 
           <Link
             href="/login"
-            className="btn-primary w-full flex items-center gap-2 py-2 px-4 rounded "
+            className="btn-primary w-full h-10 flex items-center gap-2 py-2 px-4 rounded "
           >
             <LoginOutlined /> লগইন
           </Link>
@@ -82,7 +82,7 @@ const LoginRegisterBtn = ({ auth, from = "navbar" }: Props) => {
       <a
         href="https://wa.me/8801777458099?text=Hello%20I%20want%20to%20order"
         target="_blank"
-        className="btn-whatsapp text-xl font-semibold "
+        className="btn-primary text-xl h-10 font-semibold "
       >
         <WhatsAppOutlined />
         WhatsApp

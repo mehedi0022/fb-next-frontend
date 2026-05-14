@@ -14,12 +14,21 @@ export type Product = {
   sku?: string;
   title: string;
   slug: string;
+  shortDescription?: string;
   description: string;
+  videoUrl?: string | null;
   price: Price;
   stock: number;
   isInStock: boolean;
   thumbnail: string;
   images: string[];
+  variants?: {
+    sku: string;
+    stock: number;
+    wholesalePrice: number;
+    suggestedPrice: number;
+    attributes: { attributeName: string; valueName: string }[];
+  }[];
   category: string;
   brand?: string;
   createdAt: string;
