@@ -11,6 +11,7 @@ import { Button, Popconfirm, Space, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
@@ -29,10 +30,7 @@ export default function ProductListPage() {
       const result = await deleteProduct(id).unwrap();
       toast.success(result?.message || "Product deactivated.");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Delete failed.";
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, "Delete failed."));
     }
   };
 
@@ -41,10 +39,7 @@ export default function ProductListPage() {
       const result = await hardDeleteProduct(id).unwrap();
       toast.success(result?.message || "Product deleted permanently.");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Delete failed.";
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, "Delete failed."));
     }
   };
 

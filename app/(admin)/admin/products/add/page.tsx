@@ -13,6 +13,7 @@ import { Button } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -35,10 +36,7 @@ export default function AddProductPage() {
       toast.success(result?.message || "Product created successfully.");
       router.push("/admin/products/all");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Create failed.";
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, "Create failed."));
     }
   };
 

@@ -14,6 +14,7 @@ import { ColumnsType } from "antd/es/table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 type BrandFormValues = { name: string };
 
@@ -57,10 +58,7 @@ export default function BrandsManagementPage() {
       toast.success(response?.message || "Saved successfully.");
       closeModal();
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Request failed.";
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, "Request failed."));
     }
   };
 
@@ -69,10 +67,7 @@ export default function BrandsManagementPage() {
       const response = await deleteBrand(id).unwrap();
       toast.success(response?.message || "Deleted successfully.");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Delete failed.";
-      toast.error(message);
+      toast.error(getApiErrorMessage(error, "Delete failed."));
     }
   };
 
