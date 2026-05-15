@@ -232,9 +232,13 @@ export default function ProductForm({
       return variant;
     });
 
-    const normalizedGalleryFiles = galleryFiles
-      .map((file) => (file.originFileObj as File | undefined) ?? (file as File))
-      .filter((file): file is File => file instanceof File);
+    const normalizedGalleryFiles = galleryFiles.reduce<File[]>(
+      (acc, file) => {
+        if (file.originFileObj) acc.push(file.originFileObj);
+        return acc;
+      },
+      [],
+    );
 
     onSubmit({
       name: values.name,
