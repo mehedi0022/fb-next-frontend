@@ -2,11 +2,24 @@
 
 import { useGetBatchesQuery } from "@/appstore/modules/batch/api";
 import { useGetBranchesQuery } from "@/appstore/modules/branch/api";
-import { useGetDashboardMetricsQuery } from "@/appstore/modules/dashboard/api";
+import {
+  useGetDashboardMetricsQuery,
+  useGetProductMetricsQuery,
+} from "@/appstore/modules/dashboard/api";
 import { Batch, Branch } from "@/lib/home";
 import { Button, DatePicker, Select } from "antd";
 import {
   BanknoteArrowDown,
+  Boxes,
+  Eye,
+  FileEdit,
+  ListTree,
+  PackageSearch,
+  PackageX,
+  RefreshCw,
+  ShieldAlert,
+  ShoppingBag,
+  TrendingUp,
   CircleDollarSign,
   Clock3,
   RotateCcw,
@@ -18,6 +31,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Dayjs } from "dayjs";
+import { useRouter } from "next/navigation";
 
 const { RangePicker } = DatePicker;
 
@@ -37,12 +51,21 @@ type StatCardProps = {
   icon: React.ReactNode;
   theme: ThemeClasses;
   subtitle?: string;
+  onClick?: () => void;
 };
 
-function StatCard({ label, value, icon, theme, subtitle }: StatCardProps) {
+function StatCard({
+  label,
+  value,
+  icon,
+  theme,
+  subtitle,
+  onClick,
+}: StatCardProps) {
   return (
     <div
-      className={`relative rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${theme.bg} ${theme.border} ${theme.hover}`}>
+      onClick={onClick}
+      className={`relative rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${theme.bg} ${theme.border} ${theme.hover} ${onClick ? "cursor-pointer" : ""}`}>
       <div className="mb-4 flex items-center justify-between">
         <p
           className={`text-xs font-bold uppercase tracking-wider ${theme.label}`}>
@@ -73,11 +96,16 @@ const currencyFormat = (amount: number) =>
   }).format(amount);
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [branchId, setBranchId] = useState<number | undefined>(undefined);
   const [batchId, setBatchId] = useState<number | undefined>(undefined);
   const [dateRange, setDateRange] = useState<
     [Dayjs | null, Dayjs | null] | null
   >(null);
+  const [productLowStockThreshold, setProductLowStockThreshold] =
+    useState<number>(10);
+  const [productTopLimit, setProductTopLimit] = useState<number>(5);
+  const [arrivalWindowDays, setArrivalWindowDays] = useState<7 | 30>(7);
 
   const { data: branchResponse } = useGetBranchesQuery();
   const { data: batchResponse } = useGetBatchesQuery();
@@ -99,6 +127,24 @@ export default function AdminDashboardPage() {
   );
 
   const { data, isLoading, isError } = useGetDashboardMetricsQuery(queryParams);
+  const {
+    data: productMetricsResponse,
+    isLoading: productMetricsLoading,
+    isError: productMetricsError,
+  } = useGetProductMetricsQuery({
+    lowStockThreshold: productLowStockThreshold,
+    topLimit: productTopLimit,
+  });
+
+  const goToAllProducts = (params?: Record<string, string | number>) => {
+    const qs = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) =>
+        qs.set(key, String(value)),
+      );
+    }
+    router.push(`/admin/products/all${qs.toString() ? `?${qs.toString()}` : ""}`);
+  };
 
   const resetFilters = () => {
     setBranchId(undefined);
@@ -352,6 +398,237 @@ export default function AdminDashboardPage() {
           icon={<WalletCards className="h-5 w-5" />}
           theme={themes.indigo}
         />
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-bold text-slate-800">
+              Product Metrics
+            </h2>
+            <p className="text-xs text-slate-500">
+              Real-time product inventory and catalog insights
+            </p>
+          </div>
+        </div>
+        <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Low Stock Threshold
+            </label>
+            <Select
+              value={productLowStockThreshold}
+              onChange={(value) => setProductLowStockThreshold(value)}
+              className="w-full"
+              size="large"
+              options={[5, 10, 20, 50].map((value) => ({
+                value,
+                label: `< ${value}`,
+              }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Top List Limit
+            </label>
+            <Select
+              value={productTopLimit}
+              onChange={(value) => setProductTopLimit(value)}
+              className="w-full"
+              size="large"
+              options={[3, 5, 10].map((value) => ({
+                value,
+                label: `Top ${value}`,
+              }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              New Arrival Window
+            </label>
+            <Select
+              value={arrivalWindowDays}
+              onChange={(value) => setArrivalWindowDays(value)}
+              className="w-full"
+              size="large"
+              options={[
+                { value: 7, label: "Last 7 days" },
+                { value: 30, label: "Last 30 days" },
+              ]}
+            />
+          </div>
+        </div>
+
+        {productMetricsLoading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-24 animate-pulse rounded-xl border border-slate-200 bg-slate-50"
+              />
+            ))}
+          </div>
+        ) : productMetricsError || !productMetricsResponse?.success ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            Failed to load product metrics.
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              <StatCard
+                label="Total Products"
+                value={productMetricsResponse.data.totalProducts}
+                icon={<Boxes className="h-5 w-5" />}
+                theme={themes.blue}
+                onClick={() => goToAllProducts()}
+              />
+              <StatCard
+                label={`New Arrivals (${arrivalWindowDays}d)`}
+                value={
+                  arrivalWindowDays === 7
+                    ? productMetricsResponse.data.newArrivals.last7Days
+                    : productMetricsResponse.data.newArrivals.last30Days
+                }
+                icon={<ShoppingBag className="h-5 w-5" />}
+                theme={themes.emerald}
+                subtitle={`30d: ${productMetricsResponse.data.newArrivals.last30Days}`}
+                onClick={() =>
+                  goToAllProducts({
+                    metric: "new-arrivals",
+                    days: arrivalWindowDays,
+                  })
+                }
+              />
+              <StatCard
+                label="Low Stock"
+                value={productMetricsResponse.data.lowStockWarning.count}
+                icon={<ShieldAlert className="h-5 w-5" />}
+                theme={themes.amber}
+                subtitle={`Threshold < ${productMetricsResponse.data.lowStockWarning.threshold}`}
+                onClick={() =>
+                  goToAllProducts({
+                    metric: "low-stock",
+                    threshold: productMetricsResponse.data.lowStockWarning
+                      .threshold,
+                  })
+                }
+              />
+              <StatCard
+                label="Out of Stock"
+                value={productMetricsResponse.data.outOfStock}
+                icon={<PackageX className="h-5 w-5" />}
+                theme={themes.rose}
+                onClick={() => goToAllProducts({ metric: "out-of-stock" })}
+              />
+              <StatCard
+                label="Total Categories"
+                value={productMetricsResponse.data.totalCategories}
+                icon={<ListTree className="h-5 w-5" />}
+                theme={themes.violet}
+                onClick={() => goToAllProducts()}
+              />
+              <StatCard
+                label="Draft / Unpublished"
+                value={productMetricsResponse.data.draftOrUnpublished}
+                icon={<FileEdit className="h-5 w-5" />}
+                theme={themes.orange}
+                onClick={() => goToAllProducts({ metric: "draft", isActive: "false" })}
+              />
+              <StatCard
+                label="Recently Updated"
+                value={productMetricsResponse.data.recentlyUpdatedProducts}
+                icon={<RefreshCw className="h-5 w-5" />}
+                theme={themes.cyan}
+              />
+              <StatCard
+                label="Highest Price"
+                value={
+                  productMetricsResponse.data.priceRangeOverview.highest
+                    ? currencyFormat(
+                        productMetricsResponse.data.priceRangeOverview.highest
+                          .price,
+                      )
+                    : "-"
+                }
+                icon={<TrendingUp className="h-5 w-5" />}
+                theme={themes.indigo}
+              />
+              <StatCard
+                label="Lowest Price"
+                value={
+                  productMetricsResponse.data.priceRangeOverview.lowest
+                    ? currencyFormat(
+                        productMetricsResponse.data.priceRangeOverview.lowest
+                          .price,
+                      )
+                    : "-"
+                }
+                icon={<PackageSearch className="h-5 w-5" />}
+                theme={themes.blue}
+              />
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <div className="rounded-xl border border-slate-200 p-4">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800">
+                  <TrendingUp className="h-4 w-4 text-emerald-600" />
+                  Top Selling Products
+                </h3>
+                <div className="space-y-2">
+                  {productMetricsResponse.data.topSellingProducts.length ? (
+                    productMetricsResponse.data.topSellingProducts.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+                        <p className="truncate text-sm font-medium text-slate-700">
+                          <button
+                            onClick={() => goToAllProducts({ search: item.name })}
+                            className="text-left hover:text-sky-700">
+                            {item.name}
+                          </button>
+                        </p>
+                        <span className="text-xs font-semibold text-emerald-700">
+                          Score: {item.score}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-500">No data found.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 p-4">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800">
+                  <Eye className="h-4 w-4 text-cyan-600" />
+                  Most Viewed Products
+                </h3>
+                <div className="space-y-2">
+                  {productMetricsResponse.data.mostViewedProducts.length ? (
+                    productMetricsResponse.data.mostViewedProducts.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+                        <p className="truncate text-sm font-medium text-slate-700">
+                          <button
+                            onClick={() => goToAllProducts({ search: item.name })}
+                            className="text-left hover:text-sky-700">
+                            {item.name}
+                          </button>
+                        </p>
+                        <span className="text-xs font-semibold text-cyan-700">
+                          Score: {item.score}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-500">No data found.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

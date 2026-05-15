@@ -12,6 +12,8 @@ import { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
@@ -20,7 +22,25 @@ const priceText = (price?: ProductListItem["suggestedPrice"]) => {
 };
 
 export default function ProductListPage() {
-  const { data, isLoading } = useGetAllProductsQuery({ page: 1, limit: 50 });
+  const searchParams = useSearchParams();
+  const metric = searchParams.get("metric");
+  const threshold = Number(searchParams.get("threshold") || "10");
+  const days = Number(searchParams.get("days") || "7");
+  const search = (searchParams.get("search") || "").trim();
+  const isActiveParam = searchParams.get("isActive");
+  const isActive =
+    isActiveParam === "true"
+      ? true
+      : isActiveParam === "false"
+        ? false
+        : undefined;
+
+  const { data, isLoading } = useGetAllProductsQuery({
+    page: 1,
+    limit: 200,
+    search: search || undefined,
+    isActive,
+  });
   const [deleteProduct, { isLoading: deleting }] = useDeleteProductMutation();
   const [hardDeleteProduct, { isLoading: hardDeleting }] =
     useHardDeleteProductMutation();
@@ -109,17 +129,60 @@ export default function ProductListPage() {
     },
   ];
 
+  const filteredData = useMemo(() => {
+    const rows = data?.data || [];
+    const now = new Date();
+    const since = new Date(now);
+    since.setDate(since.getDate() - days);
+
+    if (!metric) return rows;
+
+    if (metric === "low-stock") {
+      return rows.filter(
+        (item) =>
+          Number(item.totalStock || 0) > 0 &&
+          Number(item.totalStock || 0) < threshold,
+      );
+    }
+
+    if (metric === "out-of-stock") {
+      return rows.filter((item) => Number(item.totalStock || 0) <= 0);
+    }
+
+    if (metric === "new-arrivals") {
+      return rows.filter((item) => {
+        if (!item.createdAt) return false;
+        return new Date(item.createdAt) >= since;
+      });
+    }
+
+    if (metric === "draft") {
+      return rows.filter((item) => item.isActive === false);
+    }
+
+    return rows;
+  }, [data?.data, metric, threshold, days]);
+
   return (
     <div className="space-y-5 p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Product List</h1>
+        <div>
+          <h1 className="text-xl font-semibold">Product List</h1>
+          {metric ? (
+            <p className="text-xs text-slate-500">
+              Active filter: {metric}
+              {metric === "low-stock" ? ` (threshold &lt; ${threshold})` : ""}
+              {metric === "new-arrivals" ? ` (last ${days} days)` : ""}
+            </p>
+          ) : null}
+        </div>
         <Link href="/admin/products/add">
           <Button type="primary">Create Product</Button>
         </Link>
       </div>
       <ReusableTable
         columns={columns}
-        data={data?.data || []}
+        data={filteredData}
         loading={isLoading}
       />
     </div>

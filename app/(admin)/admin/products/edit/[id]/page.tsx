@@ -13,7 +13,7 @@ import ProductForm, {
 import { Button } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { message } from "antd";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 type Props = {
@@ -38,7 +38,7 @@ export default function EditProductPage({ params }: Props) {
 
   const onSubmit = async (payload: ProductFormSubmitPayload) => {
     if (!productResponse?.data?.id) {
-      toast.error("Product data is not ready yet.");
+      message.error("Product data is not ready yet.");
       return;
     }
 
@@ -49,10 +49,10 @@ export default function EditProductPage({ params }: Props) {
         coverImage: payload.coverImage,
         images: payload.images,
       }).unwrap();
-      toast.success(result?.message || "Product updated successfully.");
+      message.success(result?.message || "Product updated successfully.");
       router.push("/admin/products/all");
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Update failed."));
+      message.error(getApiErrorMessage(error, "Update failed."));
     }
   };
 
