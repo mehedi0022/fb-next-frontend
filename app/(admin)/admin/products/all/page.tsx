@@ -2,6 +2,8 @@
 
 import {
   ProductListItem,
+  useGetAllBrandsQuery,
+  useGetAllCategoriesQuery,
   useDeleteProductMutation,
   useGetAllProductsQuery,
   useHardDeleteProductMutation,
@@ -14,6 +16,7 @@ import { toast } from "react-toastify";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { RotateCcw, Search } from "lucide-react";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
@@ -30,7 +33,13 @@ export default function ProductListPage() {
   const days = Number(searchParams.get("days") || "7");
   const search = (searchParams.get("search") || "").trim();
   const isActiveParam = searchParams.get("isActive");
+  const categoryIdParam = searchParams.get("categoryId");
+  const brandIdParam = searchParams.get("brandId");
+  const categoryId = categoryIdParam ? Number(categoryIdParam) : undefined;
+  const brandId = brandIdParam ? Number(brandIdParam) : undefined;
   const [searchInput, setSearchInput] = useState(search);
+  const { data: categoriesResponse } = useGetAllCategoriesQuery();
+  const { data: brandsResponse } = useGetAllBrandsQuery();
   const isActive =
     isActiveParam === "true"
       ? true
@@ -42,13 +51,16 @@ export default function ProductListPage() {
     page: 1,
     limit: 100,
     search: search || undefined,
+    categoryId,
+    brandId,
     isActive,
-    metric: (metric as
-      | "low-stock"
-      | "out-of-stock"
-      | "new-arrivals"
-      | "draft"
-      | null) || undefined,
+    metric:
+      (metric as
+        | "low-stock"
+        | "out-of-stock"
+        | "new-arrivals"
+        | "draft"
+        | null) || undefined,
     threshold: Number.isFinite(threshold) ? threshold : undefined,
     days: Number.isFinite(days) ? days : undefined,
   });
@@ -179,57 +191,134 @@ export default function ProductListPage() {
           <Button type="primary">Create Product</Button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-2 xl:grid-cols-6">
-        <Input
-          placeholder="Search products..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <Select
-          placeholder="Metric"
-          allowClear
-          value={metric || undefined}
-          onChange={(value) => setQueryParams({ metric: value || null })}
-          options={[
-            { value: "low-stock", label: "Low Stock" },
-            { value: "out-of-stock", label: "Out of Stock" },
-            { value: "new-arrivals", label: "New Arrivals" },
-            { value: "draft", label: "Draft / Unpublished" },
-          ]}
-        />
-        <Select
-          placeholder="Threshold"
-          value={threshold}
-          onChange={(value) => setQueryParams({ threshold: String(value) })}
-          options={[5, 10, 20, 50].map((value) => ({
-            value,
-            label: `< ${value}`,
-          }))}
-        />
-        <Select
-          placeholder="Days"
-          value={days}
-          onChange={(value) => setQueryParams({ days: String(value) })}
-          options={[
-            { value: 7, label: "Last 7 days" },
-            { value: 30, label: "Last 30 days" },
-          ]}
-        />
-        <Select
-          placeholder="Status"
-          allowClear
-          value={isActiveParam || undefined}
-          onChange={(value) => setQueryParams({ isActive: value || null })}
-          options={[
-            { value: "true", label: "Published" },
-            { value: "false", label: "Draft" },
-          ]}
-        />
-        <Button
-          onClick={() => router.push(pathname)}
-          className="w-full border-slate-300">
-          Reset Filters
-        </Button>
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-base font-bold text-slate-800">
+            Filter Products
+          </h2>
+          <Button
+            icon={<RotateCcw size={14} />}
+            onClick={() => router.push(pathname)}>
+            Reset
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Search
+            </label>
+            <Input
+              allowClear
+              size="large"
+              prefix={<Search size={14} className="text-slate-400" />}
+              placeholder="Search products..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Category
+            </label>
+            <Select
+              placeholder="All Categories"
+              allowClear
+              size="large"
+              value={categoryId}
+              onChange={(value) =>
+                setQueryParams({
+                  categoryId: value ? String(value) : null,
+                })
+              }
+              options={(categoriesResponse?.data || []).map((item) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Brand
+            </label>
+            <Select
+              placeholder="All Brands"
+              allowClear
+              size="large"
+              value={brandId}
+              onChange={(value) =>
+                setQueryParams({
+                  brandId: value ? String(value) : null,
+                })
+              }
+              options={(brandsResponse?.data || []).map((item) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Metric
+            </label>
+            <Select
+              placeholder="All Metrics"
+              allowClear
+              size="large"
+              value={metric || undefined}
+              onChange={(value) => setQueryParams({ metric: value || null })}
+              options={[
+                { value: "low-stock", label: "Low Stock" },
+                { value: "out-of-stock", label: "Out of Stock" },
+                { value: "new-arrivals", label: "New Arrivals" },
+                { value: "draft", label: "Draft / Unpublished" },
+              ]}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Threshold
+            </label>
+            <Select
+              size="large"
+              value={threshold}
+              onChange={(value) => setQueryParams({ threshold: String(value) })}
+              options={[5, 10, 20, 50].map((value) => ({
+                value,
+                label: `< ${value}`,
+              }))}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Days
+            </label>
+            <Select
+              size="large"
+              value={days}
+              onChange={(value) => setQueryParams({ days: String(value) })}
+              options={[
+                { value: 7, label: "Last 7 days" },
+                { value: 30, label: "Last 30 days" },
+              ]}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              Status
+            </label>
+            <Select
+              placeholder="All Status"
+              allowClear
+              size="large"
+              value={isActiveParam || undefined}
+              onChange={(value) => setQueryParams({ isActive: value || null })}
+              options={[
+                { value: "true", label: "Published" },
+                { value: "false", label: "Draft" },
+              ]}
+            />
+          </div>
+        </div>
       </div>
       <ReusableTable
         columns={columns}
