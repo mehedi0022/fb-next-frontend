@@ -221,6 +221,9 @@ export type ProductListParams = {
   categoryId?: number;
   brandId?: number;
   isActive?: boolean;
+  metric?: "low-stock" | "out-of-stock" | "new-arrivals" | "draft";
+  threshold?: number;
+  days?: number;
 };
 
 const getSimpleProductVariant = (variants?: ProductVariantPayload[]) => {
