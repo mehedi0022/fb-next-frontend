@@ -337,7 +337,7 @@ export default function ProductForm({
                 rows={2}
                 placeholder="Example: Premium cotton shirt for daily wear"
                 showCount
-                maxLength={180}
+                maxLength={280}
               />
             </Form.Item>
 
