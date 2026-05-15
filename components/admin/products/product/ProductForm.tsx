@@ -232,13 +232,17 @@ export default function ProductForm({
       return variant;
     });
 
-    const normalizedGalleryFiles = galleryFiles.reduce<File[]>(
-      (acc, file) => {
-        if (file.originFileObj) acc.push(file.originFileObj);
-        return acc;
-      },
-      [],
-    );
+    const normalizedGalleryFiles = galleryFiles.reduce<File[]>((acc, file) => {
+      const maybeUploadFile = file as UploadFile;
+      const resolvedFile =
+        maybeUploadFile.originFileObj ??
+        ((file as unknown as File) instanceof File
+          ? (file as unknown as File)
+          : null);
+
+      if (resolvedFile) acc.push(resolvedFile);
+      return acc;
+    }, []);
 
     onSubmit({
       name: values.name,
