@@ -243,7 +243,11 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     getSingleProduct: builder.query<ProductSingleResponse, string | number>({
-      query: (slugOrId) => `/product/${slugOrId}`,
+      query: (slugOrId) => {
+        const value = String(slugOrId).trim();
+        const isNumericId = /^\d+$/.test(value);
+        return isNumericId ? `/product/${value}` : `/product/slug/${value}`;
+      },
       providesTags: ["Product"],
     }),
 

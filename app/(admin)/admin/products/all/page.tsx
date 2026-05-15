@@ -14,8 +14,8 @@ import { toast } from "react-toastify";
 
 const priceText = (price?: ProductListItem["suggestedPrice"]) => {
   if (!price) return "BDT 0";
-  if (price.type === "fixed") return `BDT ${Number(price.value).toLocaleString()}`;
-  return `BDT ${Number(price.min).toLocaleString()} - ${Number(price.max).toLocaleString()}`;
+  if (price.type === "fixed") return `${Number(price.value).toLocaleString()}`;
+  return `${Number(price.min).toLocaleString()} - ${Number(price.max).toLocaleString()}`;
 };
 
 export default function ProductListPage() {
@@ -52,21 +52,25 @@ export default function ProductListPage() {
     {
       title: "SI",
       width: 70,
-      align: "center",
+      align: "start",
       render: (_: unknown, __: ProductListItem, index: number) => index + 1,
     },
     { title: "Name", dataIndex: "name" },
     {
       title: "Category",
+      align: "center",
       render: (_: unknown, item: ProductListItem) => item.category?.name || "-",
     },
     {
       title: "Brand",
+      align: "center",
       render: (_: unknown, item: ProductListItem) => item.brand?.name || "-",
     },
     {
       title: "Price",
-      render: (_: unknown, item: ProductListItem) => priceText(item.suggestedPrice),
+      align: "center",
+      render: (_: unknown, item: ProductListItem) =>
+        priceText(item.suggestedPrice),
     },
     {
       title: "Stock",
@@ -77,11 +81,15 @@ export default function ProductListPage() {
       title: "Status",
       align: "center",
       render: (_: unknown, item: ProductListItem) =>
-        item.isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>,
+        item.isActive ? (
+          <Tag color="green">Active</Tag>
+        ) : (
+          <Tag color="red">Inactive</Tag>
+        ),
     },
     {
       title: "Action",
-      align: "center",
+      align: "end",
       render: (_: unknown, item: ProductListItem) => (
         <Space>
           <Link href={`/admin/products/edit/${item.id}`}>
@@ -90,8 +98,7 @@ export default function ProductListPage() {
           <Popconfirm
             title="Deactivate this product?"
             onConfirm={() => onSoftDelete(item.id)}
-            okButtonProps={{ loading: deleting }}
-          >
+            okButtonProps={{ loading: deleting }}>
             <Button size="small" danger>
               Deactivate
             </Button>
@@ -99,8 +106,7 @@ export default function ProductListPage() {
           <Popconfirm
             title="Permanently delete this product?"
             onConfirm={() => onHardDelete(item.id)}
-            okButtonProps={{ loading: hardDeleting }}
-          >
+            okButtonProps={{ loading: hardDeleting }}>
             <Button size="small">Hard Delete</Button>
           </Popconfirm>
         </Space>
@@ -116,7 +122,11 @@ export default function ProductListPage() {
           <Button type="primary">Create Product</Button>
         </Link>
       </div>
-      <ReusableTable columns={columns} data={data?.data || []} loading={isLoading} />
+      <ReusableTable
+        columns={columns}
+        data={data?.data || []}
+        loading={isLoading}
+      />
     </div>
   );
 }
