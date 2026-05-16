@@ -1,5 +1,8 @@
 import { baseApi } from "@/appstore/api/baseApi";
-import { DashboardMetricsResponse } from "@/lib/admin/types";
+import {
+  DashboardMetricsResponse,
+  ProductMetricsResponse,
+} from "@/lib/admin/types";
 
 export interface DashboardMetricsParams {
   branchId?: number;
@@ -20,7 +23,18 @@ const dashboardApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Dashboard"],
     }),
+    getProductMetrics: builder.query<
+      ProductMetricsResponse,
+      { lowStockThreshold?: number; topLimit?: number } | void
+    >({
+      query: (params) => ({
+        url: "/dashboard-matric/product-metrics",
+        params: params ?? undefined,
+      }),
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
-export const { useGetDashboardMetricsQuery } = dashboardApi;
+export const { useGetDashboardMetricsQuery, useGetProductMetricsQuery } =
+  dashboardApi;

@@ -23,7 +23,7 @@ import {
   Switch,
   Upload,
 } from "antd";
-import type { RcFile, UploadFile } from "antd/es/upload/interface";
+import type { UploadFile } from "antd/es/upload/interface";
 import {
   Boxes,
   ImagePlus,
@@ -232,15 +232,17 @@ export default function ProductForm({
       return variant;
     });
 
-    // const normalizedGalleryFiles = galleryFiles
-    //   .map((file) => (file.originFileObj as File | undefined) ?? (file as File))
-    //   .filter((file): file is File => file instanceof File);
+    const normalizedGalleryFiles = galleryFiles.reduce<File[]>((acc, file) => {
+      const maybeUploadFile = file as UploadFile;
+      const resolvedFile =
+        maybeUploadFile.originFileObj ??
+        ((file as unknown as File) instanceof File
+          ? (file as unknown as File)
+          : null);
 
-    const normalizedGalleryFiles = galleryFiles.map((file) => {
-      if (file instanceof File) return file;
-      if (file.originFileObj instanceof File) return file.originFileObj;
-      return undefined;
-    }).filter((file): file is RcFile => file !== undefined);
+      if (resolvedFile) acc.push(resolvedFile);
+      return acc;
+    }, []);
 
     onSubmit({
       name: values.name,
@@ -260,6 +262,7 @@ export default function ProductForm({
     <Form
       form={form}
       layout="vertical"
+      size="large"
       onFinish={submit}
       initialValues={{
         name: initialData?.name,
@@ -335,7 +338,7 @@ export default function ProductForm({
                 rows={2}
                 placeholder="Example: Premium cotton shirt for daily wear"
                 showCount
-                maxLength={180}
+                maxLength={280}
               />
             </Form.Item>
 
@@ -372,9 +375,26 @@ export default function ProductForm({
                   listType="picture-card"
                   fileList={coverUploadFiles}
                   beforeUpload={(file) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    const uploadFile: UploadFile = {
+                      uid: file.uid ?? `-${Date.now()}`,
+                      name: file.name,
+                      status: "done",
+                      url: previewUrl,
+                      originFileObj: file,
+                    };
                     setCoverFile(file);
-                    setCoverUploadFiles([file]);
+                    setCoverUploadFiles([uploadFile]);
                     return false;
+                  }}
+                  onPreview={async (file) => {
+                    const src =
+                      file.url ??
+                      (file.originFileObj
+                        ? URL.createObjectURL(file.originFileObj)
+                        : "");
+                    if (!src) return;
+                    window.open(src, "_blank");
                   }}
                   onRemove={() => {
                     setCoverFile(undefined);
@@ -412,8 +432,24 @@ export default function ProductForm({
                   listType="picture-card"
                   fileList={galleryFiles}
                   beforeUpload={(file) => {
-                    setGalleryFiles((prev) => [...prev, file]);
+                    const uploadFile: UploadFile = {
+                      uid: file.uid ?? `-${Date.now()}`,
+                      name: file.name,
+                      status: "done",
+                      url: URL.createObjectURL(file),
+                      originFileObj: file,
+                    };
+                    setGalleryFiles((prev) => [...prev, uploadFile]);
                     return false;
+                  }}
+                  onPreview={async (file) => {
+                    const src =
+                      file.url ??
+                      (file.originFileObj
+                        ? URL.createObjectURL(file.originFileObj)
+                        : "");
+                    if (!src) return;
+                    window.open(src, "_blank");
                   }}
                   onRemove={(file) => {
                     setGalleryFiles((prev) =>

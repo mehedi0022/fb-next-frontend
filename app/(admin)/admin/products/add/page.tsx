@@ -12,7 +12,8 @@ import ProductForm, {
 import { Button } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { message } from "antd";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function AddProductPage() {
 
   const onSubmit = async (payload: ProductFormSubmitPayload) => {
     if (!payload.coverImage) {
-      toast.error("Product cover image is required.");
+      message.error("Product cover image is required.");
       return;
     }
 
@@ -32,13 +33,10 @@ export default function AddProductPage() {
         ...payload,
         coverImage: payload.coverImage,
       }).unwrap();
-      toast.success(result?.message || "Product created successfully.");
+      message.success(result?.message || "Product created successfully.");
       router.push("/admin/products/all");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Create failed.";
-      toast.error(message);
+      message.error(getApiErrorMessage(error, "Create failed."));
     }
   };
 

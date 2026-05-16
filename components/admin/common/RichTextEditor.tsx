@@ -50,8 +50,8 @@ const RichTextEditor = ({
 
   useEffect(() => {
     if (!editor) return;
-    if (value && editor.getHTML() !== value) {
-      editor.commands.setContent(value);
+    if (value !== undefined && editor.getHTML() !== value) {
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [editor, value]);
 
@@ -117,6 +117,7 @@ const RichTextEditor = ({
               type={editor.isActive("bold") ? "primary" : "text"}
               size="small"
               icon={<BoldOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().toggleBold().run()}
             />
           </Tooltip>
@@ -125,6 +126,7 @@ const RichTextEditor = ({
               type={editor.isActive("italic") ? "primary" : "text"}
               size="small"
               icon={<ItalicOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().toggleItalic().run()}
             />
           </Tooltip>
@@ -133,6 +135,7 @@ const RichTextEditor = ({
               type={editor.isActive("strike") ? "primary" : "text"}
               size="small"
               icon={<StrikethroughOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().toggleStrike().run()}
             />
           </Tooltip>
@@ -144,6 +147,7 @@ const RichTextEditor = ({
               type={editor.isActive("bulletList") ? "primary" : "text"}
               size="small"
               icon={<UnorderedListOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().toggleBulletList().run()}
             />
           </Tooltip>
@@ -152,6 +156,7 @@ const RichTextEditor = ({
               type={editor.isActive("orderedList") ? "primary" : "text"}
               size="small"
               icon={<OrderedListOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
             />
           </Tooltip>
@@ -163,6 +168,7 @@ const RichTextEditor = ({
               type={editor.isActive("link") ? "primary" : "text"}
               size="small"
               icon={<LinkOutlined />}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={setLink}
             />
           </Tooltip>
@@ -175,6 +181,7 @@ const RichTextEditor = ({
               size="small"
               icon={<UndoOutlined />}
               disabled={!editor.can().undo()}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().undo().run()}
             />
           </Tooltip>
@@ -184,6 +191,7 @@ const RichTextEditor = ({
               size="small"
               icon={<RedoOutlined />}
               disabled={!editor.can().redo()}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => editor.chain().focus().redo().run()}
             />
           </Tooltip>

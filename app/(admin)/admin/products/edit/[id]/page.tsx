@@ -13,7 +13,8 @@ import ProductForm, {
 import { Button } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { message } from "antd";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 
 type Props = {
   params: {
@@ -37,7 +38,7 @@ export default function EditProductPage({ params }: Props) {
 
   const onSubmit = async (payload: ProductFormSubmitPayload) => {
     if (!productResponse?.data?.id) {
-      toast.error("Product data is not ready yet.");
+      message.error("Product data is not ready yet.");
       return;
     }
 
@@ -48,13 +49,10 @@ export default function EditProductPage({ params }: Props) {
         coverImage: payload.coverImage,
         images: payload.images,
       }).unwrap();
-      toast.success(result?.message || "Product updated successfully.");
+      message.success(result?.message || "Product updated successfully.");
       router.push("/admin/products/all");
     } catch (error) {
-      const message =
-        (error as { data?: { message?: string } })?.data?.message ||
-        "Update failed.";
-      toast.error(message);
+      message.error(getApiErrorMessage(error, "Update failed."));
     }
   };
 
@@ -67,9 +65,7 @@ export default function EditProductPage({ params }: Props) {
   }
 
   if (!productResponse?.data) {
-    const message =
-      (productError as { data?: { message?: string } })?.data?.message ||
-      "Product not found.";
+    const message = getApiErrorMessage(productError, "Product not found.");
 
     return <div className="p-6 text-red-600">{message}</div>;
   }

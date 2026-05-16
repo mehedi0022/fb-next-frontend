@@ -116,6 +116,48 @@ export interface DashboardMetricsResponse {
   data: DashboardMetrics;
 }
 
+export interface ProductMetricListItem {
+  id: number;
+  name: string;
+  slug: string;
+  score: number;
+  stock: number;
+}
+
+export interface ProductPriceRangeItem {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+}
+
+export interface ProductMetrics {
+  totalProducts: number;
+  newArrivals: {
+    last7Days: number;
+    last30Days: number;
+  };
+  lowStockWarning: {
+    threshold: number;
+    count: number;
+  };
+  outOfStock: number;
+  totalCategories: number;
+  draftOrUnpublished: number;
+  recentlyUpdatedProducts: number;
+  topSellingProducts: ProductMetricListItem[];
+  mostViewedProducts: ProductMetricListItem[];
+  priceRangeOverview: {
+    highest: ProductPriceRangeItem | null;
+    lowest: ProductPriceRangeItem | null;
+  };
+}
+
+export interface ProductMetricsResponse {
+  success: boolean;
+  data: ProductMetrics;
+}
+
 export interface SellerAccountSummaryResponse {
   success: boolean;
   data: {
