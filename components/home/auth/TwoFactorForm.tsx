@@ -20,7 +20,11 @@ const pastedOtpSchema = z
   .string()
   .regex(/^\d{6}$/, "সম্পূর্ণ ৬ সংখ্যার কোড প্রয়োজন");
 
-export default function TwoFactorForm({ redirect }: { redirect: string }) {
+export default function TwoFactorForm({
+  callbackUrl,
+}: {
+  callbackUrl?: string;
+}) {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -147,18 +151,38 @@ export default function TwoFactorForm({ redirect }: { redirect: string }) {
     setError("");
 
     try {
-      await verifyOtp({ email, otp: otpString, rememberMe }).unwrap();
+      const response = await verifyOtp({
+        email,
+        otp: otpString,
+        rememberMe,
+      }).unwrap();
 
       sessionStorage.removeItem("tempEmail");
+      sessionStorage.removeItem("tempRememberMe");
+
       const result = await refetch();
 
       // Check if user data is returned and set session
       if (result.data?.user) {
         dispatch(setSession({ user: result.data.user }));
 
-        router.replace(redirect);
-      }else{
-        setError("ব্যবহারকারী তথ্য পুনরুদ্ধার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+        const role = response?.user?.role;
+
+        if (callbackUrl) {
+          router.replace(callbackUrl);
+        } else if (role === "seller") {
+          router.replace("/dashboard");
+        } else if (role === "admin" || role === "super_admin") {
+          router.replace("/admin");
+        } else {
+          router.replace("/");
+        }
+
+        // router.replace(callbackUrl);
+      } else {
+        setError(
+          "ব্যবহারকারী তথ্য পুনরুদ্ধার করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+        );
       }
     } catch {
       setError("ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।");
@@ -179,9 +203,6 @@ export default function TwoFactorForm({ redirect }: { redirect: string }) {
       setError("কোড পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     }
   };
-
-  console.log(rememberMe);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Email Display */}

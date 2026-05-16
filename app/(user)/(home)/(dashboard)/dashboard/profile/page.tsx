@@ -75,9 +75,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-3xl">
-        <div className="overflow-hidden rounded-2xl border shadow-2xl shadow-black/50">
+    <div className="">
+      <div className="max-w-4xl">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
 
           {/* Header */}
           <div className="border-b px-6 py-5">
@@ -170,7 +170,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-60"
               >
                 {loading ? (
                   <>

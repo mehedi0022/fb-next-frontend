@@ -146,24 +146,24 @@ export default function MyCategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-300 p-6">
+    <div className="space-y-5">
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Total Categories</p>
             <p className="mt-2 text-3xl font-bold text-slate-800">{totalCategories}</p>
           </div>
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Active</p>
             <p className="mt-2 text-3xl font-bold text-emerald-600">{activeCategories}</p>
           </div>
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Inactive</p>
             <p className="mt-2 text-3xl font-bold text-slate-500">{inactiveCategories}</p>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
           <h2 className="mb-3 text-lg font-semibold text-slate-800">Add Category</h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <select
@@ -171,7 +171,7 @@ export default function MyCategoriesPage() {
               onChange={(e) =>
                 setSelectedCategoryId(e.target.value ? Number(e.target.value) : "")
               }
-              className="rounded-lg border px-3 py-2 text-sm md:col-span-2"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm md:col-span-2"
             >
               <option value="">Select category</option>
               {availableCategories.map((item) => (
@@ -183,14 +183,14 @@ export default function MyCategoriesPage() {
             <button
               onClick={handleCreate}
               disabled={isCreating}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             >
               {isCreating ? "Adding..." : "Add Category"}
             </button>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-end gap-3 border-b p-4">
             <div className="min-w-[220px] flex-1">
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -201,7 +201,7 @@ export default function MyCategoriesPage() {
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleApplyFilter()}
                 placeholder="Search category name"
-                className="w-full rounded-lg border px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -213,7 +213,7 @@ export default function MyCategoriesPage() {
                 onChange={(e) =>
                   setStatusFilter(e.target.value as "" | "active" | "inactive")
                 }
-                className="rounded-lg border px-3 py-2 text-sm"
+                className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
               >
                 <option value="">All</option>
                 <option value="active">Active</option>
@@ -222,13 +222,13 @@ export default function MyCategoriesPage() {
             </div>
             <button
               onClick={handleApplyFilter}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
             >
               Filter
             </button>
             <button
               onClick={handleResetFilter}
-              className="rounded-lg border px-4 py-2 text-sm font-medium"
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium"
             >
               Reset
             </button>
@@ -327,3 +327,4 @@ export default function MyCategoriesPage() {
     </div>
   );
 }
+

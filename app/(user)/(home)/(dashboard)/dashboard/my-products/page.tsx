@@ -154,24 +154,24 @@ export default function MyProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-300 p-6">
+    <div className="space-y-5">
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Total Products</p>
             <p className="mt-2 text-3xl font-bold text-slate-800">{totalProducts}</p>
           </div>
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Active</p>
             <p className="mt-2 text-3xl font-bold text-emerald-600">{activeProducts}</p>
           </div>
-          <div className="rounded-xl border bg-white p-4">
+          <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
             <p className="text-xs text-slate-500">Inactive</p>
             <p className="mt-2 text-3xl font-bold text-slate-500">{inactiveProducts}</p>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
           <h2 className="mb-3 text-lg font-semibold text-slate-800">Add Product</h2>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
             <select
@@ -179,7 +179,7 @@ export default function MyProductsPage() {
               onChange={(e) =>
                 setSelectedProductId(e.target.value ? Number(e.target.value) : "")
               }
-              className="rounded-lg border px-3 py-2 text-sm"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
             >
               <option value="">Select product</option>
               {availableProducts.map((p) => (
@@ -194,7 +194,7 @@ export default function MyProductsPage() {
               type="number"
               min="1"
               placeholder="Your price"
-              className="rounded-lg border px-3 py-2 text-sm"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
             />
             <input
               value={previousPrice}
@@ -202,19 +202,19 @@ export default function MyProductsPage() {
               type="number"
               min="1"
               placeholder="Previous price (optional)"
-              className="rounded-lg border px-3 py-2 text-sm"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
             />
             <button
               onClick={handleCreate}
               disabled={isCreating}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             >
               {isCreating ? "Adding..." : "Add Product"}
             </button>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-end gap-3 border-b p-4">
             <div className="min-w-[220px] flex-1">
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -225,7 +225,7 @@ export default function MyProductsPage() {
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleApplyFilter()}
                 placeholder="Search product name"
-                className="w-full rounded-lg border px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -237,7 +237,7 @@ export default function MyProductsPage() {
                 onChange={(e) =>
                   setStatusFilter(e.target.value as "" | "active" | "inactive")
                 }
-                className="rounded-lg border px-3 py-2 text-sm"
+                className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
               >
                 <option value="">All</option>
                 <option value="active">Active</option>
@@ -246,13 +246,13 @@ export default function MyProductsPage() {
             </div>
             <button
               onClick={handleApplyFilter}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
             >
               Filter
             </button>
             <button
               onClick={handleResetFilter}
-              className="rounded-lg border px-4 py-2 text-sm font-medium"
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium"
             >
               Reset
             </button>
@@ -355,3 +355,4 @@ export default function MyProductsPage() {
     </div>
   );
 }
+

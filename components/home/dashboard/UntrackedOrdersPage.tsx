@@ -18,7 +18,7 @@ const COLUMNS = [
 
 const STATUS_STYLES: Record<UntrackedOrderStatus, string> = {
   cancelled: "bg-amber-400 text-white",
-  pending:   "bg-blue-500 text-white",
+  pending:   "bg-slate-900 text-white",
   delivered: "bg-emerald-500 text-white",
 };
 
@@ -83,9 +83,9 @@ export default function UntrackedOrdersPage() {
   }, [search]);
 
   return (
-    <div className="min-h-screen p-6 md:p-10">
-      <div className="mx-auto max-w-5xl">
-        <div className="overflow-hidden rounded-2xl border bg-slate-300 shadow-sm">
+    <div className="">
+      <div className="">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
           {/* Header */}
           <div className="border-b px-6 py-5">
@@ -154,7 +154,7 @@ export default function UntrackedOrdersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b bg-slate-400">
+                <tr className="border-b bg-slate-50">
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}
@@ -180,7 +180,7 @@ export default function UntrackedOrdersPage() {
                       <td className="px-6 py-3.5">
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-blue-400 active:scale-[0.97]"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-slate-700 active:scale-[0.97]"
                         >
                           <ExternalLink className="h-3 w-3" />
                           Product Details
@@ -192,7 +192,7 @@ export default function UntrackedOrdersPage() {
                   <tr>
                     <td colSpan={COLUMNS.length} className="py-16 text-center">
                       <div className="flex flex-col items-center gap-3">
-                        <PackageSearch className="h-10 w-10 text-slate-300" />
+                        <PackageSearch className="h-10 w-10 text-slate-400" />
                         <p className="text-sm text-slate-400">No untracked orders found.</p>
                       </div>
                     </td>
