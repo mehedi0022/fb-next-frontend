@@ -262,6 +262,7 @@ export default function ProductForm({
     <Form
       form={form}
       layout="vertical"
+      size="large"
       onFinish={submit}
       initialValues={{
         name: initialData?.name,
@@ -374,9 +375,26 @@ export default function ProductForm({
                   listType="picture-card"
                   fileList={coverUploadFiles}
                   beforeUpload={(file) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    const uploadFile: UploadFile = {
+                      uid: file.uid ?? `-${Date.now()}`,
+                      name: file.name,
+                      status: "done",
+                      url: previewUrl,
+                      originFileObj: file,
+                    };
                     setCoverFile(file);
-                    setCoverUploadFiles([file]);
+                    setCoverUploadFiles([uploadFile]);
                     return false;
+                  }}
+                  onPreview={async (file) => {
+                    const src =
+                      file.url ??
+                      (file.originFileObj
+                        ? URL.createObjectURL(file.originFileObj)
+                        : "");
+                    if (!src) return;
+                    window.open(src, "_blank");
                   }}
                   onRemove={() => {
                     setCoverFile(undefined);
@@ -414,8 +432,24 @@ export default function ProductForm({
                   listType="picture-card"
                   fileList={galleryFiles}
                   beforeUpload={(file) => {
-                    setGalleryFiles((prev) => [...prev, file]);
+                    const uploadFile: UploadFile = {
+                      uid: file.uid ?? `-${Date.now()}`,
+                      name: file.name,
+                      status: "done",
+                      url: URL.createObjectURL(file),
+                      originFileObj: file,
+                    };
+                    setGalleryFiles((prev) => [...prev, uploadFile]);
                     return false;
+                  }}
+                  onPreview={async (file) => {
+                    const src =
+                      file.url ??
+                      (file.originFileObj
+                        ? URL.createObjectURL(file.originFileObj)
+                        : "");
+                    if (!src) return;
+                    window.open(src, "_blank");
                   }}
                   onRemove={(file) => {
                     setGalleryFiles((prev) =>

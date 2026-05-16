@@ -172,7 +172,7 @@ export default function ProductListPage() {
       setQueryParams({ search: normalized || null });
     }, 400);
     return () => clearTimeout(timer);
-  }, [searchInput, search]);
+  }, [searchInput, search, setQueryParams]);
 
   return (
     <div className="space-y-5 p-6">
