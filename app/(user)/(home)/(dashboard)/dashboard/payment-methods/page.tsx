@@ -1,12 +1,5 @@
-import { PlaceholderPage } from '@/lib/home'
-import React from 'react'
+import { PlaceholderPage } from "@/lib/home";
 
-function PaymentMethods() {
-  return (
-    <div>
-        <PlaceholderPage title="Payment Methods" />;
-    </div>
-  )
+export default function PaymentMethods() {
+  return <PlaceholderPage title="Payment Methods" />;
 }
-
-export default PaymentMethods

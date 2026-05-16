@@ -16,7 +16,7 @@ export const authApi = baseApi.injectEndpoints({
 
     // verify OTP
     verifyOtp: builder.mutation<
-      { message: string },
+      { message: string; user?: { role?: string } },
       { email?: string; phone?: string; otp: string; rememberMe: boolean }
     >({
       query: (body) => ({
@@ -30,7 +30,7 @@ export const authApi = baseApi.injectEndpoints({
     // resend OTP
     resendOtp: builder.mutation<{ message: string }, { email?: string }>({
       query: (body) => ({
-        url: "/auth/send-otp",
+        url: "/auth/resend-otp",
         method: "POST",
         body,
       }),

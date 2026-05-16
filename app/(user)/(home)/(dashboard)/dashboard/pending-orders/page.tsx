@@ -34,10 +34,10 @@ const COLUMNS = [
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  delivered: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  delivered: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
   partial: "bg-blue-500/10 text-blue-400 border-blue-500/20",
   untraceable: "bg-slate-500/10 text-slate-400 border-slate-500/20",
-  cancelled: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+  cancelled: "bg-rose-500/10 text-rose-600 border-rose-500/20",
 };
 
 function StatusBadge({ status }: { status: OrderStatus }) {
@@ -63,9 +63,9 @@ export default function OrderList() {
     useOrderFilter(ORDERS);
 
   return (
-    <div className="min-h-screen p-6 md:p-10">
-      <div className="mx-auto max-w-7xl">
-        <div className="overflow-hidden rounded-2xl border shadow-2xl shadow-black/50 bg-slate-300">
+    <div className="">
+      <div className="">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
           {/* Info Banner */}
           <div className="border-b px-5 py-3">
@@ -87,7 +87,7 @@ export default function OrderList() {
                   name="search"
                   value={filters.search}
                   onChange={handleChange}
-                  className={inputClass}
+                  className={inputClass + " border-slate-200 bg-slate-50 text-slate-700"}
                   placeholder="Order ID, invoice, tracking, phone..."
                 />
               </div>
@@ -104,7 +104,7 @@ export default function OrderList() {
                   type="date"
                   value={filters.fromDate}
                   onChange={handleChange}
-                  className={inputClass}
+                  className={inputClass + " border-slate-200 bg-slate-50 text-slate-700"}
                 />
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function OrderList() {
                   type="date"
                   value={filters.toDate}
                   onChange={handleChange}
-                  className={inputClass}
+                  className={inputClass + " border-slate-200 bg-slate-50 text-slate-700"}
                 />
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function OrderList() {
               <button
                 type="button"
                 onClick={handleApply}
-                className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-indigo-500 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-slate-700 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900"
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 Apply filters
@@ -149,7 +149,7 @@ export default function OrderList() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-sm">
               <thead>
-                <tr className="border-b bg-slate-400">
+                <tr className="border-b bg-slate-50">
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}
@@ -173,9 +173,9 @@ export default function OrderList() {
                       <td className="px-4 py-3 text-right font-mono ">{order.wholesalePrice.toFixed(2)}</td>
                       <td
                         className={`px-4 py-3 text-right font-mono font-semibold ${order.netProfit < 0
-                            ? "text-rose-400"
+                            ? "text-rose-600"
                             : order.netProfit > 0
-                              ? "text-emerald-400"
+                              ? "text-emerald-600"
                               : ""
                           }`}
                       >

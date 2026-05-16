@@ -142,10 +142,24 @@ export default function TwoFactorForm() {
     setError("");
 
     try {
-      await verifyOtp({ email, otp: otpString, rememberMe }).unwrap();
+      const response = await verifyOtp({
+        email,
+        otp: otpString,
+        rememberMe,
+      }).unwrap();
 
       sessionStorage.removeItem("tempEmail");
-      router.replace("/");
+      sessionStorage.removeItem("tempRememberMe");
+
+      const role = response?.user?.role;
+
+      if (role === "seller") {
+        router.replace("/dashboard");
+      } else if (role === "admin" || role === "super_admin") {
+        router.replace("/admin");
+      } else {
+        router.replace("/");
+      }
     } catch {
       setError("ভুল যাচাইকরণ কোড। আবার চেষ্টা করুন।");
     } finally {
@@ -165,9 +179,6 @@ export default function TwoFactorForm() {
       setError("কোড পাঠাতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
     }
   };
-
-  console.log(rememberMe);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Email Display */}
