@@ -1,310 +1,324 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Pagination } from "antd";
+import type { PaginationProps } from "antd";
+import { toast } from "react-toastify";
+import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import { useGetAllCategoriesQuery } from "@/appstore/modules/products/api";
+import type { ProductCategory } from "@/appstore/modules/products/api";
 import {
-  LayoutGrid,
-  Filter,
-  RotateCcw,
-  ToggleLeft,
-  ToggleRight,
-} from "lucide-react";
-import { CATEGORY_DATA } from "@/lib/home";
-import { Pagination, PaginationProps } from "antd";
+  useCreateSellerCategoryMutation,
+  useDeleteSellerCategoryMutation,
+  useGetSellerCategoriesQuery,
+  useUpdateSellerCategoryMutation,
+} from "@/appstore/modules/seller/panel.api";
+
+const PAGE_SIZE = 10;
 
 export default function MyCategoriesPage() {
-  const [categories, setCategories] = useState(CATEGORY_DATA);
   const [search, setSearch] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"" | "active" | "inactive">("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const PAGE_SIZE = 8;
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | "">("");
 
-  // ── Filter ─────────────────────────────────────
-  const handleFilter = () => {
-    setAppliedSearch(search);
+  const { data: sellerCategoriesRes, isLoading, isFetching } =
+    useGetSellerCategoriesQuery({
+      page: currentPage,
+      limit: PAGE_SIZE,
+      search: appliedSearch || undefined,
+      status: statusFilter || undefined,
+    });
+
+  const { data: activeMetaRes } = useGetSellerCategoriesQuery({
+    page: 1,
+    limit: 1,
+    status: "active",
+  });
+  const { data: inactiveMetaRes } = useGetSellerCategoriesQuery({
+    page: 1,
+    limit: 1,
+    status: "inactive",
+  });
+
+  const { data: allCategoriesRes } = useGetAllCategoriesQuery();
+
+  const [createSellerCategory, { isLoading: isCreating }] =
+    useCreateSellerCategoryMutation();
+  const [updateSellerCategory, { isLoading: isUpdating }] =
+    useUpdateSellerCategoryMutation();
+  const [deleteSellerCategory, { isLoading: isDeleting }] =
+    useDeleteSellerCategoryMutation();
+
+  const sellerCategories = useMemo(
+    () => sellerCategoriesRes?.data ?? [],
+    [sellerCategoriesRes?.data],
+  );
+  const meta = sellerCategoriesRes?.meta;
+  const totalCategories = meta?.total ?? 0;
+  const activeCategories = activeMetaRes?.meta?.total ?? 0;
+  const inactiveCategories = inactiveMetaRes?.meta?.total ?? 0;
+
+  const flattenCategories = (nodes: ProductCategory[]) => {
+    const out: Array<{ id: number; name: string }> = [];
+    const walk = (items: ProductCategory[], prefix = "") => {
+      items.forEach((item) => {
+        out.push({ id: item.id, name: prefix ? `${prefix} > ${item.name}` : item.name });
+        if (item.children?.length) {
+          walk(item.children, prefix ? `${prefix} > ${item.name}` : item.name);
+        }
+      });
+    };
+    walk(nodes);
+    return out;
+  };
+
+  const flatCategoryOptions = useMemo(
+    () => flattenCategories(allCategoriesRes?.data ?? []),
+    [allCategoriesRes?.data],
+  );
+
+  const existingCategoryIds = useMemo(
+    () => new Set(sellerCategories.map((item) => item.categoryId)),
+    [sellerCategories],
+  );
+
+  const availableCategories = flatCategoryOptions.filter(
+    (item) => !existingCategoryIds.has(item.id),
+  );
+
+  const handleApplyFilter = () => {
+    setAppliedSearch(search.trim());
     setCurrentPage(1);
   };
 
-  const handleReset = () => {
+  const handleResetFilter = () => {
     setSearch("");
     setAppliedSearch("");
+    setStatusFilter("");
     setCurrentPage(1);
   };
 
-  // ── Toggle Status ──────────────────────────────
-  const toggleStatus = (id: number) => {
-    setCategories((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: item.status === "active" ? "inactive" : "active",
-            }
-          : item
-      )
-    );
+  const handleCreate = async () => {
+    if (!selectedCategoryId) {
+      toast.warning("Select a category first.");
+      return;
+    }
+    try {
+      const result = await createSellerCategory({
+        categoryId: Number(selectedCategoryId),
+      }).unwrap();
+      toast.success(result?.message || "Category added to your panel.");
+      setSelectedCategoryId("");
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Failed to add category."));
+    }
   };
 
-  // ── Filtered Data ──────────────────────────────
-  const filteredCategories = useMemo(() => {
-    return categories.filter((item) =>
-      item.category.toLowerCase().includes(appliedSearch.toLowerCase())
-    );
-  }, [categories, appliedSearch]);
+  const handleToggleStatus = async (
+    id: number,
+    currentStatus: "active" | "inactive",
+  ) => {
+    const nextStatus = currentStatus === "active" ? "inactive" : "active";
+    try {
+      await updateSellerCategory({ id, status: nextStatus }).unwrap();
+      toast.success(`Category ${nextStatus}.`);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Failed to update category status."));
+    }
+  };
 
-  // ── Paginated Data ─────────────────────────────
-  const paginatedCategories = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return filteredCategories.slice(start, start + PAGE_SIZE);
-  }, [filteredCategories, currentPage]);
+  const handleDelete = async (id: number) => {
+    const ok = window.confirm("Delete this category from your panel?");
+    if (!ok) return;
+    try {
+      const result = await deleteSellerCategory(id).unwrap();
+      toast.success(result?.message || "Category deleted.");
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Failed to delete category."));
+    }
+  };
 
-  // ── Pagination Change ──────────────────────────
   const onPageChange: PaginationProps["onChange"] = (page) => {
     setCurrentPage(page);
   };
 
-  // ── Stats ──────────────────────────────────────
-  const totalCategories = categories.length;
-  const activeCategories = categories.filter(
-    (item) => item.status === "active"
-  ).length;
-
-  const inactiveCategories = categories.filter(
-    (item) => item.status === "inactive"
-  ).length;
-
   return (
-    <div className="min-h-screen bg-[#efefec] p-4 md:p-6">
+    <div className="min-h-screen bg-slate-300 p-6">
       <div className="space-y-5">
-        {/* ── Top Section ───────────────────────── */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {/* Hero Banner */}
-          <div className="lg:col-span-2 rounded-3xl bg-gradient-to-r from-[#7b4a28] to-[#f07d2f] p-6 md:p-8 text-white relative overflow-hidden min-h-[190px] flex flex-col justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#27e0b3]">
-                Your Store Categories
-              </p>
-
-              <h1 className="mt-2 text-3xl font-bold leading-tight max-w-md">
-                Organize categories your way
-              </h1>
-
-              <p className="mt-3 text-sm text-white/90 max-w-md leading-relaxed">
-                Pick the categories you want to show, reorder them, and add your
-                own custom labels.
-              </p>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black hover:bg-white/90 transition">
-                Browse Categories
-              </button>
-
-              <button className="rounded-full border border-white/60 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition">
-                Your Products
-              </button>
-            </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-xl border bg-white p-4">
+            <p className="text-xs text-slate-500">Total Categories</p>
+            <p className="mt-2 text-3xl font-bold text-slate-800">{totalCategories}</p>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-[#d8d8d4] bg-white p-5">
-              <p className="text-xs text-slate-500">Total Categories</p>
-              <h2 className="mt-3 text-4xl font-bold text-slate-900">
-                {totalCategories}
-              </h2>
-            </div>
-
-            <div className="rounded-2xl border border-[#d8d8d4] bg-white p-5">
-              <p className="text-xs text-slate-500">Active</p>
-              <h2 className="mt-3 text-4xl font-bold text-slate-900">
-                {activeCategories}
-              </h2>
-            </div>
-
-            <div className="rounded-2xl border border-[#d8d8d4] bg-white p-5">
-              <p className="text-xs text-slate-500">Inactive</p>
-              <h2 className="mt-3 text-4xl font-bold text-slate-900">
-                {inactiveCategories}
-              </h2>
-            </div>
+          <div className="rounded-xl border bg-white p-4">
+            <p className="text-xs text-slate-500">Active</p>
+            <p className="mt-2 text-3xl font-bold text-emerald-600">{activeCategories}</p>
+          </div>
+          <div className="rounded-xl border bg-white p-4">
+            <p className="text-xs text-slate-500">Inactive</p>
+            <p className="mt-2 text-3xl font-bold text-slate-500">{inactiveCategories}</p>
           </div>
         </div>
 
-        {/* ── Categories Table ───────────────────── */}
-        <div className="rounded-3xl border border-[#d8d8d4] bg-white p-4 md:p-5">
-          {/* Header */}
-          <div className="mb-5">
-            <h2 className="text-3xl font-bold text-slate-900">
-              Your Categories
-            </h2>
+        <div className="rounded-xl border bg-white p-4">
+          <h2 className="mb-3 text-lg font-semibold text-slate-800">Add Category</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            <select
+              value={selectedCategoryId}
+              onChange={(e) =>
+                setSelectedCategoryId(e.target.value ? Number(e.target.value) : "")
+              }
+              className="rounded-lg border px-3 py-2 text-sm md:col-span-2"
+            >
+              <option value="">Select category</option>
+              {availableCategories.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={handleCreate}
+              disabled={isCreating}
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {isCreating ? "Adding..." : "Add Category"}
+            </button>
           </div>
+        </div>
 
-          {/* Filter */}
-          <div className="mb-5 flex flex-wrap items-end gap-3">
-            <div className="flex flex-col gap-2 flex-1 min-w-[250px]">
-              <label className="text-sm font-medium text-slate-700">
+        <div className="rounded-xl border bg-white">
+          <div className="flex flex-wrap items-end gap-3 border-b p-4">
+            <div className="min-w-[220px] flex-1">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Search
               </label>
-
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by category name or label"
-                className="h-12 rounded-lg border border-[#f07d2f] px-4 text-sm outline-none focus:ring-2 focus:ring-orange-300"
+                onKeyDown={(e) => e.key === "Enter" && handleApplyFilter()}
+                placeholder="Search category name"
+                className="w-full rounded-lg border px-3 py-2 text-sm"
               />
             </div>
-
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Status
+              </label>
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value as "" | "active" | "inactive")
+                }
+                className="rounded-lg border px-3 py-2 text-sm"
+              >
+                <option value="">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
             <button
-              onClick={handleFilter}
-              className="h-12 rounded-lg bg-[#1d232a] px-7 text-sm font-semibold text-white hover:bg-black transition flex items-center gap-2"
+              onClick={handleApplyFilter}
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
             >
-              <Filter className="h-4 w-4" />
               Filter
             </button>
-
             <button
-              onClick={handleReset}
-              className="h-12 rounded-lg border border-slate-300 bg-[#f4f4f2] px-7 text-sm font-medium text-slate-700 hover:bg-slate-100 transition flex items-center gap-2"
+              onClick={handleResetFilter}
+              className="rounded-lg border px-4 py-2 text-sm font-medium"
             >
-              <RotateCcw className="h-4 w-4" />
               Reset
             </button>
           </div>
 
-          {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[950px]">
+            <table className="w-full min-w-[900px] text-sm">
               <thead>
-                <tr className="border-b border-slate-200">
-                  {[
-                    "Category",
-                    "Label",
-                    "Sort",
-                    "Status",
-                    "Home",
-                    "Added",
-                    "Link",
-                    "Action",
-                  ].map((head) => (
-                    <th
-                      key={head}
-                      className="px-3 py-3 text-left text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400"
-                    >
-                      {head}
-                    </th>
-                  ))}
+                <tr className="border-b">
+                  <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-500">
+                    Category
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-500">
+                    Parent
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-bold uppercase text-slate-500">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-bold uppercase text-slate-500">
+                    Added
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-bold uppercase text-slate-500">
+                    Action
+                  </th>
                 </tr>
               </thead>
-
               <tbody>
-                {paginatedCategories.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="border-b border-slate-200 hover:bg-slate-50"
-                  >
-                    <td className="px-3 py-3">
-                      <div>
-                        <p className="font-medium text-slate-800">
-                          {item.category}
-                        </p>
-
-                        {item.subcategory && (
-                          <p className="text-xs text-slate-500">
-                            Subcategory: {item.subcategory}
-                          </p>
-                        )}
-                      </div>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-10 text-center text-slate-500">
+                      Loading categories...
                     </td>
-
-                    <td className="px-3 py-3 text-slate-700">{item.label}</td>
-
-                    <td className="px-3 py-3 text-slate-700">{item.sort}</td>
-
-                    <td className="px-3 py-3">
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => toggleStatus(item.id)}>
-                          {item.status === "active" ? (
-                            <ToggleRight className="h-9 w-9 text-emerald-500" />
-                          ) : (
-                            <ToggleLeft className="h-9 w-9 text-slate-300" />
-                          )}
-                        </button>
-
-                        <span
-                          className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase ${
+                  </tr>
+                ) : sellerCategories.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-10 text-center text-slate-500">
+                      No categories found.
+                    </td>
+                  </tr>
+                ) : (
+                  sellerCategories.map((item) => (
+                    <tr key={item.id} className="border-b">
+                      <td className="px-4 py-3">{item.category?.name}</td>
+                      <td className="px-4 py-3">
+                        {item.category?.parent?.name || "-"}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          disabled={isUpdating}
+                          onClick={() => handleToggleStatus(item.id, item.status)}
+                          className={`rounded px-2 py-1 text-xs font-semibold ${
                             item.status === "active"
                               ? "bg-emerald-100 text-emerald-700"
-                              : "bg-slate-100 text-slate-500"
+                              : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {item.status}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="px-3 py-3 text-slate-700">
-                      {item.home ? "Yes" : "No"}
-                    </td>
-
-                    <td className="px-3 py-3 text-slate-700">{item.added}</td>
-
-                    <td className="px-3 py-3">
-                      <button className="rounded border border-slate-400 px-4 py-1.5 text-xs font-medium hover:bg-slate-50">
-                        View
-                      </button>
-                    </td>
-
-                    <td className="px-3 py-3">
-                      <button className="rounded border border-red-400 px-4 py-1.5 text-xs font-medium text-red-500 hover:bg-red-50">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-
-                {filteredCategories.length === 0 && (
-                  <tr>
-                    <td colSpan={8} className="py-16 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <LayoutGrid className="h-10 w-10 text-slate-300" />
-                        <p className="text-sm text-slate-400">
-                          No categories found.
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-slate-500">
+                        {new Date(item.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          disabled={isDeleting}
+                          onClick={() => handleDelete(item.id)}
+                          className="rounded bg-rose-500 px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>
           </div>
 
-          {/* Pagination */}
-          {filteredCategories.length > 0 && (
-            <div className="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          {(meta?.total ?? 0) > 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t p-4">
               <p className="text-sm text-slate-500">
-                Showing{" "}
-                <span className="font-semibold text-slate-800">
-                  {(currentPage - 1) * PAGE_SIZE + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-semibold text-slate-800">
-                  {Math.min(currentPage * PAGE_SIZE, filteredCategories.length)}
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-slate-800">
-                  {filteredCategories.length}
-                </span>{" "}
-                categories
+                Showing page {meta?.page} of {meta?.totalPages}
+                {isFetching ? " (refreshing...)" : ""}
               </p>
-
               <Pagination
-                current={currentPage}
-                total={filteredCategories.length}
-                pageSize={PAGE_SIZE}
+                current={meta?.page || 1}
+                total={meta?.total || 0}
+                pageSize={meta?.limit || PAGE_SIZE}
                 onChange={onPageChange}
                 showSizeChanger={false}
-                responsive
               />
             </div>
           )}
