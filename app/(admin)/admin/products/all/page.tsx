@@ -203,7 +203,7 @@ export default function ProductListPage() {
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 col-span-2 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Search
             </label>
@@ -216,7 +216,7 @@ export default function ProductListPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Category
             </label>
@@ -236,7 +236,7 @@ export default function ProductListPage() {
               }))}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Brand
             </label>
@@ -256,7 +256,7 @@ export default function ProductListPage() {
               }))}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Metric
             </label>
@@ -274,7 +274,7 @@ export default function ProductListPage() {
               ]}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Threshold
             </label>
@@ -288,7 +288,7 @@ export default function ProductListPage() {
               }))}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Days
             </label>
@@ -302,7 +302,7 @@ export default function ProductListPage() {
               ]}
             />
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 flex flex-col">
             <label className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Status
             </label>
