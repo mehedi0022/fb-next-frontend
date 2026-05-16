@@ -3,7 +3,7 @@ import { Shield, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import TwoFactorForm from './TwoFactorForm';
 
-export default function TwoFactorAuth({ redirect }: { redirect: string }) {
+export default function TwoFactorAuth({ callbackUrl }: { callbackUrl?: string }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 py-12">
       <Container>
@@ -35,7 +35,7 @@ export default function TwoFactorAuth({ redirect }: { redirect: string }) {
             </div>
 
             {/* Form */}
-            <TwoFactorForm redirect={redirect} />
+            <TwoFactorForm callbackUrl={callbackUrl} />
 
             {/* Footer */}
             <div className="mt-8 text-center">

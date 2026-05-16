@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams: { redirect?: string };
+  searchParams: { callbackUrl?: string };
 }) {
-  return <SignIn redirect={searchParams.redirect || "/"} />;
+  return <SignIn callbackUrl={searchParams?.callbackUrl} />;
 }

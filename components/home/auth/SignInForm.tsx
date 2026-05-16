@@ -19,7 +19,7 @@ interface FormErrors {
   general?: string;
 }
 
-export default function SignInForm({ redirect }: { redirect: string }) {
+export default function SignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const [login] = useLoginMutation();
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -91,14 +91,18 @@ export default function SignInForm({ redirect }: { redirect: string }) {
       if (res?.message === "OTP sent to email") {
         sessionStorage.setItem("tempEmail", formData.email);
         sessionStorage.setItem("tempRememberMe", String(formData.rememberMe));
-        router.push(
-          `/login/two-factor?redirect=${encodeURIComponent(redirect)}`,
-        );
+        if (callbackUrl) {
+          router.push(
+            `/login/two-factor?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+          );
+        } else {
+          router.push(`/login/two-factor`);
+        }
         return;
       }
 
       // ✅ If backend directly logs in (optional case)
-      router.push(redirect);
+      router.push(callbackUrl || "/");
     } catch (err: unknown) {
       console.error("Login error:", err);
       const error = err as { data?: { message?: string } };

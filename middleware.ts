@@ -48,7 +48,12 @@ const redirectByRole = (role: Role, request: NextRequest) => {
   if (role === "admin" || role === "super_admin") {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
-  return NextResponse.redirect(new URL("/login", request.url));
+  return NextResponse.redirect(
+    new URL(
+      `/login?callbackUrl=${encodeURIComponent(request.nextUrl.pathname)}`,
+      request.url,
+    ),
+  );
 };
 
 export async function middleware(request: NextRequest) {
@@ -61,7 +66,8 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = AUTH_PAGES.some(
     (authPath) => pathname === authPath || pathname.startsWith(`${authPath}/`),
   );
-  const isSellerRoute = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+  const isSellerRoute =
+    pathname === "/dashboard" || pathname.startsWith("/dashboard/");
   const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
 
   if (!isAuthPage && !isSellerRoute && !isAdminRoute) {
@@ -70,14 +76,24 @@ export async function middleware(request: NextRequest) {
 
   if (!hasAuthCookies) {
     if (isAuthPage) return NextResponse.next();
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(
+      new URL(
+        `/login?callbackUrl=${encodeURIComponent(pathname)}`,
+        request.url,
+      ),
+    );
   }
 
   const role = await getRoleFromApi(request);
 
   if (!role) {
     if (isAuthPage) return NextResponse.next();
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(
+      new URL(
+        `/login?callbackUrl=${encodeURIComponent(pathname)}`,
+        request.url,
+      ),
+    );
   }
 
   if (isAuthPage) {
@@ -96,5 +112,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login/:path*", "/register/:path*", "/dashboard/:path*", "/admin/:path*"],
+  matcher: [
+    "/login/:path*",
+    "/register/:path*",
+    "/dashboard/:path*",
+    "/admin/:path*",
+  ],
 };

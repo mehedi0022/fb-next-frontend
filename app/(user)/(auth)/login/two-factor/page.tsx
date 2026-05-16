@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: 'আপনার অ্যাকাউন্টের নিরাপত্তার জন্য দুই-ধাপ যাচাইকরণ সম্পন্ন করুন',
 };
 
-export default function TwoFactorPage({ searchParams }: { searchParams: { redirect?: string } }) {
+export default function TwoFactorPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
   return (
-    <TwoFactorAuth redirect={searchParams.redirect || "/"} />
+    <TwoFactorAuth callbackUrl={searchParams?.callbackUrl} />
   );
 }

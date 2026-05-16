@@ -57,7 +57,7 @@ const RoleProtectedRoute = ({
     }
 
     if (!user?.role || isLoggedOut) {
-      router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+      router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
     }
   }, [user, isLoggedOut, status, router, pathname]);
 

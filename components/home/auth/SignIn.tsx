@@ -5,7 +5,7 @@ import SignInForm from './SignInForm';
 
 
 
-export default function SignIn({redirect}: {redirect: string}) {
+export default function SignIn({callbackUrl}: {callbackUrl?: string}) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
       <Container>
@@ -54,7 +54,7 @@ export default function SignIn({redirect}: {redirect: string}) {
                 </div>
 
                 {/* Form */}
-                <SignInForm redirect={redirect} />
+                <SignInForm callbackUrl={callbackUrl} />
 
                 {/* Footer Links */}
                 <div className="mt-8 text-center space-y-4">
