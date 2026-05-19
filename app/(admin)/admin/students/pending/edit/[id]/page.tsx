@@ -25,7 +25,7 @@ import {
 import { useGetBranchesQuery } from "@/appstore/modules/branch/api";
 import { toast } from "react-toastify";
 import LoadingSkeleton from "@/components/admin/common/Skeleton";
-import { BatchInBranch } from "@/lib/home/types";
+import { BatchInBranch } from "@/lib/home";
 import Image from "next/image";
 
 // ==================== TYPES ====================

@@ -63,7 +63,7 @@ export const CustomBranchForm = ({ initial, onSubmit }: Props) => {
 
       <div className="grid md:grid-cols-2 gap-5">
         {/* Branch Name */}
-        <Field label="Branch Name *" error={errors.branchName}>
+        <Field label="Branch Name"  error={errors.branchName} required>
           <div className="relative">
             <Building2 className="input-icon" />
             <input
@@ -85,7 +85,7 @@ export const CustomBranchForm = ({ initial, onSubmit }: Props) => {
         </Field>
 
         {/* Status */}
-        <Field label="Status *" error={errors.status}>
+        <Field label="Status" error={errors.status} required>
           <div className="relative">
             <select
               {...register("status", {

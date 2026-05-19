@@ -1,24 +1,12 @@
 import { baseApi } from "@/appstore/api/baseApi";
-
-interface StepItem {
-  id: number;
-  description: string;
-  sort_order: number;
-  status: "active" | "inactive";
-  created_at: string;
-  updated_at: string;
-}
-
-interface Steps {
-  success: boolean;
-  data: StepItem[];
-} 
+import type { StepsResponse } from "@/lib/home";
 
 const stepsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all steps
-    getSteps: build.query<Steps, void>({
+    getSteps: build.query<StepsResponse, void>({
       query: () => "/steps",
+      providesTags: ["Step"],
     }),
 
     // create a step
@@ -28,6 +16,7 @@ const stepsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Step"],
     }),
 
     // update a step
@@ -37,6 +26,7 @@ const stepsApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Step"],
     }),
 
     // delete a step
@@ -45,6 +35,7 @@ const stepsApi = baseApi.injectEndpoints({
         url: `/steps/delete/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Step"],
     }),
   }),
 });

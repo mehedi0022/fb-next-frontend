@@ -64,7 +64,7 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
         </div>
       )}
 
-      <Field label="Batch Name" error={errors.batchName}>
+      <Field label="Batch Name" error={errors.batchName} required>
         <input
           {...register("batchName", { required: true })}
           className="input"
@@ -72,7 +72,7 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
         />
       </Field>
 
-      <Field label="Branch" error={errors.branchId}>
+      <Field label="Branch" error={errors.branchId} required>
         <select
           {...register("branchId", { required: true })}
           className="input"
@@ -87,7 +87,7 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
         </select>
       </Field>
 
-      <Field label="Max Students">
+      <Field label="Max Students" error={errors.maxStudents} required>
         <input
           type="number"
           defaultValue={100}
@@ -97,7 +97,7 @@ export const BatchForm = ({ branches, initial, onSubmit }: Props) => {
         />
       </Field>
 
-      <Field label="Status">
+      <Field label="Status" error={errors.status}>
         <select {...register("status")} className="input" disabled={loading}>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
