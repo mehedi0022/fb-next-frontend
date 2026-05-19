@@ -113,7 +113,95 @@ export type BatchFormData = {
   status: "active" | "inactive";
 };
 
+// -------- Admin settings content types -----------
+export interface FeatureItem {
+  id: number;
+  title: string;
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
+}
 
+export interface FeatureFormData {
+  title: string;
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+}
+
+export interface FeaturesResponse {
+  success: boolean;
+  data: FeatureItem[];
+}
+
+export interface StepItem {
+  id: number;
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StepFormData {
+  description: string;
+  sort_order: number;
+  status: "active" | "inactive";
+}
+
+export interface StepsResponse {
+  success: boolean;
+  data: StepItem[];
+}
+
+export interface FaqItem {
+  id: string | number;
+  question: string;
+  answer: string;
+  status: "active" | "inactive";
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FaqFormData {
+  question: string;
+  answer: string;
+  sort_order: number;
+  status: "active" | "inactive";
+}
+
+export interface FaqsResponse {
+  success: boolean;
+  data: FaqItem[];
+}
+
+// -------- Banner Related -----------
+export interface BannerItem {
+  id: number;
+  title: string;
+  highlight_text: string;
+  subtitle: string;
+  status: "active" | "inactive";
+  image?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface BannerFormData {
+  title: string;
+  highlight_text: string;
+  subtitle: string;
+  status: "active" | "inactive";
+  image?: string;
+}
+
+export interface BannersResponse {
+  success: boolean;
+  data: BannerItem[];
+}
 
 // Dashboard related types
 
@@ -280,7 +368,6 @@ export interface UntrackedOrder {
   status: UntrackedOrderStatus;
 }
 
-
 // ─── Products Types ────────────────────────────────────────────────────────────────────
 
 export interface ProductsTableItem {
@@ -305,4 +392,4 @@ export interface CategoryItem {
   status: "active" | "inactive";
   home: boolean;
   added: string;
-};
+}

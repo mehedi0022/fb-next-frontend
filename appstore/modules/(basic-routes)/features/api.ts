@@ -1,25 +1,12 @@
 import { baseApi } from "@/appstore/api/baseApi";
-
-interface FeatureItem {
-  id: number;
-  title: string;
-  description: string;
-  sort_order: number;
-  status: "active" | "inactive";
-  created_at: string;
-  updated_at: string;
-}
-
-interface Features {
-  success: boolean;
-  data: FeatureItem[];
-}
+import type { FeaturesResponse } from "@/lib/home";
 
 const featuresApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all features
-    getFeatures: build.query<Features, void>({
+    getFeatures: build.query<FeaturesResponse, void>({
       query: () => "/features",
+      providesTags: ["Feature"],
     }),
 
     // create feature
@@ -29,6 +16,7 @@ const featuresApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Feature"],
     }),
 
     // update feature
@@ -38,6 +26,7 @@ const featuresApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Feature"],
     }),
 
     // delete feature
@@ -46,6 +35,7 @@ const featuresApi = baseApi.injectEndpoints({
         url: `/features/delete/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Feature"],
     }),
   }),
 });

@@ -1,25 +1,12 @@
 import { baseApi } from "@/appstore/api/baseApi";
-
-interface FaqItem {
-  id: string | number;
-  question: string;
-  answer: string;
-  status: "active" | "inactive";
-  sort_order: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Faq {
-  success: boolean;
-  data: FaqItem[];
-}
+import { FaqsResponse } from "@/lib/home";
 
 const faqsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // get all faqs
-    getFaqs: build.query<Faq, void>({
+    getFaqs: build.query<FaqsResponse, void>({
       query: () => "/faqs",
+      providesTags: ["Faq"],
     }),
 
     // create a faq
@@ -29,6 +16,7 @@ const faqsApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Faq"],
     }),
 
     // update a faq
@@ -38,6 +26,7 @@ const faqsApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Faq"],
     }),
 
     // delete a faq
@@ -46,6 +35,7 @@ const faqsApi = baseApi.injectEndpoints({
         url: `/faqs/delete/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Faq"],
     }),
   }),
 });
