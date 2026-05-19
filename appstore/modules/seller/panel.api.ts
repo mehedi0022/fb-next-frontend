@@ -17,7 +17,8 @@ export type SellerCategoryItem = {
     id: number;
     name: string;
     slug: string;
-    level: number;
+    image?: string | null;
+    level?: number;
     parent?: {
       id: number;
       name: string;
@@ -45,7 +46,12 @@ export type SellerProductItem = {
     id: number;
     name: string;
     slug: string;
-    images?: unknown[];
+    coverImage?: string | null;
+    variants?: Array<{
+      id: number;
+      stock: number;
+      price: number;
+    }>;
   };
   category: {
     id: number;
@@ -72,10 +78,18 @@ type PaginatedResponse<T> = {
   data: T[];
 };
 
+type ListResponse<T> = {
+  success: boolean;
+  data: T[];
+};
+
 type SingleResponse<T> = {
   success: boolean;
   data: T;
   message?: string;
+  meta?: {
+    affectedProducts?: number;
+  };
 };
 
 export type SellerPanelListParams = {
@@ -83,11 +97,16 @@ export type SellerPanelListParams = {
   limit?: number;
   search?: string;
   status?: "active" | "inactive";
+  categoryId?: number;
+  hotDeal?: boolean;
+  topSelling?: boolean;
+  isHomePageView?: boolean;
+  isMenuView?: boolean;
+  isFeatured?: boolean;
 };
 
 export type CreateSellerCategoryPayload = {
   categoryId: number;
-  status?: SellerCategoryStatus;
   isHomePageView?: boolean;
   isMenuView?: boolean;
   isFeatured?: boolean;
@@ -103,9 +122,10 @@ export type UpdateSellerCategoryPayload = {
 
 export type CreateSellerProductPayload = {
   productId: number;
+  categoryId?: number;
   price: number;
   previousePrice?: number;
-  status?: SellerProductStatus;
+  description?: string;
   isHomePageView?: boolean;
   hotDeal?: boolean;
   topSelling?: boolean;
@@ -116,6 +136,7 @@ export type UpdateSellerProductPayload = {
   status?: SellerProductStatus;
   price?: number;
   previousePrice?: number;
+  description?: string;
   isHomePageView?: boolean;
   hotDeal?: boolean;
   topSelling?: boolean;
@@ -124,11 +145,11 @@ export type UpdateSellerProductPayload = {
 const sellerPanelApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getSellerCategories: builder.query<
-      PaginatedResponse<SellerCategoryItem>,
+      ListResponse<SellerCategoryItem>,
       SellerPanelListParams | void
     >({
       query: (params) => ({
-        url: "/seller/category",
+        url: "/seller/categories",
         params: params ?? undefined,
       }),
       providesTags: ["SellerPanel"],
@@ -139,7 +160,7 @@ const sellerPanelApi = baseApi.injectEndpoints({
       CreateSellerCategoryPayload
     >({
       query: (body) => ({
-        url: "/seller/category/create",
+        url: "/seller/categories",
         method: "POST",
         body,
       }),
@@ -151,7 +172,7 @@ const sellerPanelApi = baseApi.injectEndpoints({
       UpdateSellerCategoryPayload
     >({
       query: ({ id, ...body }) => ({
-        url: `/seller/category/update/${id}`,
+        url: `/seller/categories/${id}`,
         method: "PUT",
         body,
       }),
@@ -159,11 +180,11 @@ const sellerPanelApi = baseApi.injectEndpoints({
     }),
 
     deleteSellerCategory: builder.mutation<
-      { success: boolean; message?: string },
+      { success: boolean; message?: string; meta?: { affectedProducts?: number } },
       number
     >({
       query: (id) => ({
-        url: `/seller/category/delete/${id}`,
+        url: `/seller/categories/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["SellerPanel"],
@@ -185,11 +206,18 @@ const sellerPanelApi = baseApi.injectEndpoints({
       CreateSellerProductPayload
     >({
       query: (body) => ({
-        url: "/seller/products/create",
+        url: "/seller/products",
         method: "POST",
         body,
       }),
       invalidatesTags: ["SellerPanel"],
+    }),
+
+    getSellerProductById: builder.query<SingleResponse<SellerProductItem>, number>({
+      query: (id) => ({
+        url: `/seller/products/${id}`,
+      }),
+      providesTags: ["SellerPanel"],
     }),
 
     updateSellerProduct: builder.mutation<
@@ -197,7 +225,7 @@ const sellerPanelApi = baseApi.injectEndpoints({
       UpdateSellerProductPayload
     >({
       query: ({ id, ...body }) => ({
-        url: `/seller/products/update/${id}`,
+        url: `/seller/products/${id}`,
         method: "PUT",
         body,
       }),
@@ -209,7 +237,7 @@ const sellerPanelApi = baseApi.injectEndpoints({
       number
     >({
       query: (id) => ({
-        url: `/seller/products/delete/${id}`,
+        url: `/seller/products/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["SellerPanel"],
@@ -224,7 +252,7 @@ export const {
   useDeleteSellerCategoryMutation,
   useGetSellerProductsQuery,
   useCreateSellerProductMutation,
+  useGetSellerProductByIdQuery,
   useUpdateSellerProductMutation,
   useDeleteSellerProductMutation,
 } = sellerPanelApi;
-

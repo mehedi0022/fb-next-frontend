@@ -19,8 +19,8 @@ const Footer = () => {
     ];
 
     const quickLinks = [
-        { label: 'রেজিস্ট্রেশন', href: '/auth/register' },
-        { label: 'লগইন', href: '/auth/login' },
+        { label: 'রেজিস্ট্রেশন', href: '/register' },
+        { label: 'লগইন', href: '/login' },
         { label: 'যোগাযোগ', href: '/contact' },
     ];
 

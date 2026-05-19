@@ -4,41 +4,62 @@ import type { NextRequest } from "next/server";
 type Role = "seller" | "admin" | "super_admin" | null;
 
 const AUTH_PAGES = ["/login", "/login/two-factor", "/register"];
+const LOCAL_API_FALLBACK = "http://localhost:5000/api/v1";
 
-const getApiBaseUrl = () => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
+const normalizeUrl = (url?: string | null) => {
   if (!url) return null;
   return url.replace(/\/$/, "");
 };
 
-const getRoleFromApi = async (request: NextRequest): Promise<Role> => {
-  const apiBaseUrl = getApiBaseUrl();
-  if (!apiBaseUrl) return null;
+const getApiBaseUrls = (request: NextRequest) => {
+  const urls: string[] = [];
+  const configuredApiUrl = normalizeUrl(process.env.NEXT_PUBLIC_API_URL);
+  if (configuredApiUrl) {
+    urls.push(configuredApiUrl);
+  }
 
+  const hostname = request.nextUrl.hostname;
+  const isLocalHost = hostname === "localhost" || hostname === "127.0.0.1";
+  if (isLocalHost) {
+    const localApiUrl = normalizeUrl(process.env.NEXT_PUBLIC_LOCAL_API_URL)
+      || LOCAL_API_FALLBACK;
+    if (!urls.includes(localApiUrl)) {
+      urls.push(localApiUrl);
+    }
+  }
+
+  return urls;
+};
+
+const getRoleFromApi = async (request: NextRequest): Promise<Role> => {
   const cookieHeader = request.headers.get("cookie");
   if (!cookieHeader) return null;
 
-  try {
-    const response = await fetch(`${apiBaseUrl}/auth/check-me`, {
-      method: "GET",
-      headers: {
-        cookie: cookieHeader,
-      },
-      cache: "no-store",
-    });
+  const apiBaseUrls = getApiBaseUrls(request);
+  for (const apiBaseUrl of apiBaseUrls) {
+    try {
+      const response = await fetch(`${apiBaseUrl}/auth/check-me`, {
+        method: "GET",
+        headers: {
+          cookie: cookieHeader,
+        },
+        cache: "no-store",
+      });
 
-    if (!response.ok) return null;
+      if (!response.ok) continue;
 
-    const data = await response.json();
-    const role = data?.user?.role;
+      const data = await response.json();
+      const role = data?.user?.role;
 
-    if (role === "seller" || role === "admin" || role === "super_admin") {
-      return role;
+      if (role === "seller" || role === "admin" || role === "super_admin") {
+        return role;
+      }
+    } catch {
+      continue;
     }
-    return null;
-  } catch {
-    return null;
   }
+
+  return null;
 };
 
 const redirectByRole = (role: Role, request: NextRequest) => {
@@ -113,9 +134,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/login",
     "/login/:path*",
+    "/register",
     "/register/:path*",
+    "/dashboard",
     "/dashboard/:path*",
+    "/admin",
     "/admin/:path*",
   ],
 };

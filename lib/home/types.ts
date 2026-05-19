@@ -11,6 +11,7 @@ export type Price = {
 
 export type Product = {
   id: string;
+  categoryId?: number;
   sku?: string;
   title: string;
   slug: string;
@@ -49,6 +50,8 @@ export interface NavigationItem {
 export interface ProductCardProps {
   product: Product;
   isLoggedIn?: boolean; // Make optional so component can use Redux fallback
+  existingSellerProductId?: number;
+  hasActiveSellerCategory?: boolean;
 }
 
 export interface ContainerProps {

@@ -9,6 +9,7 @@ import { useGetAllProductsQuery } from "@/appstore/modules/products/api";
 import {
   useCreateSellerProductMutation,
   useDeleteSellerProductMutation,
+  useGetSellerCategoriesQuery,
   useGetSellerProductsQuery,
   useUpdateSellerProductMutation,
 } from "@/appstore/modules/seller/panel.api";
@@ -52,6 +53,9 @@ export default function MyProductsPage() {
     limit: 100,
     isActive: true,
   });
+  const { data: sellerCategoriesRes } = useGetSellerCategoriesQuery({
+    status: "active",
+  });
 
   const [createSellerProduct, { isLoading: isCreating }] =
     useCreateSellerProductMutation();
@@ -66,6 +70,10 @@ export default function MyProductsPage() {
   );
   const meta = sellerProductsRes?.meta;
   const sourceProducts = allProductsRes?.data ?? [];
+  const activeSellerCategoryIds = new Set(
+    (sellerCategoriesRes?.data ?? []).map((item) => item.categoryId),
+  );
+  const hasActiveCategories = activeSellerCategoryIds.size > 0;
   const totalProducts = meta?.total ?? 0;
   const activeProducts = activeMetaRes?.meta?.total ?? 0;
   const inactiveProducts = inactiveMetaRes?.meta?.total ?? 0;
@@ -102,14 +110,29 @@ export default function MyProductsPage() {
     }
 
     try {
+      const selectedProduct = sourceProducts.find(
+        (item) => item.id === Number(selectedProductId),
+      );
+
       const body: {
         productId: number;
+        categoryId?: number;
         price: number;
         previousePrice?: number;
       } = {
         productId: Number(selectedProductId),
         price: Number(price),
       };
+
+      if (selectedProduct?.category?.id) {
+        if (!activeSellerCategoryIds.has(selectedProduct.category.id)) {
+          toast.warning(
+            "Please add this product category in My Categories first.",
+          );
+          return;
+        }
+        body.categoryId = selectedProduct.category.id;
+      }
 
       if (previousPrice) {
         body.previousePrice = Number(previousPrice);
@@ -206,12 +229,17 @@ export default function MyProductsPage() {
             />
             <button
               onClick={handleCreate}
-              disabled={isCreating}
+              disabled={isCreating || !hasActiveCategories}
               className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             >
               {isCreating ? "Adding..." : "Add Product"}
             </button>
           </div>
+          {!hasActiveCategories && (
+            <p className="mt-2 text-xs text-amber-600">
+              Please add at least one active category in My Categories before adding products.
+            </p>
+          )}
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -307,13 +335,16 @@ export default function MyProductsPage() {
                         <button
                           disabled={isUpdating}
                           onClick={() => handleToggleStatus(item.id, item.status)}
-                          className={`rounded px-2 py-1 text-xs font-semibold ${
-                            item.status === "active"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-slate-100 text-slate-600"
-                          }`}
+                          className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+                            item.status === "active" ? "bg-emerald-500" : "bg-slate-300"
+                          } ${isUpdating ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+                          aria-label="Toggle product status"
                         >
-                          {item.status}
+                          <span
+                            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                              item.status === "active" ? "translate-x-8" : "translate-x-1"
+                            }`}
+                          />
                         </button>
                       </td>
                       <td className="px-4 py-3 text-xs text-slate-500">

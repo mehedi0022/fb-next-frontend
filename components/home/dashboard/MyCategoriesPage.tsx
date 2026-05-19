@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Pagination } from "antd";
-import type { PaginationProps } from "antd";
 import { toast } from "react-toastify";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
 import { useGetAllCategoriesQuery } from "@/appstore/modules/products/api";
@@ -11,36 +9,46 @@ import {
   useCreateSellerCategoryMutation,
   useDeleteSellerCategoryMutation,
   useGetSellerCategoriesQuery,
+  useGetSellerProductsQuery,
   useUpdateSellerCategoryMutation,
 } from "@/appstore/modules/seller/panel.api";
-
-const PAGE_SIZE = 10;
+import { DeleteConfirmModal } from "@/components/admin/common/DeleteConfirmModal";
 
 export default function MyCategoriesPage() {
   const [search, setSearch] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"" | "active" | "inactive">("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isMenuViewFilter, setIsMenuViewFilter] = useState<"" | "true" | "false">("");
+  const [isHomePageViewFilter, setIsHomePageViewFilter] = useState<
+    "" | "true" | "false"
+  >("");
+  const [isFeaturedFilter, setIsFeaturedFilter] = useState<"" | "true" | "false">("");
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | "">("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{
+    type: "deactivate" | "delete";
+    categoryId: number;
+    categoryName: string;
+    affectedProducts: number;
+  } | null>(null);
 
-  const { data: sellerCategoriesRes, isLoading, isFetching } =
+  const { data: sellerCategoriesRes, isLoading } =
     useGetSellerCategoriesQuery({
-      page: currentPage,
-      limit: PAGE_SIZE,
-      search: appliedSearch || undefined,
       status: statusFilter || undefined,
+      isMenuView:
+        isMenuViewFilter === "" ? undefined : isMenuViewFilter === "true",
+      isHomePageView:
+        isHomePageViewFilter === ""
+          ? undefined
+          : isHomePageViewFilter === "true",
+      isFeatured:
+        isFeaturedFilter === "" ? undefined : isFeaturedFilter === "true",
     });
 
-  const { data: activeMetaRes } = useGetSellerCategoriesQuery({
+  const { data: allSellerCategoriesRes } = useGetSellerCategoriesQuery();
+  const { data: allSellerProductsRes } = useGetSellerProductsQuery({
     page: 1,
-    limit: 1,
-    status: "active",
-  });
-  const { data: inactiveMetaRes } = useGetSellerCategoriesQuery({
-    page: 1,
-    limit: 1,
-    status: "inactive",
+    limit: 1000,
   });
 
   const { data: allCategoriesRes } = useGetAllCategoriesQuery();
@@ -56,18 +64,32 @@ export default function MyCategoriesPage() {
     () => sellerCategoriesRes?.data ?? [],
     [sellerCategoriesRes?.data],
   );
-  const meta = sellerCategoriesRes?.meta;
-  const totalCategories = meta?.total ?? 0;
-  const activeCategories = activeMetaRes?.meta?.total ?? 0;
-  const inactiveCategories = inactiveMetaRes?.meta?.total ?? 0;
+  const allSellerCategories = useMemo(
+    () => allSellerCategoriesRes?.data ?? [],
+    [allSellerCategoriesRes?.data],
+  );
+  const allSellerProducts = useMemo(
+    () => allSellerProductsRes?.data ?? [],
+    [allSellerProductsRes?.data],
+  );
 
-  const flattenCategories = (nodes: ProductCategory[]) => {
+  const totalCategories = allSellerCategories.length;
+  const activeCategories = allSellerCategories.filter(
+    (item) => item.status === "active",
+  ).length;
+  const inactiveCategories = allSellerCategories.filter(
+    (item) => item.status === "inactive",
+  ).length;
+
+  const flattenLeafCategories = (nodes: ProductCategory[]) => {
     const out: Array<{ id: number; name: string }> = [];
     const walk = (items: ProductCategory[], prefix = "") => {
       items.forEach((item) => {
-        out.push({ id: item.id, name: prefix ? `${prefix} > ${item.name}` : item.name });
+        const label = prefix ? `${prefix} > ${item.name}` : item.name;
         if (item.children?.length) {
-          walk(item.children, prefix ? `${prefix} > ${item.name}` : item.name);
+          walk(item.children, label);
+        } else {
+          out.push({ id: item.id, name: label });
         }
       });
     };
@@ -76,7 +98,7 @@ export default function MyCategoriesPage() {
   };
 
   const flatCategoryOptions = useMemo(
-    () => flattenCategories(allCategoriesRes?.data ?? []),
+    () => flattenLeafCategories(allCategoriesRes?.data ?? []),
     [allCategoriesRes?.data],
   );
 
@@ -89,16 +111,12 @@ export default function MyCategoriesPage() {
     (item) => !existingCategoryIds.has(item.id),
   );
 
-  const handleApplyFilter = () => {
-    setAppliedSearch(search.trim());
-    setCurrentPage(1);
-  };
-
   const handleResetFilter = () => {
     setSearch("");
-    setAppliedSearch("");
     setStatusFilter("");
-    setCurrentPage(1);
+    setIsMenuViewFilter("");
+    setIsHomePageViewFilter("");
+    setIsFeaturedFilter("");
   };
 
   const handleCreate = async () => {
@@ -117,11 +135,24 @@ export default function MyCategoriesPage() {
     }
   };
 
-  const handleToggleStatus = async (
-    id: number,
-    currentStatus: "active" | "inactive",
-  ) => {
+  const handleToggleStatus = async (id: number, currentStatus: "active" | "inactive") => {
     const nextStatus = currentStatus === "active" ? "inactive" : "active";
+    if (nextStatus === "inactive") {
+      const targetCategory = allSellerCategories.find((item) => item.id === id);
+      const affectedProducts = allSellerProducts.filter(
+        (item) => item.categoryId === targetCategory?.categoryId && item.status === "active",
+      ).length;
+
+      setPendingAction({
+        type: "deactivate",
+        categoryId: id,
+        categoryName: targetCategory?.category?.name ?? "this category",
+        affectedProducts,
+      });
+      setModalOpen(true);
+      return;
+    }
+
     try {
       await updateSellerCategory({ id, status: nextStatus }).unwrap();
       toast.success(`Category ${nextStatus}.`);
@@ -131,19 +162,57 @@ export default function MyCategoriesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const ok = window.confirm("Delete this category from your panel?");
-    if (!ok) return;
+    const targetCategory = allSellerCategories.find((item) => item.id === id);
+    const affectedProducts = allSellerProducts.filter(
+      (item) => item.categoryId === targetCategory?.categoryId && item.status === "active",
+    ).length;
+
+    setPendingAction({
+      type: "delete",
+      categoryId: id,
+      categoryName: targetCategory?.category?.name ?? "this category",
+      affectedProducts,
+    });
+    setModalOpen(true);
+  };
+
+  const handleConfirmModal = async () => {
+    if (!pendingAction) return;
+
     try {
-      const result = await deleteSellerCategory(id).unwrap();
-      toast.success(result?.message || "Category deleted.");
+      if (pendingAction.type === "deactivate") {
+        const result = await updateSellerCategory({
+          id: pendingAction.categoryId,
+          status: "inactive",
+        }).unwrap();
+        toast.success(
+          result?.meta?.affectedProducts
+            ? `Category inactive. ${result.meta.affectedProducts} products also inactivated.`
+            : "Category inactive.",
+        );
+      } else {
+        const result = await deleteSellerCategory(pendingAction.categoryId).unwrap();
+        toast.success(
+          result?.meta?.affectedProducts
+            ? `Category deleted. ${result.meta.affectedProducts} products also deleted.`
+            : result?.message || "Category deleted.",
+        );
+      }
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to delete category."));
+      toast.error(getApiErrorMessage(error, "Failed to update category."));
+    } finally {
+      setModalOpen(false);
+      setPendingAction(null);
     }
   };
 
-  const onPageChange: PaginationProps["onChange"] = (page) => {
-    setCurrentPage(page);
-  };
+  const visibleCategories = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return sellerCategories;
+    return sellerCategories.filter((item) =>
+      item.category?.name?.toLowerCase().includes(query),
+    );
+  }, [search, sellerCategories]);
 
   return (
     <div className="space-y-5">
@@ -199,7 +268,6 @@ export default function MyCategoriesPage() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleApplyFilter()}
                 placeholder="Search category name"
                 className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
               />
@@ -220,12 +288,54 @@ export default function MyCategoriesPage() {
                 <option value="inactive">Inactive</option>
               </select>
             </div>
-            <button
-              onClick={handleApplyFilter}
-              className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
-            >
-              Filter
-            </button>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Menu View
+              </label>
+              <select
+                value={isMenuViewFilter}
+                onChange={(e) =>
+                  setIsMenuViewFilter(e.target.value as "" | "true" | "false")
+                }
+                className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              >
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Home View
+              </label>
+              <select
+                value={isHomePageViewFilter}
+                onChange={(e) =>
+                  setIsHomePageViewFilter(e.target.value as "" | "true" | "false")
+                }
+                className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              >
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Featured
+              </label>
+              <select
+                value={isFeaturedFilter}
+                onChange={(e) =>
+                  setIsFeaturedFilter(e.target.value as "" | "true" | "false")
+                }
+                className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+              >
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
             <button
               onClick={handleResetFilter}
               className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium"
@@ -262,14 +372,14 @@ export default function MyCategoriesPage() {
                       Loading categories...
                     </td>
                   </tr>
-                ) : sellerCategories.length === 0 ? (
+                ) : visibleCategories.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-4 py-10 text-center text-slate-500">
                       No categories found.
                     </td>
                   </tr>
                 ) : (
-                  sellerCategories.map((item) => (
+                  visibleCategories.map((item) => (
                     <tr key={item.id} className="border-b">
                       <td className="px-4 py-3">{item.category?.name}</td>
                       <td className="px-4 py-3">
@@ -279,13 +389,16 @@ export default function MyCategoriesPage() {
                         <button
                           disabled={isUpdating}
                           onClick={() => handleToggleStatus(item.id, item.status)}
-                          className={`rounded px-2 py-1 text-xs font-semibold ${
-                            item.status === "active"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-slate-100 text-slate-600"
-                          }`}
+                          className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+                            item.status === "active" ? "bg-emerald-500" : "bg-slate-300"
+                          } ${isUpdating ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
+                          aria-label="Toggle category status"
                         >
-                          {item.status}
+                          <span
+                            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                              item.status === "active" ? "translate-x-8" : "translate-x-1"
+                            }`}
+                          />
                         </button>
                       </td>
                       <td className="px-4 py-3 text-xs text-slate-500">
@@ -306,24 +419,26 @@ export default function MyCategoriesPage() {
               </tbody>
             </table>
           </div>
-
-          {(meta?.total ?? 0) > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t p-4">
-              <p className="text-sm text-slate-500">
-                Showing page {meta?.page} of {meta?.totalPages}
-                {isFetching ? " (refreshing...)" : ""}
-              </p>
-              <Pagination
-                current={meta?.page || 1}
-                total={meta?.total || 0}
-                pageSize={meta?.limit || PAGE_SIZE}
-                onChange={onPageChange}
-                showSizeChanger={false}
-              />
-            </div>
-          )}
         </div>
       </div>
+      <DeleteConfirmModal
+        open={modalOpen}
+        onCancel={() => {
+          setModalOpen(false);
+          setPendingAction(null);
+        }}
+        onConfirm={handleConfirmModal}
+        title={pendingAction?.type === "delete" ? "Delete Category" : "Deactivate Category"}
+        okText={pendingAction?.type === "delete" ? "Delete" : "Deactivate"}
+        confirmLoading={isUpdating || isDeleting}
+        content={
+          pendingAction
+            ? pendingAction.type === "delete"
+              ? `If you delete "${pendingAction.categoryName}", ${pendingAction.affectedProducts} product(s) under this category will also be deleted permanently.`
+              : `If you deactivate "${pendingAction.categoryName}", ${pendingAction.affectedProducts} active product(s) under this category will also be set inactive.`
+            : "Are you sure?"
+        }
+      />
     </div>
   );
 }

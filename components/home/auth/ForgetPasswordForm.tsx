@@ -184,7 +184,7 @@ export default function ForgetPasswordForm() {
       {/* Back to Login Link */}
       <div className="text-center">
         <Link 
-          href="/auth/login" 
+          href="/login" 
           className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />

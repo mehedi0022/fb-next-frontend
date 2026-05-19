@@ -2,6 +2,13 @@
 
 import { SearchParamsProps } from "@/lib/home";
 import { useGetAllProductsQuery } from "@/appstore/modules/products/api";
+import { useGetSellerProductsQuery } from "@/appstore/modules/seller/panel.api";
+import { useGetSellerCategoriesQuery } from "@/appstore/modules/seller/panel.api";
+import { useAppSelector } from "@/appstore/hooks/hooks";
+import {
+  selectIsAuthenticated,
+  selectUserRole,
+} from "@/appstore/slices/sessionSlice";
 import React, { Suspense } from "react";
 import Container from "../../common/Container";
 import Title from "../../common/Title";
@@ -15,11 +22,27 @@ interface ProductsListProps {
 
 const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
   const search = searchParams?.product || "";
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const userRole = useAppSelector(selectUserRole);
+  const isSeller = isAuthenticated && userRole === "seller";
+
   const { data, isLoading, isError } = useGetAllProductsQuery({
     search,
     isActive: true,
     limit: 100,
   });
+
+  const { data: sellerProductsData } = useGetSellerProductsQuery(
+    {
+      page: 1,
+      limit: 1000,
+    },
+    { skip: !isSeller },
+  );
+  const { data: sellerCategoriesData } = useGetSellerCategoriesQuery(
+    { status: "active" },
+    { skip: !isSeller },
+  );
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
   const siteBaseUrl = apiUrl.replace(/\/api\/v\d+$/i, "");
@@ -40,6 +63,7 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
 
     return {
       id: String(item.id),
+      categoryId: item.category?.id,
       title: item.name,
       slug: item.slug,
       shortDescription: item.shortDescription ?? "",
@@ -60,6 +84,14 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
       createdAt: item.createdAt ?? "",
     };
   });
+
+  const sellerProductByProductId = new Map(
+    (sellerProductsData?.data ?? []).map((item) => [item.productId, item.id]),
+  );
+  const activeSellerCategoryIds = new Set(
+    (sellerCategoriesData?.data ?? []).map((item) => item.categoryId),
+  );
+
   return (
     <section className="bg-ternary pt-10">
       <Container className="py-5">
@@ -83,6 +115,10 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
             <ProductCard
               key={product.id}
               product={product}
+              existingSellerProductId={sellerProductByProductId.get(Number(product.id))}
+              hasActiveSellerCategory={
+                product.categoryId ? activeSellerCategoryIds.has(product.categoryId) : false
+              }
             />
           ))}
 

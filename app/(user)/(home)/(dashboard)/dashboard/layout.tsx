@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <RoleProtectedRoute allowRoles={["seller"]}>
       <div className="min-h-screen bg-slate-100">
-        <div className="mx-auto w-full max-w-[1320px] px-4 pb-8 pt-6 sm:px-6 lg:px-8">
+        <div className="container mx-auto w-full pb-8 pt-6">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
             <Sidebar />
             <div className="min-w-0 space-y-5">

@@ -34,6 +34,7 @@ const ProductDetailsPage = ({ params }: { params: { id: string } }) => {
   const product: Product | null = raw
     ? {
         id: String(raw.id),
+        categoryId: raw.category?.id,
         sku,
         title: raw.name,
         slug: raw.slug,
