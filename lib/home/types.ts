@@ -39,6 +39,7 @@ export type Product = {
 export interface SearchParamsProps {
   product?: string;
   category?: string;
+  categoryId?: string;
 }
 
 export interface NavigationItem {

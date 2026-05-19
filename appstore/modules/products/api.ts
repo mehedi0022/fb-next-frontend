@@ -142,6 +142,7 @@ export type ProductCategory = {
   id: number;
   name: string;
   slug?: string;
+  image?: string | null;
   parentId?: number | null;
   children?: ProductCategory[];
   createdAt?: string;
@@ -181,6 +182,7 @@ export type CreateBrandPayload = {
 export type CreateCategoryPayload = {
   name: string;
   parentId?: number | null;
+  image?: File | null;
 };
 
 export type CreateAttributePayload = {
@@ -197,6 +199,7 @@ export type UpdateCategoryPayload = {
   id: number;
   name: string;
   parentId?: number | null;
+  image?: File | null;
 };
 
 export type UpdateAttributePayload = {
@@ -390,20 +393,42 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     createCategory: builder.mutation<ApiSuccessResponse, CreateCategoryPayload>({
-      query: (body) => ({
-        url: "/product/category/create",
-        method: "POST",
-        body,
-      }),
+      query: (body) => {
+        const formData = new FormData();
+        formData.append("name", body.name);
+        if (body.parentId !== undefined && body.parentId !== null) {
+          formData.append("parentId", String(body.parentId));
+        }
+        if (body.image) {
+          formData.append("image", body.image);
+        }
+        return {
+          url: "/product/category/create",
+          method: "POST",
+          body: formData,
+        };
+      },
       invalidatesTags: ["Product"],
     }),
 
     updateCategory: builder.mutation<ApiSuccessResponse, UpdateCategoryPayload>({
-      query: ({ id, ...body }) => ({
-        url: `/product/category/update/${id}`,
-        method: "PUT",
-        body,
-      }),
+      query: ({ id, ...body }) => {
+        const formData = new FormData();
+        formData.append("name", body.name);
+        if (body.parentId === null) {
+          formData.append("parentId", "");
+        } else if (body.parentId !== undefined) {
+          formData.append("parentId", String(body.parentId));
+        }
+        if (body.image) {
+          formData.append("image", body.image);
+        }
+        return {
+          url: `/product/category/update/${id}`,
+          method: "PUT",
+          body: formData,
+        };
+      },
       invalidatesTags: ["Product"],
     }),
 

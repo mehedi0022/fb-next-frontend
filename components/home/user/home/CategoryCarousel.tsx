@@ -3,11 +3,25 @@ import Slider from "react-slick";
 import CategoryCard from "../categories/CategoryCard";
 
 interface Category {
+  id?: number;
   name: string;
   img: string;
+  slug?: string;
+  href?: string;
+  isAdded?: boolean;
 }
 
-export default function CategoryCarousel({ categories = [] }: { categories?: Category[] }) {
+export default function CategoryCarousel({
+  categories = [],
+  showAddButton = false,
+  creatingCategory = false,
+  onAddCategory,
+}: {
+  categories?: Category[];
+  showAddButton?: boolean;
+  creatingCategory?: boolean;
+  onAddCategory?: (categoryId: number) => void;
+}) {
   const settings = {
     infinite: (categories?.length ?? 0) > 4, 
     speed: 400,
@@ -63,7 +77,12 @@ export default function CategoryCarousel({ categories = [] }: { categories?: Cat
       <Slider {...settings} arrows={true}>
         {categories.map((cat, index) => (
           <div key={index} className="px-2">
-            <CategoryCard category={cat} />
+            <CategoryCard
+              category={cat}
+              showAddButton={showAddButton}
+              creatingCategory={creatingCategory}
+              onAddCategory={onAddCategory}
+            />
           </div>
         ))}
       </Slider>

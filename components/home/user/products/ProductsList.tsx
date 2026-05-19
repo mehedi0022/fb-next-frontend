@@ -22,12 +22,17 @@ interface ProductsListProps {
 
 const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
   const search = searchParams?.product || "";
+  const categoryIdParam = Number(searchParams?.categoryId);
+  const selectedCategoryId = Number.isInteger(categoryIdParam) && categoryIdParam > 0
+    ? categoryIdParam
+    : undefined;
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const userRole = useAppSelector(selectUserRole);
   const isSeller = isAuthenticated && userRole === "seller";
 
   const { data, isLoading, isError } = useGetAllProductsQuery({
     search,
+    categoryId: selectedCategoryId,
     isActive: true,
     limit: 100,
   });
@@ -107,6 +112,11 @@ const ProductsList: React.FC<ProductsListProps> = ({ searchParams }) => {
         {search && (
           <p className="text-sm text-gray-500 mt-2">
             Showing results for &quot;{search}&quot;
+          </p>
+        )}
+        {selectedCategoryId && (
+          <p className="text-sm text-gray-500 mt-1">
+            Filtered by category ID: {selectedCategoryId}
           </p>
         )}
 

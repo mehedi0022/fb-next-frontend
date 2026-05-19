@@ -9,14 +9,19 @@ import {
 } from "@/appstore/modules/products/api";
 import { AppModal } from "@/components/admin/common/AppModal";
 import { ReusableTable } from "@/components/admin/common/ReusableTable";
-import { Button, Form, Input, Popconfirm, Space, TreeSelect } from "antd";
+import { Button, Form, Input, Popconfirm, Space, TreeSelect, Upload } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { getApiErrorMessage } from "@/lib/getApiErrorMessage";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 
-type CategoryFormValues = { name: string; parentId?: number | "__root__" };
+type CategoryFormValues = {
+  name: string;
+  parentId?: number | "__root__";
+  image?: UploadFile[];
+};
 type CategoryTreeRow = ProductCategory & {
   children?: CategoryTreeRow[];
 };
@@ -114,6 +119,12 @@ export default function CategoriesManagementPage() {
     form.resetFields();
   };
 
+  const uploadProps: UploadProps = {
+    beforeUpload: () => false,
+    maxCount: 1,
+    accept: "image/png,image/jpeg,image/webp",
+  };
+
   const onSubmit = async (values: CategoryFormValues) => {
     try {
       const mappedParentId =
@@ -128,6 +139,7 @@ export default function CategoriesManagementPage() {
       const payload = {
         name: values.name,
         parentId: mappedParentId,
+        image: values.image?.[0]?.originFileObj as File | undefined,
       };
       const response = editing
         ? await updateCategory({ id: editing.id, ...payload }).unwrap()
@@ -157,6 +169,20 @@ export default function CategoriesManagementPage() {
       render: (_: unknown, __: CategoryTreeRow, index: number) => index + 1,
     },
     { title: "Category Name", dataIndex: "name" },
+    {
+      title: "Image",
+      render: (_: unknown, item: CategoryTreeRow) =>
+        item.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.image.startsWith("http") ? item.image : `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/${item.image.replace(/\\/g, "/")}`}
+            alt={item.name}
+            className="h-10 w-10 rounded object-cover border"
+          />
+        ) : (
+          "-"
+        ),
+    },
     {
       title: "Path",
       render: (_: unknown, item: CategoryTreeRow) => getCategoryPath(item),
@@ -244,6 +270,17 @@ export default function CategoriesManagementPage() {
               ]}
               treeDataSimpleMode={{ id: "value", pId: "pId", rootPId: 0 }}
             />
+          </Form.Item>
+
+          <Form.Item
+            label="Category Image (Optional)"
+            name="image"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
+          >
+            <Upload {...uploadProps} listType="picture">
+              <Button>Select Image</Button>
+            </Upload>
           </Form.Item>
 
           <div className="flex justify-end gap-2">
