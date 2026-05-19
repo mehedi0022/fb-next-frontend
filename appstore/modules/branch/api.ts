@@ -1,5 +1,5 @@
 import { baseApi } from "@/appstore/api/baseApi";
-import { Branch } from "@/lib/home/types";
+import { Branch } from "@/lib/home";
 
 interface BranchResponse {
   success: boolean;

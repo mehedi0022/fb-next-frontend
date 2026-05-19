@@ -8,7 +8,7 @@ interface ReusableTableProps<T> {
   loadingComponent?: React.ReactNode;
 }
 
-export function ReusableTable<T extends { id: number }>({
+export function ReusableTable<T extends { id: string | number }>({
   columns,
   data,
   loading,

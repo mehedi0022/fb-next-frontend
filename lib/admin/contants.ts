@@ -83,8 +83,12 @@ import {
         label: "Site Settings",
         icon: Settings,
         children: [
-            { label: "General Settings", href: "/settings/general" },
-            { label: "SEO Settings", href: "/settings/seo" },
+            { label: "General Settings", href: "/admin/settings/general" },
+            { label: "Banner Settings", href: "/admin/settings/banner" },
+            { label: "Features", href: "/admin/settings/features" },
+            { label: "Steps", href: "/admin/settings/steps" },
+            { label: "FAQ", href: "/admin/settings/faq" },
+            { label: "SEO Settings", href: "/admin/settings/seo" },
         ],
     },
 ];
