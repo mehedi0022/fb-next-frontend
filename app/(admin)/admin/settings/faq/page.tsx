@@ -105,7 +105,7 @@ export default function FaqPage() {
     {
       title: "Answer",
       dataIndex: "answer",
-        width: 250,
+      width: 250,
       render: (value: string) => <span className="line-clamp-2">{value}</span>,
     },
     {
