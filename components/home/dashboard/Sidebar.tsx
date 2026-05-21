@@ -1,11 +1,14 @@
 "use client";
 
+import { useGetSellerPriceAlertSummaryQuery } from "@/appstore/modules/seller/panel.api";
 import { COURSE_INFO, NAV_ITEMS, SELLER_INFO } from "@/lib/home";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: summaryRes } = useGetSellerPriceAlertSummaryQuery();
+  const unreadAlerts = summaryRes?.data?.unreadAlerts ?? 0;
 
   return (
     <aside className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:h-[calc(100vh-48px)] lg:overflow-y-auto">
@@ -93,7 +96,18 @@ export default function Sidebar() {
                   : "border-transparent bg-white text-slate-600 hover:border-slate-200 hover:bg-slate-50 hover:text-slate-900"
               }`}
             >
-              {item.label}
+              <span className="flex items-center justify-between gap-3">
+                <span>{item.label}</span>
+                {item.href === "/dashboard" && unreadAlerts > 0 ? (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                      isActive ? "bg-white/15 text-white" : "bg-rose-100 text-rose-700"
+                    }`}
+                  >
+                    {unreadAlerts}
+                  </span>
+                ) : null}
+              </span>
             </Link>
           );
         })}

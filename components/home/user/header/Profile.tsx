@@ -5,7 +5,7 @@ import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons
 import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/appstore/api/authApi';
 import { useAppDispatch, useAppSelector } from '@/appstore/hooks/hooks';
-import { clearSession, selectIsAuthenticated, selectUser } from '@/appstore/slices/sessionSlice';
+import { logoutSession, selectIsAuthenticated, selectUser } from '@/appstore/slices/sessionSlice';
 import { baseApi } from '@/appstore/api/baseApi';
 
 type Props = {
@@ -26,16 +26,16 @@ const Profile = ({ open, onClose }: Props) => {
       await logout().unwrap();
 
       // Clear Redux state first
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState());
     } catch (error) {
       console.error('Logout failed:', error);
       
       // Even if API fails, clear local state and cookies
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState());
     } finally {
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState()); 
       onClose();
       router.replace('/');

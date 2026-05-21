@@ -42,6 +42,14 @@ export type SellerProductItem = {
   status: SellerProductStatus;
   createdAt: string;
   updatedAt: string;
+  pricingState?: {
+    currentWholesaleMin: string;
+    sellerPriceSnapshot: string;
+    estimatedProfitAfter: string;
+    changeDirection: "increase" | "decrease" | "stable";
+    pendingAction: boolean;
+    updatedAt: string;
+  } | null;
   product: {
     id: number;
     name: string;
@@ -89,6 +97,52 @@ type SingleResponse<T> = {
   message?: string;
   meta?: {
     affectedProducts?: number;
+  };
+};
+
+export type SellerPriceAlertSummary = {
+  increasedProducts: number;
+  droppedProducts: number;
+  totalAffectedProducts: number;
+  highRiskProducts: number;
+  estimatedProfitImpact: number;
+  pendingSellerActions: number;
+  unreadAlerts: number;
+};
+
+export type SellerPriceAlertItem = {
+  id: number;
+  sellerProductId: number;
+  sellerId: number;
+  productId: number;
+  title: string;
+  message: string;
+  changeDirection: "increase" | "decrease" | "stable";
+  previousWholesaleMin: string;
+  currentWholesaleMin: string;
+  sellerPriceSnapshot: string;
+  estimatedProfitBefore: string;
+  estimatedProfitAfter: string;
+  status: "unread" | "read" | "resolved";
+  createdAt: string;
+  updatedAt: string;
+  product: {
+    id: number;
+    name: string;
+    slug: string;
+    coverImage?: string | null;
+  };
+  sellerProduct: {
+    id: number;
+    price?: string | null;
+    status: SellerProductStatus;
+    pricingState?: {
+      pendingAction: boolean;
+      changeDirection: "increase" | "decrease" | "stable";
+      estimatedProfitBefore?: string | null;
+      estimatedProfitAfter: string;
+      updatedAt: string;
+    } | null;
   };
 };
 
@@ -242,6 +296,57 @@ const sellerPanelApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["SellerPanel"],
     }),
+
+    getSellerPriceAlertSummary: builder.query<
+      { success: boolean; data: SellerPriceAlertSummary },
+      void
+    >({
+      query: () => ({
+        url: "/seller/products/price-alerts/summary",
+      }),
+      providesTags: ["SellerPanel"],
+    }),
+
+    getSellerPriceAlerts: builder.query<
+      PaginatedResponse<SellerPriceAlertItem>,
+      {
+        page?: number;
+        limit?: number;
+        status?: "unread" | "read" | "resolved";
+        direction?: "increase" | "decrease" | "stable";
+        risk?: "high";
+        pendingAction?: boolean;
+        profitImpact?: boolean;
+      } | void
+    >({
+      query: (params) => ({
+        url: "/seller/products/price-alerts",
+        params: params ?? undefined,
+      }),
+      providesTags: ["SellerPanel"],
+    }),
+
+    markSellerPriceAlertAsRead: builder.mutation<
+      { success: boolean; data: SellerPriceAlertItem },
+      number
+    >({
+      query: (alertId) => ({
+        url: `/seller/products/price-alerts/${alertId}/read`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["SellerPanel"],
+    }),
+
+    markSellerPriceAlertAsResolved: builder.mutation<
+      { success: boolean; data: SellerPriceAlertItem },
+      number
+    >({
+      query: (alertId) => ({
+        url: `/seller/products/price-alerts/${alertId}/resolve`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["SellerPanel"],
+    }),
   }),
 });
 
@@ -255,4 +360,8 @@ export const {
   useGetSellerProductByIdQuery,
   useUpdateSellerProductMutation,
   useDeleteSellerProductMutation,
+  useGetSellerPriceAlertSummaryQuery,
+  useGetSellerPriceAlertsQuery,
+  useMarkSellerPriceAlertAsReadMutation,
+  useMarkSellerPriceAlertAsResolvedMutation,
 } = sellerPanelApi;

@@ -5,14 +5,14 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { clearSession } from "../slices/sessionSlice"; // adjust path
+import { logoutSession } from "../slices/sessionSlice";
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   credentials: "include",
 });
 
-let isRefreshing = false;
+let refreshPromise: Promise<unknown> | null = null;
 
 const baseQueryWithRefresh: BaseQueryFn<
   string | FetchArgs,
@@ -22,25 +22,26 @@ const baseQueryWithRefresh: BaseQueryFn<
   let result = await rawBaseQuery(args, api, extraOptions);
 
   if (result.error?.status === 401) {
-    // Prevent multiple simultaneous refresh calls
-    if (!isRefreshing) {
-      isRefreshing = true;
+    if (!refreshPromise) {
+      refreshPromise = Promise.resolve(
+        rawBaseQuery(
+          { url: "/auth/regenerate-access-token", method: "POST" },
+          api,
+          extraOptions,
+        ),
+      ).finally(() => {
+        refreshPromise = null;
+      });
+    }
 
-      const refreshResult = await rawBaseQuery(
-        { url: "/auth/regenerate-access-token", method: "POST" },
-        api,
-        extraOptions,
-      );
+    const refreshResult = (await refreshPromise) as Awaited<
+      ReturnType<typeof rawBaseQuery>
+    >;
 
-      isRefreshing = false;
-
-      if (refreshResult.data) {
-        // Token refreshed — retry the original request
-        result = await rawBaseQuery(args, api, extraOptions);
-      } else {
-        // Refresh also failed — clear session and force logout
-        api.dispatch(clearSession());
-      }
+    if (refreshResult.data) {
+      result = await rawBaseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(logoutSession());
     }
   }
 
@@ -61,7 +62,7 @@ export const baseApi = createApi({
     "Feature",
     "Step",
     "Faq",
-    "Banner"
+    "Banner",
   ],
   endpoints: () => ({}),
 });

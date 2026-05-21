@@ -9,7 +9,7 @@ import {
   TrendingUp,
   Minus,
 } from "lucide-react";
-import { PAYMENT_DATA, PaymentData } from "@/lib/home";
+import { useGetSellerOrderSummaryQuery } from "@/appstore/modules/orders/api";
 
 function formatAmount(value: number): string {
   const abs = Math.abs(value).toFixed(2);
@@ -29,20 +29,41 @@ function TrendIcon({ value }: { value: number }) {
 }
 
 export default function PaymentDashboard() {
-  const [data, setData] = useState<PaymentData>(PAYMENT_DATA);
+  const { data: summaryData, refetch } = useGetSellerOrderSummaryQuery();
   const [spinning, setSpinning] = useState(false);
 
   const handleRefresh = async () => {
     setSpinning(true);
     try {
-      await new Promise((r) => setTimeout(r, 800));
-      setData(PAYMENT_DATA);
+      await refetch();
     } finally {
       setSpinning(false);
     }
   };
 
-  const { netProfitItems, netProfit, paymentSummaryItems } = data;
+  const amounts = summaryData?.data?.amounts;
+  const profit = Number(amounts?.totalProfit ?? 0);
+  const totalGrand = Number(amounts?.totalGrand ?? 0);
+  const wholesale = Number(amounts?.totalWholesale ?? 0);
+  const delivery = Number(amounts?.totalDeliveryCharge ?? 0);
+  const packaging = Number(amounts?.totalPackagingCharge ?? 0);
+  const cod = Number(amounts?.totalCodCharge ?? 0);
+
+  const netProfitItems = [
+    { label: "Total Sales", value: totalGrand },
+    { label: "Wholesale Cost (-)", value: -wholesale },
+    { label: "Delivery Charge (-)", value: -delivery },
+    { label: "Packaging Charge (-)", value: -packaging },
+    { label: "COD Charge (-)", value: -cod },
+  ];
+
+  const paymentSummaryItems = [
+    { label: "Net Profit", value: profit, highlight: true },
+    { label: "Gross Sales", value: totalGrand },
+    { label: "Total Cost", value: wholesale + delivery + packaging + cod },
+  ];
+
+  const netProfit = profit;
   const isLoss = netProfit < 0;
   const isGain = netProfit > 0;
 

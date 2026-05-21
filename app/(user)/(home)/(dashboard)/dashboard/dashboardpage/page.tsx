@@ -1,4 +1,5 @@
 import PaymentDashboard from "@/components/home/dashboard/PaymentDashboard";
+import PriceAlertsPanel from "@/components/home/dashboard/PriceAlertsPanel";
 import { DateFilterBar, FinanceBanner, StatCardsGrid } from "@/lib/home";
 
 export default function DashboardPage() {
@@ -8,6 +9,7 @@ export default function DashboardPage() {
       <FinanceBanner />
       <StatCardsGrid />
       <PaymentDashboard />
+      <PriceAlertsPanel />
     </div>
   );
 }

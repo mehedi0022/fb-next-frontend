@@ -17,7 +17,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/appstore/hooks/hooks";
 import { toggleSidebar } from "@/appstore/slices/sidebarSlice";
 import { useLogoutMutation } from "@/appstore/api/authApi";
-import { clearSession } from "@/appstore/slices/sessionSlice";
+import { logoutSession } from "@/appstore/slices/sessionSlice";
 import { baseApi } from "@/appstore/api/baseApi";
 import { toast } from "react-toastify";
 
@@ -35,16 +35,16 @@ export default function AdminHeader() {
       await logout().unwrap();
 
       // Clear Redux state first
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState());
     } catch (error) {
       console.error("Logout failed:", error);
 
       // Even if API fails, clear local state and cookies
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState());
     } finally {
-      dispatch(clearSession());
+      dispatch(logoutSession());
       dispatch(baseApi.util.resetApiState());
       toast.success("Logged out successfully");
     }
